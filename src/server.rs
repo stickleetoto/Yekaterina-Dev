@@ -12,13 +12,35 @@ use crate::{
     engine, formula,
     limits::{self, ResultBudget},
     model::{ComputeParams, FindParams, SpecParams},
-    registry, storage,
+    pool::{Job, WorkerPool},
+    registry,
+    safety::{self, ControlOp},
+    scheduler::{self, Placement},
+    storage,
     user_ops::{self, UserOp, UserRegistry},
 };
 
 const MAX_BATCH: usize = 1024;
 const MAX_PIPE: usize = 256;
 const MAX_UDO_DEPTH: usize = 32;
+
+/// Minimum parallelisable work in a run before distributing it is worth the
+/// handoff, and how far that work must exceed the serial payload cost.
+///
+/// Both calibrated against the 1/2/4/8 worker sweep rather than chosen; see
+/// `docs/V11_PARALLEL_MODEL.md`. A 32-item `math.add` batch completes in 0.12 ms
+/// against a 0.08 ms protocol floor, so there is nothing there to distribute,
+/// and a 4-item `stat.sum(10000)` batch spends its time parsing 40,000 numbers
+/// serially, which no number of workers can shorten.
+const PARALLEL_COMPUTE_FLOOR: u64 = 50_000;
+
+/// Compute must exceed payload by this factor. Without it, large-argument,
+/// cheap-arithmetic batches take the parallel path and pay the handoff for
+/// nothing -- measured at 1.07x slower for `4 x stat.sum(10000)`.
+const PARALLEL_PAYLOAD_RATIO: u64 = 20;
+
+/// A run needs at least this many independent items to be worth a wave.
+const PARALLEL_MIN_ITEMS: usize = 2;
 
 #[derive(Clone)]
 pub struct Yekaterina {
@@ -46,6 +68,9 @@ pub struct Yekaterina {
     /// `Arc`, so readers are never blocked behind an `fsync`.
     store_gate: Arc<Mutex<()>>,
     store_dir: Arc<PathBuf>,
+    /// Worker pool for pure batch work. Created once, shared by every clone of
+    /// the handler. With one worker the parallel path is never taken.
+    pool: Arc<WorkerPool>,
 }
 
 impl Default for Yekaterina {
@@ -56,12 +81,21 @@ impl Yekaterina {
     pub fn new() -> Self { Self::with_store_dir(storage::default_store_dir()) }
 
     pub fn with_store_dir(store_dir: PathBuf) -> Self {
+        Self::with_store_dir_and_workers(store_dir, 1)
+    }
+
+    pub fn with_store_dir_and_workers(store_dir: PathBuf, workers: usize) -> Self {
         let registry = storage::load(&store_dir).unwrap_or_default();
         Self {
             user_ops: Arc::new(RwLock::new(Arc::new(registry))),
             store_gate: Arc::new(Mutex::new(())),
             store_dir: Arc::new(store_dir),
+            pool: Arc::new(WorkerPool::new(workers)),
         }
+    }
+
+    pub fn with_workers(workers: usize) -> Self {
+        Self::with_store_dir_and_workers(storage::default_store_dir(), workers)
     }
 
     /// Take one immutable view of the user registry.
@@ -114,23 +148,37 @@ impl Yekaterina {
             if depth > 0 && opcode.trim().to_ascii_lowercase().starts_with("udo.") { return Err("CONTROL"); }
 
             if let Some(spec) = registry::resolve(opcode) {
-                match spec.opcode {
-                    "udo.formula" => return self.mutate_registry(|r| r.define_formula(args)).await,
-                    "udo.composite" => return self.mutate_registry(|r| r.define_composite(args)).await,
-                    "udo.remove" => return self.mutate_registry(|r| r.remove(args)).await,
-                    "udo.import" => return self.mutate_registry(|r| r.import_pack(args)).await,
-                    "udo.uninstall" => return self.mutate_registry(|r| r.uninstall_pack(args)).await,
-                    "udo.list" => {
+                // Dispatch on the same classification the scheduler uses, so the
+                // two cannot drift apart. An opcode with no ControlOp variant is
+                // routed to `engine::execute`, whose signature admits no state --
+                // which is exactly why `safety::classify` may call it Pure.
+                match safety::control_op(spec.opcode) {
+                    Some(ControlOp::DefineFormula) => {
+                        return self.mutate_registry(|r| r.define_formula(args)).await;
+                    }
+                    Some(ControlOp::DefineComposite) => {
+                        return self.mutate_registry(|r| r.define_composite(args)).await;
+                    }
+                    Some(ControlOp::Remove) => {
+                        return self.mutate_registry(|r| r.remove(args)).await;
+                    }
+                    Some(ControlOp::Import) => {
+                        return self.mutate_registry(|r| r.import_pack(args)).await;
+                    }
+                    Some(ControlOp::Uninstall) => {
+                        return self.mutate_registry(|r| r.uninstall_pack(args)).await;
+                    }
+                    Some(ControlOp::List) => {
                         if !args.is_empty() { return Err("ARG"); }
                         let snap = self.snapshot_or(snapshot).await;
                         return Ok(json!(snap.list()));
                     }
-                    "udo.export" => {
+                    Some(ControlOp::Export) => {
                         let snap = self.snapshot_or(snapshot).await;
                         return snap.export_pack(args);
                     }
-                    "expr.eval" => return eval_expression(args),
-                    canonical => return engine::execute(canonical, args),
+                    Some(ControlOp::ExprEval) => return eval_expression(args),
+                    None => return engine::execute(spec.opcode, args),
                 }
             }
 
@@ -187,25 +235,116 @@ impl Yekaterina {
 
     async fn run_batch(&self, items: &[Value], input: Option<&Value>) -> Value {
         if items.len() > MAX_BATCH { return json!({"e":"LIMIT"}); }
-        let mut results = Vec::with_capacity(items.len());
+        let plan = scheduler::plan_batch(items);
+        let mut results: Vec<Value> = Vec::with_capacity(items.len());
         let mut budget = ResultBudget::new();
-        for item in items {
-            let parsed = parse_batch_item(item);
-            let value = match parsed {
-                Ok((op, raw_args)) => match resolve_args(raw_args, input, &results) {
-                    Ok(args) => match self.execute_any(&op, &args).await { Ok(v) => v, Err(e) => json!({"e":e}) },
+
+        let mut i = 0usize;
+        while i < items.len() {
+            if plan[i] == Placement::Concurrent {
+                // Longest run of items that reference no earlier result and are
+                // classified Pure. Every item in it is independent of every
+                // other, so any execution order yields the same values.
+                let mut j = i;
+                while j < items.len() && plan[j] == Placement::Concurrent {
+                    j += 1;
+                }
+                for value in self.execute_wave(&items[i..j], input).await {
+                    if !store(&mut results, &mut budget, value) {
+                        return json!({"e":"OUT_LIMIT"});
+                    }
+                }
+                i = j;
+            } else {
+                // Dependent, dynamic, or control: runs here, in order, with
+                // every earlier result already materialised.
+                let value = self.execute_ordered(&items[i], input, &results).await;
+                if !store(&mut results, &mut budget, value) {
+                    return json!({"e":"OUT_LIMIT"});
+                }
+                i += 1;
+            }
+        }
+        json!({"r":results})
+    }
+
+    /// Execute one item on the request task, exactly as v1.0.0 did.
+    async fn execute_ordered(
+        &self,
+        item: &Value,
+        input: Option<&Value>,
+        results: &[Value],
+    ) -> Value {
+        match parse_batch_item(item) {
+            Ok((op, raw_args)) => match resolve_args(raw_args, input, results) {
+                Ok(args) => match self.execute_any(&op, &args).await {
+                    Ok(v) => v,
                     Err(e) => json!({"e":e}),
                 },
                 Err(e) => json!({"e":e}),
-            };
-            // The stored value, not the computed one, is what the accumulated
-            // budget is charged for: an oversized item becomes an OUT_LIMIT
-            // marker in the result vector, exactly as in v1.0.0.
-            let stored = if limits::value_too_large(&value) { json!({"e":"OUT_LIMIT"}) } else { value };
-            if !budget.admit(&stored) { return json!({"e":"OUT_LIMIT"}); }
-            results.push(stored);
+            },
+            Err(e) => json!({"e":e}),
         }
-        json!({"r":results})
+    }
+
+    /// Execute a run of mutually independent pure items.
+    ///
+    /// Falls back to sequential execution when the pool has one worker or the
+    /// run is too small to pay for distribution. Either way the returned values
+    /// are in input order: slots are keyed by index, never sorted by completion.
+    async fn execute_wave(&self, items: &[Value], input: Option<&Value>) -> Vec<Value> {
+        let cost = scheduler::run_cost(items);
+        let parallel = self.pool.workers() > 1
+            && items.len() >= PARALLEL_MIN_ITEMS
+            && cost.compute >= PARALLEL_COMPUTE_FLOOR
+            && cost.compute >= cost.payload.saturating_mul(PARALLEL_PAYLOAD_RATIO);
+
+        if !parallel {
+            let mut out = Vec::with_capacity(items.len());
+            for item in items {
+                // No item in a wave references a result, so an empty result
+                // slice resolves identically to the real one.
+                out.push(self.execute_ordered(item, input, &[]).await);
+            }
+            return out;
+        }
+
+        // Build owned jobs. An item that fails to parse or resolve never reaches
+        // a worker; its error is produced here and its slot filled directly.
+        let mut jobs: Vec<Job> = Vec::with_capacity(items.len());
+        let mut out: Vec<Option<Value>> = (0..items.len()).map(|_| None).collect();
+        for (index, item) in items.iter().enumerate() {
+            match parse_batch_item(item) {
+                Ok((op, raw_args)) => match resolve_args(raw_args, input, &[]) {
+                    Ok(args) => jobs.push(Job {
+                        index,
+                        opcode: op.into_owned(),
+                        args: args.into_owned(),
+                    }),
+                    Err(e) => out[index] = Some(json!({"e":e})),
+                },
+                Err(e) => out[index] = Some(json!({"e":e})),
+            }
+        }
+
+        let indices: Vec<usize> = jobs.iter().map(|j| j.index).collect();
+        let pool = Arc::clone(&self.pool);
+        let computed = match tokio::task::spawn_blocking(move || pool.run(jobs)).await {
+            Ok(values) => values,
+            // A panicking operation unwound on a worker, was carried back, and
+            // is resumed here so the request task dies exactly as it did in
+            // v1.0.0. No new error code is introduced.
+            Err(join_error) => std::panic::resume_unwind(join_error.into_panic()),
+        };
+        for (slot, value) in indices.into_iter().zip(computed) {
+            out[slot] = Some(match value {
+                Ok(v) => v,
+                Err(e) => json!({"e":e}),
+            });
+        }
+        out.into_iter()
+            .map(|v| v.expect("every wave slot filled exactly once"))
+            .collect()
     }
 
     async fn run_pipeline(&self, items: &[Value], input: Option<&Value>, all: bool) -> Value {
@@ -323,6 +462,18 @@ fn source_code(source: registry::OperationSource) -> &'static str {
     }
 }
 
+/// Charge one produced value against the accumulated budget and store it.
+/// Returns false when the batch must abort with OUT_LIMIT.
+fn store(results: &mut Vec<Value>, budget: &mut ResultBudget, value: Value) -> bool {
+    // The stored value, not the computed one, is what the accumulated budget is
+    // charged for: an oversized item becomes an OUT_LIMIT marker in the result
+    // vector, exactly as in v1.0.0.
+    let stored = if limits::value_too_large(&value) { json!({"e":"OUT_LIMIT"}) } else { value };
+    if !budget.admit(&stored) { return false; }
+    results.push(stored);
+    true
+}
+
 fn parse_batch_item(item: &Value) -> Result<(Cow<'_, str>, &[Value]), &'static str> {
     user_ops::parse_step_ref(item)
 }
@@ -412,7 +563,7 @@ mod resolution_tests {
             match self.next() % if depth >= 3 { 6 } else { 8 } {
                 0 => Value::Null,
                 1 => json!(self.next() % 100),
-                2 => json!(self.next() % 2 == 0),
+                2 => json!(self.next().is_multiple_of(2)),
                 3 => Value::String("plain".into()),
                 // Reference-shaped strings, valid and invalid, at the same rate
                 // as ordinary values so both resolver paths are exercised.
@@ -543,6 +694,245 @@ mod tests {
         drop(yk);
         let reloaded = Yekaterina::with_store_dir(dir.clone());
         assert_eq!(reloaded.execute_any("user.quad", &[json!(4)]).await.unwrap(), json!(16.0));
+        let _ = fs::remove_dir_all(dir);
+    }
+
+    /// Phase 6. The whole point of the parallel batch path: the response must
+    /// be byte-identical at every worker count, for every batch shape.
+    ///
+    /// Compares against a single-worker server rather than against a stored
+    /// expectation, so the sequential path is the oracle.
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn batch_results_are_identical_at_every_worker_count() {
+        let big: Vec<Value> = (0..600).map(|i| json!(i as f64)).collect();
+        let signal: Vec<Value> = (0..512).map(|i| json!((i % 13) as f64)).collect();
+
+        let shapes: Vec<(&str, Value, Option<Value>)> = vec![
+            ("independent scalars", json!((0..64).map(|i| json!(["math.add", i, 1])).collect::<Vec<_>>()), None),
+            ("heavy independent", json!((0..12).map(|_| json!(["stat.sum", big])).collect::<Vec<_>>()), None),
+            ("fft wave", json!((0..8).map(|_| json!(["signal.fft", signal])).collect::<Vec<_>>()), None),
+            ("fully chained", json!(std::iter::once(json!(["math.add", 1, 2]))
+                .chain((1..40).map(|i| json!(["math.add", format!("${}", i - 1), 1])))
+                .collect::<Vec<_>>()), None),
+            ("half independent then chained", json!((0..32).map(|_| json!(["math.add", 1, 2]))
+                .chain((0..32).map(|i| json!(["math.add", format!("${}", 31 + i), 1])))
+                .collect::<Vec<_>>()), None),
+            ("interleaved dependency", json!((0..40).map(|i| if i % 3 == 2 {
+                json!(["math.mul", format!("${}", i - 1), 2])
+            } else {
+                json!(["stat.sum", big])
+            }).collect::<Vec<_>>()), None),
+            ("errors as values then referenced", json!([
+                ["math.div", 1, 0], ["math.mul", "$0", 10], ["stat.sum", big], ["math.add", 1, 2]
+            ]), None),
+            ("forward reference", json!([["math.mul", "$1", 10], ["math.add", 1, 2]]), None),
+            ("malformed items mixed in", json!([
+                ["math.add", 1, 2], {"nope": 1}, [], "scalar", 42, ["stat.sum", big], ["zzz.nope"]
+            ]), None),
+            ("input references", json!((0..16).map(|_| json!(["stat.sum", "$input"])).collect::<Vec<_>>()),
+                Some(json!(big))),
+            ("mixed arity errors", json!([
+                ["stat.mean"], ["math.add", 1], ["math.clamp", 5, 10, 1], ["stat.sum", big]
+            ]), None),
+            ("skewed durations", json!((0..16).map(|i| if i % 2 == 0 {
+                json!(["signal.dft", signal])
+            } else {
+                json!(["math.add", i, 1])
+            }).collect::<Vec<_>>()), None),
+        ];
+
+        // A byte-identical result proves nothing if every shape quietly fell
+        // back to sequential execution, so assert that the shapes intended to be
+        // distributed actually clear the floor.
+        // "fft wave" is deliberately absent: the corrected cost model scores it
+        // payload-bound, which matches the sweep measuring it at 1.04x.
+        let distributed = ["skewed durations"];
+        for name in distributed {
+            let (_, ops, _) = shapes.iter().find(|(n, _, _)| *n == name).unwrap();
+            let cost = scheduler::run_cost(ops.as_array().unwrap());
+            assert!(
+                cost.compute >= PARALLEL_COMPUTE_FLOOR
+                    && cost.compute >= cost.payload * PARALLEL_PAYLOAD_RATIO,
+                "shape {name:?} was meant to exercise the parallel path but scores {cost:?}"
+            );
+        }
+
+        let dir1 = temp_dir();
+        let sequential = Yekaterina::with_store_dir_and_workers(dir1.clone(), 1);
+        for (name, ops, input) in &shapes {
+            let want = sequential
+                .run_batch(ops.as_array().unwrap(), input.as_ref())
+                .await
+                .to_string();
+            for workers in [2usize, 4, 8] {
+                let dir = temp_dir();
+                let parallel = Yekaterina::with_store_dir_and_workers(dir.clone(), workers);
+                let got = parallel
+                    .run_batch(ops.as_array().unwrap(), input.as_ref())
+                    .await
+                    .to_string();
+                assert_eq!(want, got, "shape {name:?} differs at workers={workers}");
+                let _ = fs::remove_dir_all(dir);
+            }
+        }
+        let _ = fs::remove_dir_all(dir1);
+    }
+
+    /// Repeated runs at the same worker count must also agree: a wave that
+    /// happened to complete in input order once must not be the only reason the
+    /// previous test passed.
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn repeated_parallel_runs_are_stable() {
+        let dir = temp_dir();
+        let yk = Yekaterina::with_store_dir_and_workers(dir.clone(), 4);
+        let signal: Vec<Value> = (0..256).map(|i| json!((i % 13) as f64)).collect();
+        let ops: Vec<Value> = (0..24)
+            .map(|i| if i % 2 == 0 { json!(["signal.dft", signal]) } else { json!(["math.add", i, 1]) })
+            .collect();
+        let first = yk.run_batch(&ops, None).await.to_string();
+        for round in 0..40 {
+            assert_eq!(first, yk.run_batch(&ops, None).await.to_string(), "round {round}");
+        }
+        let _ = fs::remove_dir_all(dir);
+    }
+
+    /// A control operation inside a batch is a barrier: items after it must see
+    /// its effect, at every worker count.
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn control_operations_act_as_barriers_in_a_batch() {
+        for workers in [1usize, 4] {
+            let dir = temp_dir();
+            let yk = Yekaterina::with_store_dir_and_workers(dir.clone(), workers);
+            let ops = vec![
+                json!(["math.add", 1, 2]),
+                json!(["udo.formula", {"op": "user.triple", "p": ["x"], "expr": "x*3"}]),
+                json!(["user.triple", 5]),
+                json!(["udo.list"]),
+                json!(["math.add", 10, 20]),
+            ];
+            let out = yk.run_batch(&ops, None).await;
+            let r = out["r"].as_array().unwrap();
+            assert_eq!(r[0], json!(3.0), "workers={workers}");
+            assert_eq!(r[1], json!("user.triple"), "workers={workers}");
+            assert_eq!(r[2], json!(15.0), "definition not visible to a later item (workers={workers})");
+            assert_eq!(r[3], json!(["user.triple"]), "workers={workers}");
+            assert_eq!(r[4], json!(30.0), "workers={workers}");
+            let _ = fs::remove_dir_all(dir);
+        }
+    }
+
+    /// OUT_LIMIT must abort at the same point regardless of worker count.
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn output_limit_behaviour_is_worker_count_independent() {
+        let wide: Vec<Value> = (0..2000).map(|i| json!(i as f64)).collect();
+        let ops: Vec<Value> = (0..120).map(|_| json!(["stat.cumsum", wide])).collect();
+        let mut seen: Option<String> = None;
+        for workers in [1usize, 2, 4, 8] {
+            let dir = temp_dir();
+            let yk = Yekaterina::with_store_dir_and_workers(dir.clone(), workers);
+            let got = yk.run_batch(&ops, None).await.to_string();
+            assert!(got.contains("OUT_LIMIT"), "expected the limit to trigger (workers={workers})");
+            match &seen {
+                None => seen = Some(got),
+                Some(want) => assert_eq!(want, &got, "OUT_LIMIT differs at workers={workers}"),
+            }
+            let _ = fs::remove_dir_all(dir);
+        }
+    }
+
+    /// Cheap work must stay on the sequential path even when workers exist.
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn tiny_waves_are_not_distributed() {
+        let cheap: Vec<Value> = (0..32).map(|i| json!(["math.add", i, 1])).collect();
+        let c = scheduler::run_cost(&cheap);
+        assert!(c.compute < PARALLEL_COMPUTE_FLOOR, "cheap batch must stay sequential: {c:?}");
+
+        // Large arguments with trivial arithmetic must also stay sequential:
+        // their time is serial parsing, which workers cannot shorten.
+        let wide: Vec<Value> = (0..4)
+            .map(|_| json!(["stat.sum", (0..10000).map(|i| json!(i)).collect::<Vec<_>>()]))
+            .collect();
+        let w = scheduler::run_cost(&wide);
+        assert!(
+            w.compute < w.payload * PARALLEL_PAYLOAD_RATIO,
+            "payload-bound batch must stay sequential: {w:?}"
+        );
+    }
+
+    /// Phase 4. The classification has to be checkable against what dispatch
+    /// actually does, not just against a restatement of itself.
+    ///
+    /// Executing operations classified `Pure` must leave the registry `Arc`
+    /// physically unchanged and must create no persistent state at all. If one
+    /// of them reached `&self`, either the pointer would change or the store
+    /// directory would appear.
+    #[tokio::test]
+    async fn pure_operations_provably_touch_no_server_state() {
+        let dir = temp_dir();
+        let yk = Yekaterina::with_store_dir(dir.clone());
+        let before = yk.registry_snapshot().await;
+
+        let cases: Vec<(&str, Vec<Value>)> = vec![
+            ("math.add", vec![json!(1), json!(2)]),
+            ("stat.mean", vec![json!([1, 2, 3])]),
+            ("mat.transpose", vec![json!([[1, 2], [3, 4]])]),
+            ("int.add", vec![json!("9"), json!("1")]),
+            ("expr.eval", vec![json!({"e": "1+1"})]),
+            ("signal.fft", vec![json!([1, 0, 0, 0])]),
+            // Also drive the error paths: a rejected pure call must not write
+            // anything either.
+            ("math.div", vec![json!(1), json!(0)]),
+            ("stat.mean", vec![]),
+        ];
+        for (op, args) in &cases {
+            assert_eq!(
+                safety::classify(op),
+                safety::Safety::Pure,
+                "test premise: {op} is classified Pure"
+            );
+            let _ = yk.execute_any(op, args).await;
+        }
+
+        let after = yk.registry_snapshot().await;
+        assert!(
+            Arc::ptr_eq(&before, &after),
+            "a pure operation replaced the registry snapshot"
+        );
+        assert!(
+            !dir.exists(),
+            "a pure operation created persistent state at {}",
+            dir.display()
+        );
+    }
+
+    /// The converse: the operations classified `Serialized` are exactly the ones
+    /// that do touch state, so the classification is not trivially satisfied by
+    /// calling everything serialized.
+    #[tokio::test]
+    async fn serialized_control_operations_are_the_ones_that_write() {
+        let dir = temp_dir();
+        let yk = Yekaterina::with_store_dir(dir.clone());
+        let before = yk.registry_snapshot().await;
+
+        assert_eq!(safety::classify("udo.formula"), safety::Safety::Serialized);
+        yk.execute_any("udo.formula", &[json!({"op":"user.s","p":["x"],"expr":"x*2"})])
+            .await
+            .unwrap();
+
+        let after = yk.registry_snapshot().await;
+        assert!(
+            !Arc::ptr_eq(&before, &after),
+            "a mutating control operation left the registry snapshot in place"
+        );
+        assert!(dir.exists(), "a mutating control operation persisted nothing");
+
+        // Read-only control operations reach `&self` too, which is why they are
+        // serialized even though they change nothing.
+        assert_eq!(safety::classify("udo.list"), safety::Safety::Serialized);
+        assert_eq!(
+            yk.execute_any("udo.list", &[]).await.unwrap(),
+            json!(["user.s"])
+        );
         let _ = fs::remove_dir_all(dir);
     }
 

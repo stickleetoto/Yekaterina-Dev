@@ -36,6 +36,14 @@ EXPECTED_TOOLCHAIN = "1.98.0"
 # Frozen v1.0.0 MCP surface. Identical values to scripts/static_audit.py.
 FROZEN_MODEL_SHA256 = "08a0222b5c646f8afc57932b8fb8d56fc36870fad25da014be06bca6180f6faf"
 FROZEN_TOOL_ANNOTATION_SHA256 = "a000b4f460a1273846926031d2d5c831c5c5c9d04be3ef82068a46fd5ded64bc"
+# The `#[tool_handler(...)]` block: the server name, advertised version and
+# instructions string returned in the MCP `initialize` response. v1.0.0 had no
+# gate on this, so the instructions the LLM reads could have been edited without
+# any check noticing. Pinned here. The advertised version is deliberately NOT
+# tied to the crate version: bumping Cargo.toml to 1.1.0 must not change a byte
+# of what a client observes on the wire.
+FROZEN_SERVER_IDENTITY_SHA256 = "864823192ea2e5f11baa634d39dea9d094c21dc0fbf950d6425944253c81f160"
+ADVERTISED_VERSION = "1.0.0"
 # The v1.0.0 audit itself, pinned so "preserved as a frozen artifact" is verifiable.
 FROZEN_V10_AUDIT_SHA256 = "16360daed1e226855e41f0f845eec0dc0e1fa20a5afc5c1049867a747311ce8e"
 
@@ -189,6 +197,19 @@ def check_tool_surface(server: str, model: str) -> None:
     else:
         ok("MCP tool annotation schema is byte/semantic frozen")
 
+    m = re.search(r"#\[tool_handler\((.*?)\)\]\s*impl ServerHandler", server, re.S)
+    if not m:
+        fail("the #[tool_handler(...)] server identity block is missing")
+    else:
+        identity = re.sub(r"\s+", " ", m.group(1)).strip()
+        if sha256_text(identity) != FROZEN_SERVER_IDENTITY_SHA256:
+            fail("MCP server identity (name/version/instructions returned by "
+                 f"initialize) drifted: {sha256_text(identity)}")
+        elif f'version = "{ADVERTISED_VERSION}"' not in identity:
+            fail(f"advertised MCP version is not {ADVERTISED_VERSION!r}")
+        else:
+            ok("MCP server identity (name, advertised version, instructions) is frozen")
+
 
 def check_dispatcher(engine: str) -> None:
     if "fn dispatch_module" not in engine or "split_once('.')" not in engine:
@@ -283,7 +304,7 @@ def check_thread_containment(src_files: list[Path]) -> None:
         ok("no OS thread creation anywhere yet (worker pool not implemented)")
 
 
-def check_safety_classification() -> None:
+def check_safety_classification(registry: str, server: str) -> None:
     p = ROOT / "src" / "safety.rs"
     if not p.exists():
         pending("operation safety classification (src/safety.rs) not implemented yet "
@@ -292,17 +313,60 @@ def check_safety_classification() -> None:
     text = p.read_text(encoding="utf-8")
     if "Serialized" not in text:
         fail("src/safety.rs has no Serialized variant; fail-closed default is unverifiable")
-    # Fail-closed: the catch-all arm must not produce a parallel classification.
+
+    # Fail-closed: no catch-all may produce a parallel classification, and the
+    # unregistered path must be serialized.
     for m in re.finditer(r"_\s*=>\s*([A-Za-z:]*Safety::)?(\w+)", text):
         if m.group(2) in {"Parallel", "Pure"}:
             fail(f"src/safety.rs catch-all arm yields {m.group(2)}; "
                  "unknown operations must default to serialized execution")
-    if re.search(r"starts_with\(\s*\"", text):
-        fail("src/safety.rs uses a prefix heuristic; prefix matching can silently "
-             "misclassify future operations and is forbidden for safety classification")
+    if "return Safety::Serialized;" not in text:
+        fail("src/safety.rs does not serialize unregistered opcodes; the fail-closed "
+             "default must be an explicit early return")
+
+    # Prefix matching is fine for presentation (registry::capability_code) but
+    # can silently misclassify a future operation if used for scheduling. The
+    # exhaustiveness test below is allowed to use it.
+    body = text.split("mod tests", 1)[0]
+    if re.search(r"starts_with\(\s*\"", body):
+        fail("src/safety.rs uses a prefix heuristic outside its tests; prefix matching "
+             "can silently misclassify future operations")
     if "FAIL_CLOSED" not in text and "fail-closed" not in text.lower():
         fail("src/safety.rs does not document its fail-closed contract")
-    ok("operation safety classification is fail-closed and free of prefix heuristics")
+
+    # The real guard: a new control operation cannot be registered without being
+    # classified. Every udo.* opcode in the registry must appear as an arm of
+    # `control_op` specifically.
+    #
+    # Checking the whole file is not enough: an opcode also appears in
+    # `ControlOp::opcode()` and in the tests, so deleting only its `control_op`
+    # arm -- which still compiles, and silently classifies it Pure -- would slip
+    # past a substring search. That exact mutation was used to verify this gate.
+    udo_ops = sorted(set(re.findall(r'^\s*op\("(udo\.[^"]+)"', registry, re.M)))
+    m = re.search(r"pub fn control_op\s*\([^)]*\)[^{]*\{(.*?)\n\}", text, re.S)
+    if not m:
+        fail("src/safety.rs has no control_op function to audit")
+        control_arms = ""
+    else:
+        control_arms = m.group(1)
+    unclassified = [op for op in udo_ops if f'"{op}" =>' not in control_arms]
+    if unclassified:
+        fail(f"registered control opcodes with no control_op arm: {unclassified}. "
+             "A new udo.* operation must be given a ControlOp variant, or it falls "
+             "through to engine::execute and is silently classified Pure")
+
+    # And the dispatcher must consult the classification rather than duplicating
+    # it, so the two cannot drift apart.
+    if "safety::control_op(" not in server:
+        fail("src/server.rs does not dispatch through safety::control_op; the "
+             "dispatcher and the safety classifier must be the same code")
+    stale = [op for op in udo_ops if f'"{op}" =>' in server]
+    if stale:
+        fail(f"src/server.rs still matches control opcodes as string literals: {stale}")
+
+    ok(f"safety classification is fail-closed, prefix-free, and covers all "
+       f"{len(udo_ops)} registered control opcodes")
+    ok("dispatcher dispatches through safety::control_op (classifier cannot drift)")
 
 
 def check_worker_default() -> None:
@@ -366,6 +430,49 @@ def check_test_corpus() -> None:
         ok("existing v1.0.0 test corpus is intact or grown")
 
 
+
+def check_source_integrity() -> None:
+    """Verify SOURCE_INTEGRITY_V11.txt against the tree it claims to pin.
+
+    An integrity record nobody checks is decoration. This makes it load-bearing:
+    edit a tracked file without regenerating and the audit fails.
+    """
+    record = ROOT / "SOURCE_INTEGRITY_V11.txt"
+    if not record.is_file():
+        pending("SOURCE_INTEGRITY_V11.txt not written yet [Phase 11]")
+        return
+    entries = []
+    for line in record.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"^([0-9a-f]{64})\s\s(\S.*)$", line)
+        if m:
+            entries.append((m.group(1), m.group(2)))
+    if not entries:
+        fail("SOURCE_INTEGRITY_V11.txt lists no files")
+        return
+    drifted, absent = [], []
+    for expected, rel in entries:
+        f = ROOT / rel
+        if not f.is_file():
+            absent.append(rel)
+        elif hashlib.sha256(f.read_bytes()).hexdigest() != expected:
+            drifted.append(rel)
+    if absent:
+        fail(f"SOURCE_INTEGRITY_V11.txt pins files that do not exist: {absent}")
+    elif drifted:
+        fail(f"source integrity drift in {drifted}; "
+             "regenerate with scripts/gen_source_integrity_v11.py and commit both")
+    else:
+        ok(f"SOURCE_INTEGRITY_V11.txt verifies {len(entries)} files against the tree")
+
+    v10 = ROOT / "SOURCE_INTEGRITY.txt"
+    if not v10.is_file():
+        fail("the v1.0.0 source integrity record was deleted")
+    elif not any(rel == "SOURCE_INTEGRITY.txt" for _, rel in entries):
+        fail("SOURCE_INTEGRITY_V11.txt does not pin the v1.0.0 record")
+    else:
+        ok("the v1.0.0 source integrity record is preserved and pinned")
+
+
 # ---------------------------------------------------------------------- main
 
 def main() -> None:
@@ -388,10 +495,11 @@ def main() -> None:
     check_no_unsafe(rust_files)
     check_forbidden(non_registry)
     check_thread_containment(src_files)
-    check_safety_classification()
+    check_safety_classification(registry, server)
     check_worker_default()
     check_bench_infrastructure()
     check_test_corpus()
+    check_source_integrity()
 
     print("=" * 62)
     print(" Yekaterina v1.1 static audit")

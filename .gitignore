@@ -54,6 +54,8 @@ snapshot-*.json
 #      - benchmark_results/        published alpha.3 / alpha.6 MCP benchmarks
 #      - bench_results/v1.0.0-frozen/  the immutable v1.1 comparison baseline,
 #        referenced by docs/V11_BASELINE.md
+#      - bench_results/v1.1.0-frozen/  the v1.1.0 release measurement, produced
+#        at the freeze and pinned by SOURCE_INTEGRITY_V11.txt's binary hash
 #
 #   B. Disposable run output, regenerated on every invocation -> IGNORED.
 #      - bench_results/latest/ and any other ad-hoc run directory
@@ -64,6 +66,7 @@ snapshot-*.json
 # runners are source, not output.
 /bench_results/*
 !/bench_results/v1.0.0-frozen/
+!/bench_results/v1.1.0-frozen/
 
 /golden_results
 /full_audit_results

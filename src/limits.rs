@@ -181,7 +181,7 @@ mod tests {
                 0 => Value::Null,
                 1 => json!(self.next() % 1000),
                 2 => json!((self.next() % 1000) as f64 / 7.0),
-                3 => json!(self.next() % 2 == 0),
+                3 => json!(self.next().is_multiple_of(2)),
                 4 => Value::String("s".repeat((self.next() % 40) as usize)),
                 5 => {
                     let n = (self.next() % 6) as usize;
