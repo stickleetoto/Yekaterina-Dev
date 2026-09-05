@@ -21,6 +21,12 @@ tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread", "sync"] 
 [dev-dependencies]
 pretty_assertions = "=1.4.1"
 
+[profile.release]
+# Phase 2D. `panic` stays at the default "unwind": the Phase 5 worker pool must
+# contain a panicking job rather than aborting the whole process.
+lto = "fat"
+codegen-units = 1
+
 # Harness-free so the exact-pinned, audited dependency set gains nothing.
 [[bench]]
 name = "micro"

@@ -175,6 +175,53 @@ def build_workloads() -> list[Workload]:
         reps=7, warmup=2, ops_per_iter=16,
         tags=["independent", "parallel-candidate", "skew"]))
 
+    # ---- 6b. large array arguments (argument-clone probe) -----------------
+    # Added in Phase 2B. v1.0.0 deep-copied each item's arguments twice: once in
+    # parse_step and again in resolve_args, even with no $ references present.
+    # These workloads carry the argument weight that makes that visible.
+    for n, items in ((1000, 16), (10000, 4)):
+        w.append(Workload(
+            f"bigarg.sum{n}_x{items}", "bigarg",
+            f"{items} x stat.sum over {n} floats; large reference-free arguments.",
+            batch([["stat.sum", ramp(n)] for _ in range(items)]),
+            reps=9, warmup=2, ops_per_iter=items,
+            tags=["independent", "argument-clone-probe"]))
+    w.append(Workload(
+        "bigarg.ref_sum1000_x16", "bigarg",
+        "Same shape but every item references $input, forcing the substituting "
+        "path; guards against the borrow optimization regressing that path.",
+        lambda: [("yk.compute", {"ops": [["stat.sum", "$input"] for _ in range(16)],
+                                 "input": ramp(1000)})],
+        reps=9, warmup=2, ops_per_iter=16,
+        tags=["dependent", "argument-clone-probe"]))
+
+    # ---- 6c. expression-driven optimizers --------------------------------
+    # Added in Phase 2C-3. The optimize.* family evaluates its expression in a
+    # loop the same way num./ode. do; argmin_grid alone permits 1,000,000
+    # evaluations per request. Individually the iterative solvers land below the
+    # 0.20 ms noise floor, so they are batched to make them measurable.
+    w.append(Workload(
+        "single.optimize_argmin_100k", "optimize",
+        "optimize.argmin_grid over 100,000 grid points; 100,000 evaluations.",
+        one("yk.compute", {"op": "optimize.argmin_grid",
+                           "a": [{"e": "(x-2)*(x-2)"}, -10, 10, 100000]}),
+        reps=9, warmup=2, tags=["expression-solver"]))
+    w.append(Workload(
+        "heavy.optimize_nelder_x32", "optimize",
+        "32 x optimize.nelder_mead2d; exercises the comparator that calls the "
+        "evaluator twice inside one expression.",
+        batch([["optimize.nelder_mead2d", {"e": "(x-1)*(x-1)+(y-2)*(y-2)"}, 0, 0]
+               for _ in range(32)]),
+        reps=9, warmup=2, ops_per_iter=32,
+        tags=["independent", "expression-solver"]))
+    w.append(Workload(
+        "heavy.optimize_gd2d_x32", "optimize",
+        "32 x optimize.gradient_descent2d; two-variable evaluation loop.",
+        batch([["optimize.gradient_descent2d",
+                {"e": "(x-1)*(x-1)+(y-2)*(y-2)"}, 0, 0, 0.05] for _ in range(32)]),
+        reps=9, warmup=2, ops_per_iter=32,
+        tags=["independent", "expression-solver"]))
+
     # ---- 7. dependent batch (must NOT be parallelised naively) ------------
     w.append(Workload(
         "dependent.chain_64", "dependent",

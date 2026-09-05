@@ -36,6 +36,7 @@ pub mod frame;
 pub mod geodesy;
 pub mod geometry;
 pub mod information;
+pub mod limits;
 pub mod matrix;
 pub mod mechanics;
 pub mod model;

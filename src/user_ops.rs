@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
@@ -264,8 +265,8 @@ impl UserRegistry {
         for (owner, composite) in &self.composites {
             if removed.contains(owner) { continue; }
             for item in &composite.pipe {
-                let (child, _) = parse_step(item)?;
-                if removed.contains(&child) { return Ok(true); }
+                let (child, _) = parse_step_ref(item)?;
+                if removed.contains(child.as_ref()) { return Ok(true); }
             }
         }
         Ok(false)
@@ -282,8 +283,8 @@ impl UserRegistry {
             if !visiting.insert(name.to_string()) { return Err("CYCLE"); }
             if let Some(op) = registry.composites.get(name) {
                 for item in &op.pipe {
-                    let (child, _) = parse_step(item)?;
-                    if registry.composites.contains_key(&child) {
+                    let (child, _) = parse_step_ref(item)?;
+                    if registry.composites.contains_key(child.as_ref()) {
                         visit(&child, registry, visiting, done)?;
                     }
                 }
@@ -306,8 +307,41 @@ impl UserRegistry {
     }
 }
 
-pub fn resolve_composite_args(raw: &[Value], call_args: &[Value], results: &[Value]) -> Result<Vec<Value>, &'static str> {
-    raw.iter().map(|v| resolve_composite_value(v, call_args, results)).collect()
+/// Whether a value tree contains anything a resolver could substitute.
+///
+/// Deliberately conservative: it answers "does any string here start with `$`",
+/// not "is any string here a *valid* reference". Both resolvers treat every
+/// other value as a pure clone, so a false positive costs only the optimization
+/// and can never change a result. That matters because the two resolvers
+/// disagree on invalid references -- `server::resolve_value` rejects a bare
+/// `"$foo"` with `REF`, while [`resolve_composite_value`] passes it through
+/// unchanged -- and this predicate must stay correct for both.
+pub fn contains_reference(v: &Value) -> bool {
+    match v {
+        Value::String(s) => s.starts_with('$'),
+        Value::Array(xs) => xs.iter().any(contains_reference),
+        Value::Object(obj) => obj.values().any(contains_reference),
+        _ => false,
+    }
+}
+
+/// Resolve `$aN` / `$N` references in composite step arguments.
+///
+/// Returns a borrow when nothing needs substituting. v1.0.0 always rebuilt the
+/// whole argument tree here, so a composite step taking a large array argument
+/// deep-copied it on every invocation even when it contained no references.
+pub fn resolve_composite_args<'a>(
+    raw: &'a [Value],
+    call_args: &[Value],
+    results: &[Value],
+) -> Result<Cow<'a, [Value]>, &'static str> {
+    if !raw.iter().any(contains_reference) {
+        return Ok(Cow::Borrowed(raw));
+    }
+    raw.iter()
+        .map(|v| resolve_composite_value(v, call_args, results))
+        .collect::<Result<Vec<_>, _>>()
+        .map(Cow::Owned)
 }
 
 fn resolve_composite_value(v: &Value, call_args: &[Value], results: &[Value]) -> Result<Value, &'static str> {
@@ -330,18 +364,49 @@ fn resolve_composite_value(v: &Value, call_args: &[Value], results: &[Value]) ->
     }
 }
 
-pub fn parse_step(item: &Value) -> Result<(String, Vec<Value>), &'static str> {
+/// Lowercase an opcode without allocating when it is already lowercase.
+///
+/// `to_ascii_lowercase` only rewrites bytes in `A-Z`, so when none are present
+/// the result is byte-identical to the trimmed input and can be borrowed.
+/// Canonical opcodes are already lowercase, which is the overwhelmingly common
+/// case on the batch path.
+fn normalize_opcode(raw: &str) -> Cow<'_, str> {
+    let trimmed = raw.trim();
+    if trimmed.bytes().any(|b| b.is_ascii_uppercase()) {
+        Cow::Owned(trimmed.to_ascii_lowercase())
+    } else {
+        Cow::Borrowed(trimmed)
+    }
+}
+
+/// Borrowing form of [`parse_step`].
+///
+/// v1.0.0's `parse_step` cloned the argument vector out of the request, and the
+/// batch path then cloned it again during reference resolution -- two full deep
+/// copies per item. Four of its callers discard the arguments entirely, so they
+/// were paying a deep copy for a value they immediately dropped.
+///
+/// Error identity and ordering are unchanged: `ARG` before `TYPE` in the object
+/// form, `ARG` then `TYPE` in the array form, and an `"a"` field that is present
+/// but not an array still yields empty arguments rather than an error.
+pub fn parse_step_ref(item: &Value) -> Result<(Cow<'_, str>, &[Value]), &'static str> {
     if let Some(obj) = item.as_object() {
-        let op = obj.get("op").and_then(Value::as_str).ok_or("ARG")?.trim().to_ascii_lowercase();
-        let args = obj.get("a").and_then(Value::as_array).cloned().unwrap_or_default();
-        return Ok((op, args));
+        let op = obj.get("op").and_then(Value::as_str).ok_or("ARG")?;
+        let args = obj.get("a").and_then(Value::as_array).map(Vec::as_slice).unwrap_or(&[]);
+        return Ok((normalize_opcode(op), args));
     }
     if let Some(xs) = item.as_array() {
         let (head, tail) = xs.split_first().ok_or("ARG")?;
-        let op = head.as_str().ok_or("TYPE")?.trim().to_ascii_lowercase();
-        return Ok((op, tail.to_vec()));
+        let op = head.as_str().ok_or("TYPE")?;
+        return Ok((normalize_opcode(op), tail));
     }
     Err("TYPE")
+}
+
+/// Owning form, retained for callers that need `'static`-independent values and
+/// as the oracle the equivalence tests check [`parse_step_ref`] against.
+pub fn parse_step(item: &Value) -> Result<(String, Vec<Value>), &'static str> {
+    parse_step_ref(item).map(|(op, args)| (op.into_owned(), args.to_vec()))
 }
 
 pub fn execute_formula_spec(spec: &FormulaOp, args: &[Value]) -> Result<Value, &'static str> {
@@ -411,20 +476,20 @@ fn validate_composite(op: &CompositeOp, ns: NamespacePolicy) -> Result<(), &'sta
     for p in &op.params { validate_ident(p)?; }
     if op.pipe.is_empty() || op.pipe.len() > MAX_COMPOSITE_STEPS { return Err("LIMIT"); }
     for (i, item) in op.pipe.iter().enumerate() {
-        let (child, raw) = parse_step(item)?;
+        let (child, raw) = parse_step_ref(item)?;
         if child == op.opcode { return Err("CYCLE"); }
-        validate_refs(&raw, op.params.len(), i)?;
+        validate_refs(raw, op.params.len(), i)?;
     }
     Ok(())
 }
 
 fn validate_composite_dependencies(op: &CompositeOp, allowed_dynamic: Option<&HashSet<String>>) -> Result<(), &'static str> {
     for item in &op.pipe {
-        let (child, _) = parse_step(item)?;
+        let (child, _) = parse_step_ref(item)?;
         if child.starts_with("udo.") { return Err("CONTROL"); }
         if registry::resolve(&child).is_some() { continue; }
         if let Some(names) = allowed_dynamic {
-            if names.contains(&child) { continue; }
+            if names.contains(child.as_ref()) { continue; }
         } else if matches_namespace(&child, NamespacePolicy::UserOrPack) {
             // Runtime registry can resolve existing or future user operations.
             continue;
@@ -460,20 +525,20 @@ fn validate_ref_value(v: &Value, param_count: usize, prior_count: usize) -> Resu
 fn rewrite_pipe_ops(pipe: &[Value], mapping: &HashMap<String, String>, selected: &HashSet<String>) -> Result<Vec<Value>, &'static str> {
     let mut out = Vec::with_capacity(pipe.len());
     for item in pipe {
-        let (op, args) = parse_step(item)?;
-        let rewritten = if let Some(new) = mapping.get(&op) {
+        let (op, args) = parse_step_ref(item)?;
+        let rewritten = if let Some(new) = mapping.get(op.as_ref()) {
             new.clone()
         } else if op.starts_with("user.") {
-            if selected.contains(&op) { return Err("PACK"); }
+            if selected.contains(op.as_ref()) { return Err("PACK"); }
             return Err("PACK");
         } else if op.starts_with("pack.") {
             return Err("PACK");
         } else {
-            op
+            op.into_owned()
         };
         let mut row = Vec::with_capacity(args.len() + 1);
         row.push(json!(rewritten));
-        row.extend(args);
+        row.extend(args.iter().cloned());
         out.push(Value::Array(row));
     }
     Ok(out)
