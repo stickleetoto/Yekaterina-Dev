@@ -1,0 +1,18 @@
+Yekaterina v0.1.0-alpha.10
+
+TEST THIS BEFORE ADDING MORE OPERATIONS.
+
+Windows:
+  .\VERIFY_WINDOWS.bat
+
+Expected candidate gate:
+  709 registered built-in/control opcodes
+  exactly 3 MCP tools
+  cargo test PASS
+  cargo clippy PASS
+  release build PASS
+  golden 346/346
+  26 categories at 100%
+
+Then rerun Yekaterina_MCP_RealWorld_Benchmark_v0.1 against target\release\yekaterina.exe.
+Do not claim fresh alpha.10 performance until that benchmark passes.

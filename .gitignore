@@ -1,0 +1,69 @@
+# ---------------------------------------------------------------- build
+/target
+*.pdb
+/dist
+*.zip
+
+# ------------------------------------------------------- python tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# --------------------------------------------------------- editor / OS
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
+
+# -------------------------------------------- secrets and local runtime
+# Nothing of this kind is expected in this tree; these are guards, not
+# descriptions of existing files.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.token
+secrets.json
+credentials.json
+.netrc
+
+# Local UDO / persistence state. The server normally stores this under
+# LOCALAPPDATA (or $YEKATERINA_HOME), but a stray local store must never be
+# committed: it is user data, not source.
+/.yekaterina/
+snapshot-*.json
+*.tmp-*
+
+# --------------------------------------------------- benchmark artifacts
+#
+# Two categories, deliberately treated differently:
+#
+#   A. Frozen evidence that is part of the engineering record -> TRACKED.
+#      - benchmark_results/        published alpha.3 / alpha.6 MCP benchmarks
+#      - bench_results/v1.0.0-frozen/  the immutable v1.1 comparison baseline,
+#        referenced by docs/V11_BASELINE.md
+#
+#   B. Disposable run output, regenerated on every invocation -> IGNORED.
+#      - bench_results/latest/ and any other ad-hoc run directory
+#      - golden_results/ and full_audit_results/ (already excluded in v1.0.0)
+#
+# Reproducibility inputs are tracked either way: golden/cases.json,
+# full_audit/opcodes_alpha12.json, full_audit/overrides_alpha12.json and both
+# runners are source, not output.
+/bench_results/*
+!/bench_results/v1.0.0-frozen/
+
+/golden_results
+/full_audit_results

@@ -1,0 +1,22 @@
+Yekaterina alpha.10-hotfix2
+
+Run from the project root:
+
+    .\VERIFY_WINDOWS.bat
+
+The previous hotfix1 failure was:
+
+    lazy_search_is_small
+    left:  mat.mean
+    right: stat.mean
+
+Hotfix2 makes exact alias search use the same first-registered canonical owner as registry::resolve().
+Expected acceptance:
+
+    1054 opcodes
+    3 MCP tools
+    cargo test --all-targets PASS
+    cargo clippy --all-targets PASS
+    release build PASS
+    golden 391/391
+    35 categories at 100%

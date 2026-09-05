@@ -1,0 +1,8272 @@
+{
+  "version": "0.1.0-alpha.12-hotfix6",
+  "cases": [
+    {
+      "category": "matrix",
+      "id": "shape",
+      "op": "mat.shape",
+      "a": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5,
+            6
+          ]
+        ]
+      ],
+      "expect": [
+        2,
+        3
+      ],
+      "tol": 0
+    },
+    {
+      "category": "matrix",
+      "id": "add",
+      "op": "mat.add",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          6,
+          8
+        ],
+        [
+          10,
+          12
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "sub",
+      "op": "mat.sub",
+      "a": [
+        [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "scale",
+      "op": "mat.scale",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        2
+      ],
+      "expect": [
+        [
+          2,
+          4
+        ],
+        [
+          6,
+          8
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "mul",
+      "op": "mat.mul",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          19,
+          22
+        ],
+        [
+          43,
+          50
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "transpose",
+      "op": "mat.transpose",
+      "a": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            4,
+            5,
+            6
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "trace",
+      "op": "mat.trace",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": 5,
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "det2",
+      "op": "mat.det",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": -2,
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "det3",
+      "op": "mat.det",
+      "a": [
+        [
+          [
+            6,
+            1,
+            1
+          ],
+          [
+            4,
+            -2,
+            5
+          ],
+          [
+            2,
+            8,
+            7
+          ]
+        ]
+      ],
+      "expect": -306,
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "identity",
+      "op": "mat.identity",
+      "a": [
+        3
+      ],
+      "expect": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "diagonal",
+      "op": "mat.diagonal",
+      "a": [
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          4
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "row_sum",
+      "op": "mat.row_sum",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": [
+        3,
+        7
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "col_sum",
+      "op": "mat.col_sum",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": [
+        4,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "frobenius",
+      "op": "mat.frobenius",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      ],
+      "expect": 3.1622776601683795,
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "vecmul",
+      "op": "mat.vecmul",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "expect": [
+        17,
+        39
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "outer",
+      "op": "mat.outer",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        [
+          3,
+          4
+        ],
+        [
+          6,
+          8
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "matrix",
+      "id": "inverse",
+      "op": "mat.inverse",
+      "a": [
+        [
+          [
+            4,
+            7
+          ],
+          [
+            2,
+            6
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          0.6,
+          -0.7
+        ],
+        [
+          -0.2,
+          0.4
+        ]
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "matrix",
+      "id": "singular_error",
+      "op": "mat.inverse",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "error": "SINGULAR"
+    },
+    {
+      "category": "matrix",
+      "id": "shape_error",
+      "op": "mat.mul",
+      "a": [
+        [
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "error": "SHAPE"
+    },
+    {
+      "category": "probability",
+      "id": "comb",
+      "op": "prob.combination",
+      "a": [
+        10,
+        3
+      ],
+      "expect": 120,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "perm",
+      "op": "prob.permutation",
+      "a": [
+        10,
+        3
+      ],
+      "expect": 720,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "binom_pmf",
+      "op": "prob.binomial_pmf",
+      "a": [
+        4,
+        2,
+        0.5
+      ],
+      "expect": 0.375,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "binom_cdf",
+      "op": "prob.binomial_cdf",
+      "a": [
+        4,
+        2,
+        0.5
+      ],
+      "expect": 0.6875,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "poisson_pmf",
+      "op": "prob.poisson_pmf",
+      "a": [
+        2.0,
+        3
+      ],
+      "expect": 0.1804470443154836,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "poisson_cdf",
+      "op": "prob.poisson_cdf",
+      "a": [
+        2.0,
+        2
+      ],
+      "expect": 0.6766764161830635,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "normal_pdf0",
+      "op": "prob.normal_pdf",
+      "a": [
+        0,
+        0,
+        1
+      ],
+      "expect": 0.3989422804014327,
+      "tol": 1e-09
+    },
+    {
+      "category": "probability",
+      "id": "normal_cdf0",
+      "op": "prob.normal_cdf",
+      "a": [
+        0,
+        0,
+        1
+      ],
+      "expect": 0.5,
+      "tol": 2e-07
+    },
+    {
+      "category": "probability",
+      "id": "normal_cdf1",
+      "op": "prob.normal_cdf",
+      "a": [
+        1,
+        0,
+        1
+      ],
+      "expect": 0.8413447461,
+      "tol": 2e-07
+    },
+    {
+      "category": "probability",
+      "id": "exp_pdf",
+      "op": "prob.exponential_pdf",
+      "a": [
+        1,
+        2
+      ],
+      "expect": 0.2706705664732254,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "exp_cdf",
+      "op": "prob.exponential_cdf",
+      "a": [
+        1,
+        2
+      ],
+      "expect": 0.8646647167633873,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "uniform_pdf",
+      "op": "prob.uniform_pdf",
+      "a": [
+        5,
+        0,
+        10
+      ],
+      "expect": 0.1,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "uniform_cdf",
+      "op": "prob.uniform_cdf",
+      "a": [
+        2.5,
+        0,
+        10
+      ],
+      "expect": 0.25,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "sigmoid0",
+      "op": "prob.sigmoid",
+      "a": [
+        0
+      ],
+      "expect": 0.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "softmax_equal",
+      "op": "prob.softmax",
+      "a": [
+        [
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        0.5,
+        0.5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "logsumexp_equal",
+      "op": "prob.logsumexp",
+      "a": [
+        [
+          0,
+          0
+        ]
+      ],
+      "expect": 0.6931471805599453,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "entropy_half",
+      "op": "prob.binary_entropy",
+      "a": [
+        0.5
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "odds",
+      "op": "prob.odds",
+      "a": [
+        0.2
+      ],
+      "expect": 0.25,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "from_odds",
+      "op": "prob.from_odds",
+      "a": [
+        0.25
+      ],
+      "expect": 0.2,
+      "tol": 1e-10
+    },
+    {
+      "category": "probability",
+      "id": "invalid_prob",
+      "op": "prob.binomial_pmf",
+      "a": [
+        3,
+        1,
+        1.5
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "statistics",
+      "id": "sum",
+      "op": "stat.sum",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": 10,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "mean",
+      "op": "stat.mean",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": 2.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "median",
+      "op": "stat.median",
+      "a": [
+        [
+          9,
+          1,
+          4,
+          2
+        ]
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "variance",
+      "op": "stat.variance",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0.6666666666666666,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "std",
+      "op": "stat.std",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0.816496580927726,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "product",
+      "op": "stat.product",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": 24,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "range",
+      "op": "stat.range",
+      "a": [
+        [
+          1,
+          5,
+          3
+        ]
+      ],
+      "expect": 4,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "percentile25",
+      "op": "stat.percentile",
+      "a": [
+        [
+          0,
+          10,
+          20,
+          30
+        ],
+        25
+      ],
+      "expect": 7.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "q1",
+      "op": "stat.q1",
+      "a": [
+        [
+          0,
+          10,
+          20,
+          30
+        ]
+      ],
+      "expect": 7.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "q3",
+      "op": "stat.q3",
+      "a": [
+        [
+          0,
+          10,
+          20,
+          30
+        ]
+      ],
+      "expect": 22.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "iqr",
+      "op": "stat.iqr",
+      "a": [
+        [
+          0,
+          10,
+          20,
+          30
+        ]
+      ],
+      "expect": 15,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "mode",
+      "op": "stat.mode",
+      "a": [
+        [
+          3,
+          1,
+          3,
+          2,
+          2,
+          3
+        ]
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "geomean",
+      "op": "stat.geomean",
+      "a": [
+        [
+          1,
+          4,
+          16
+        ]
+      ],
+      "expect": 4,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "hmean",
+      "op": "stat.hmean",
+      "a": [
+        [
+          1,
+          2,
+          4
+        ]
+      ],
+      "expect": 1.7142857142857142,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "rms",
+      "op": "stat.rms",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 3.5355339059327378,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "mad",
+      "op": "stat.mad",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0.6666666666666666,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "sample_var",
+      "op": "stat.sample_variance",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "sample_std",
+      "op": "stat.sample_std",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "cov",
+      "op": "stat.covariance",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expect": 1.3333333333333333,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "corr",
+      "op": "stat.correlation",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "zscore",
+      "op": "stat.zscore",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": [
+        -1.224744871391589,
+        0,
+        1.224744871391589
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "minmax",
+      "op": "stat.minmax",
+      "a": [
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expect": [
+        0,
+        0.5,
+        1
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "cumsum",
+      "op": "stat.cumsum",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": [
+        1,
+        3,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "weighted_mean",
+      "op": "stat.weighted_mean",
+      "a": [
+        [
+          10,
+          20
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "expect": 17.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "stderr",
+      "op": "stat.stderr",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0.5773502691896258,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "cv",
+      "op": "stat.cv",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0.408248290463863,
+      "tol": 1e-10
+    },
+    {
+      "category": "statistics",
+      "id": "corr_domain",
+      "op": "stat.correlation",
+      "a": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "numerical",
+      "id": "lerp",
+      "op": "num.lerp",
+      "a": [
+        10,
+        20,
+        0.25
+      ],
+      "expect": 12.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical",
+      "id": "inv_lerp",
+      "op": "num.inv_lerp",
+      "a": [
+        10,
+        20,
+        12.5
+      ],
+      "expect": 0.25,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical",
+      "id": "map_range",
+      "op": "num.map_range",
+      "a": [
+        5,
+        0,
+        10,
+        0,
+        100
+      ],
+      "expect": 50,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical",
+      "id": "trapezoid",
+      "op": "num.trapezoid",
+      "a": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          0,
+          1,
+          4
+        ]
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical",
+      "id": "simpson",
+      "op": "num.simpson_uniform",
+      "a": [
+        [
+          0,
+          1,
+          4
+        ],
+        1
+      ],
+      "expect": 2.6666666666666665,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical",
+      "id": "derivative3",
+      "op": "num.derivative3",
+      "a": [
+        3.61,
+        4.41,
+        0.1
+      ],
+      "expect": 4,
+      "tol": 1e-12
+    },
+    {
+      "category": "numerical",
+      "id": "derivative5",
+      "op": "num.derivative5",
+      "a": [
+        3.24,
+        3.61,
+        4.41,
+        4.840000000000001,
+        0.1
+      ],
+      "expect": 4,
+      "tol": 1e-12
+    },
+    {
+      "category": "numerical",
+      "id": "bisect",
+      "op": "num.bisect",
+      "a": [
+        {
+          "e": "x^2-2"
+        },
+        1,
+        2
+      ],
+      "expect": 1.4142135623730951,
+      "tol": 1e-08
+    },
+    {
+      "category": "numerical",
+      "id": "integrate_expr",
+      "op": "num.integrate",
+      "a": [
+        {
+          "e": "x^2"
+        },
+        0,
+        1,
+        10000
+      ],
+      "expect": 0.3333333333333333,
+      "tol": 1e-07
+    },
+    {
+      "category": "numerical",
+      "id": "derivative_expr",
+      "op": "num.derivative_expr",
+      "a": [
+        {
+          "e": "x^3"
+        },
+        2,
+        1e-05
+      ],
+      "expect": 12,
+      "tol": 1e-06
+    },
+    {
+      "category": "numerical",
+      "id": "newton",
+      "op": "num.newton",
+      "a": [
+        {
+          "e": "x^2-2"
+        },
+        1
+      ],
+      "expect": 1.4142135623730951,
+      "tol": 1e-08
+    },
+    {
+      "category": "numerical",
+      "id": "inv_lerp_div0",
+      "op": "num.inv_lerp",
+      "a": [
+        1,
+        1,
+        1
+      ],
+      "error": "DIV0"
+    },
+    {
+      "category": "signal",
+      "id": "diff",
+      "op": "signal.diff",
+      "a": [
+        [
+          1,
+          4,
+          9
+        ]
+      ],
+      "expect": [
+        3,
+        5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "moving_avg",
+      "op": "signal.moving_avg",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          4
+        ],
+        2
+      ],
+      "expect": [
+        1.5,
+        2.5,
+        3.5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "ema",
+      "op": "signal.ema",
+      "a": [
+        [
+          1,
+          3,
+          5
+        ],
+        0.5
+      ],
+      "expect": [
+        1,
+        2,
+        3.5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "convolve",
+      "op": "signal.convolve",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expect": [
+        1,
+        3,
+        2
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "correlate",
+      "op": "signal.correlate",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        4,
+        11,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "energy",
+      "op": "signal.energy",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 14,
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "power",
+      "op": "signal.power",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 4.666666666666667,
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "rms",
+      "op": "signal.rms",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 3.5355339059327378,
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "normalize_peak",
+      "op": "signal.normalize_peak",
+      "a": [
+        [
+          -2,
+          1
+        ]
+      ],
+      "expect": [
+        -1,
+        0.5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "zero_crossings",
+      "op": "signal.zero_crossings",
+      "a": [
+        [
+          -1,
+          1,
+          -1
+        ]
+      ],
+      "expect": 2,
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "cumulative",
+      "op": "signal.cumulative",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": [
+        1,
+        3,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "decimate",
+      "op": "signal.decimate",
+      "a": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        2
+      ],
+      "expect": [
+        0,
+        2,
+        4
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal",
+      "id": "normalize_zero_error",
+      "op": "signal.normalize_peak",
+      "a": [
+        [
+          0,
+          0
+        ]
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "finance_units",
+      "id": "pct_of",
+      "op": "pct.of",
+      "a": [
+        200,
+        15
+      ],
+      "expect": 30,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "pct_change",
+      "op": "pct.change",
+      "a": [
+        100,
+        125
+      ],
+      "expect": 25,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "pct_diff",
+      "op": "pct.diff",
+      "a": [
+        100,
+        120
+      ],
+      "expect": 18.181818181818183,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "simple_interest",
+      "op": "fin.simple_interest",
+      "a": [
+        1000,
+        5,
+        2
+      ],
+      "expect": 1100,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "compound",
+      "op": "fin.compound",
+      "a": [
+        1000,
+        12,
+        12,
+        1
+      ],
+      "expect": 1126.8250301319697,
+      "tol": 1e-09
+    },
+    {
+      "category": "finance_units",
+      "id": "present_value",
+      "op": "fin.present_value",
+      "a": [
+        110,
+        10,
+        1
+      ],
+      "expect": 100,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "future_value",
+      "op": "fin.future_value",
+      "a": [
+        100,
+        10,
+        2
+      ],
+      "expect": 121,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "loan_zero",
+      "op": "fin.loan_payment",
+      "a": [
+        1200,
+        0,
+        12
+      ],
+      "expect": 100,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "roi",
+      "op": "fin.roi",
+      "a": [
+        100,
+        125
+      ],
+      "expect": 25,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "cagr",
+      "op": "fin.cagr",
+      "a": [
+        100,
+        121,
+        2
+      ],
+      "expect": 10,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "discount",
+      "op": "fin.discount",
+      "a": [
+        200,
+        25
+      ],
+      "expect": 150,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "length",
+      "op": "unit.length",
+      "a": [
+        1,
+        "km",
+        "m"
+      ],
+      "expect": 1000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "mass",
+      "op": "unit.mass",
+      "a": [
+        1,
+        "kg",
+        "g"
+      ],
+      "expect": 1000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "data",
+      "op": "unit.data",
+      "a": [
+        1,
+        "MiB",
+        "B"
+      ],
+      "expect": 1048576,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "temp_cf",
+      "op": "unit.temp",
+      "a": [
+        0,
+        "C",
+        "F"
+      ],
+      "expect": 32,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "temp_kc",
+      "op": "unit.temp",
+      "a": [
+        273.15,
+        "K",
+        "C"
+      ],
+      "expect": 0,
+      "tol": 1e-09
+    },
+    {
+      "category": "finance_units",
+      "id": "time",
+      "op": "unit.time",
+      "a": [
+        2,
+        "h",
+        "min"
+      ],
+      "expect": 120,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "area",
+      "op": "unit.area",
+      "a": [
+        1,
+        "ha",
+        "m2"
+      ],
+      "expect": 10000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "volume",
+      "op": "unit.volume",
+      "a": [
+        1,
+        "L",
+        "mL"
+      ],
+      "expect": 1000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "speed",
+      "op": "unit.speed",
+      "a": [
+        36,
+        "kmh",
+        "mps"
+      ],
+      "expect": 10,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "angle",
+      "op": "unit.angle",
+      "a": [
+        180,
+        "deg",
+        "rad"
+      ],
+      "expect": 3.141592653589793,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "frequency",
+      "op": "unit.frequency",
+      "a": [
+        1,
+        "GHz",
+        "MHz"
+      ],
+      "expect": 1000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "pressure",
+      "op": "unit.pressure",
+      "a": [
+        1,
+        "bar",
+        "kPa"
+      ],
+      "expect": 100,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "energy",
+      "op": "unit.energy",
+      "a": [
+        1,
+        "kWh",
+        "J"
+      ],
+      "expect": 3600000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "power",
+      "op": "unit.power",
+      "a": [
+        1,
+        "kW",
+        "W"
+      ],
+      "expect": 1000,
+      "tol": 1e-10
+    },
+    {
+      "category": "finance_units",
+      "id": "kelvin_error",
+      "op": "unit.temp",
+      "a": [
+        -1,
+        "K",
+        "C"
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "geometry_vector",
+      "id": "distance2d",
+      "op": "geo.distance2d",
+      "a": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 5,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "distance3d",
+      "op": "geo.distance3d",
+      "a": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          2
+        ]
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "midpoint",
+      "op": "geo.midpoint2d",
+      "a": [
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "expect": [
+        2,
+        3
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "circle_area",
+      "op": "geo.circle_area",
+      "a": [
+        2
+      ],
+      "expect": 12.566370614359172,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "circ",
+      "op": "geo.circle_circumference",
+      "a": [
+        2
+      ],
+      "expect": 12.566370614359172,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "rect_area",
+      "op": "geo.rectangle_area",
+      "a": [
+        3,
+        4
+      ],
+      "expect": 12,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "rect_perim",
+      "op": "geo.rectangle_perimeter",
+      "a": [
+        3,
+        4
+      ],
+      "expect": 14,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "triangle",
+      "op": "geo.triangle_area",
+      "a": [
+        3,
+        4,
+        5
+      ],
+      "expect": 6,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "vec_add",
+      "op": "vec.add",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        4,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "vec_sub",
+      "op": "vec.sub",
+      "a": [
+        [
+          4,
+          6
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "expect": [
+        3,
+        4
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "vec_scale",
+      "op": "vec.scale",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        2
+      ],
+      "expect": [
+        2,
+        4,
+        6
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "dot",
+      "op": "vec.dot",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6
+        ]
+      ],
+      "expect": 32,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "norm",
+      "op": "vec.norm",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 5,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "distance",
+      "op": "vec.distance",
+      "a": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 5,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "cosine",
+      "op": "vec.cosine",
+      "a": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expect": 0.7071067811865475,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "cross",
+      "op": "vec.cross3",
+      "a": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "expect": [
+        0,
+        0,
+        1
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "sum",
+      "op": "vec.sum",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 6,
+      "tol": 1e-10
+    },
+    {
+      "category": "geometry_vector",
+      "id": "triangle_error",
+      "op": "geo.triangle_area",
+      "a": [
+        1,
+        2,
+        3
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "and",
+      "op": "bit.and",
+      "a": [
+        12,
+        10
+      ],
+      "expect": 8,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "or",
+      "op": "bit.or",
+      "a": [
+        12,
+        10
+      ],
+      "expect": 14,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "xor",
+      "op": "bit.xor",
+      "a": [
+        12,
+        10
+      ],
+      "expect": 6,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "shl",
+      "op": "bit.shl",
+      "a": [
+        3,
+        4
+      ],
+      "expect": 48,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "shr",
+      "op": "bit.shr",
+      "a": [
+        48,
+        4
+      ],
+      "expect": 3,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "popcount",
+      "op": "bit.popcount",
+      "a": [
+        45
+      ],
+      "expect": 4,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "test",
+      "op": "bit.test",
+      "a": [
+        8,
+        3
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "set",
+      "op": "bit.set",
+      "a": [
+        0,
+        5
+      ],
+      "expect": 32,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "clear",
+      "op": "bit.clear",
+      "a": [
+        15,
+        1
+      ],
+      "expect": 13,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "toggle",
+      "op": "bit.toggle",
+      "a": [
+        8,
+        3
+      ],
+      "expect": 0,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "base_convert",
+      "op": "base.convert",
+      "a": [
+        "ff",
+        16,
+        10
+      ],
+      "expect": "255",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "base_to10",
+      "op": "base.to10",
+      "a": [
+        "101010",
+        2
+      ],
+      "expect": "42",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "base_from10",
+      "op": "base.from10",
+      "a": [
+        "255",
+        16
+      ],
+      "expect": "ff",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "base_valid",
+      "op": "base.is_valid",
+      "a": [
+        "deadbeef",
+        16
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "bigint_add",
+      "op": "int.add",
+      "a": [
+        "12345678901234567890",
+        "10"
+      ],
+      "expect": "12345678901234567900",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "bigint_mul",
+      "op": "int.mul",
+      "a": [
+        "12345678901234567890",
+        "10"
+      ],
+      "expect": "123456789012345678900",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "gcd",
+      "op": "int.gcd",
+      "a": [
+        "84",
+        "30"
+      ],
+      "expect": "6",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "lcm",
+      "op": "int.lcm",
+      "a": [
+        "21",
+        "6"
+      ],
+      "expect": "42",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "dec_add",
+      "op": "dec.add",
+      "a": [
+        "0.1",
+        "0.2"
+      ],
+      "expect": "0.3",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "dec_mul",
+      "op": "dec.mul",
+      "a": [
+        "1.25",
+        "8"
+      ],
+      "expect": "10",
+      "tol": 0
+    },
+    {
+      "category": "bit_base_exact",
+      "id": "bad_radix",
+      "op": "base.convert",
+      "a": [
+        "2",
+        2,
+        10
+      ],
+      "error": "TYPE"
+    },
+    {
+      "category": "math",
+      "id": "add",
+      "op": "math.add",
+      "a": [
+        1.5,
+        2.5
+      ],
+      "expect": 4,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "sub",
+      "op": "math.sub",
+      "a": [
+        10,
+        3
+      ],
+      "expect": 7,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "mul",
+      "op": "math.mul",
+      "a": [
+        7,
+        8
+      ],
+      "expect": 56,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "div",
+      "op": "math.div",
+      "a": [
+        7,
+        2
+      ],
+      "expect": 3.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "mod",
+      "op": "math.mod",
+      "a": [
+        7,
+        3
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "pow",
+      "op": "math.pow",
+      "a": [
+        2,
+        10
+      ],
+      "expect": 1024,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "sqrt",
+      "op": "math.sqrt",
+      "a": [
+        81
+      ],
+      "expect": 9,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "cbrt",
+      "op": "math.cbrt",
+      "a": [
+        27
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "hypot",
+      "op": "math.hypot",
+      "a": [
+        3,
+        4
+      ],
+      "expect": 5,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "deg2rad",
+      "op": "math.deg2rad",
+      "a": [
+        180
+      ],
+      "expect": 3.141592653589793,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "rad2deg",
+      "op": "math.rad2deg",
+      "a": [
+        3.141592653589793
+      ],
+      "expect": 180,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "sin",
+      "op": "math.sin",
+      "a": [
+        1.5707963267948966
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "cos",
+      "op": "math.cos",
+      "a": [
+        3.141592653589793
+      ],
+      "expect": -1,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "log2",
+      "op": "math.log2",
+      "a": [
+        8
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "lerp",
+      "op": "math.lerp",
+      "a": [
+        10,
+        20,
+        0.25
+      ],
+      "expect": 12.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "math",
+      "id": "approx",
+      "op": "math.approx_eq",
+      "a": [
+        1,
+        1.001,
+        0.01
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "math",
+      "id": "sqrt_domain",
+      "op": "math.sqrt",
+      "a": [
+        -1
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "algebra",
+      "id": "factorial10",
+      "op": "alg.factorial",
+      "a": [
+        10
+      ],
+      "expect": "3628800",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "fib20",
+      "op": "alg.fibonacci",
+      "a": [
+        20
+      ],
+      "expect": "6765",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "lucas10",
+      "op": "alg.lucas",
+      "a": [
+        10
+      ],
+      "expect": "123",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "comb52_5",
+      "op": "alg.combination_exact",
+      "a": [
+        52,
+        5
+      ],
+      "expect": "2598960",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "catalan10",
+      "op": "alg.catalan",
+      "a": [
+        10
+      ],
+      "expect": "16796",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "gcd_many",
+      "op": "alg.gcd_many",
+      "a": [
+        [
+          48,
+          18,
+          30
+        ]
+      ],
+      "expect": "6",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "lcm_many",
+      "op": "alg.lcm_many",
+      "a": [
+        [
+          48,
+          18,
+          30
+        ]
+      ],
+      "expect": "720",
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "prime97",
+      "op": "alg.is_prime",
+      "a": [
+        97
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "factor360",
+      "op": "alg.prime_factors",
+      "a": [
+        360
+      ],
+      "expect": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "totient36",
+      "op": "alg.totient",
+      "a": [
+        36
+      ],
+      "expect": 12,
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "mobius30",
+      "op": "alg.mobius",
+      "a": [
+        30
+      ],
+      "expect": -1,
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "modpow",
+      "op": "alg.mod_pow",
+      "a": [
+        2,
+        10,
+        1000
+      ],
+      "expect": 24,
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "modinv",
+      "op": "alg.mod_inverse",
+      "a": [
+        3,
+        11
+      ],
+      "expect": 4,
+      "tol": 0
+    },
+    {
+      "category": "algebra",
+      "id": "quadratic",
+      "op": "alg.quadratic_roots",
+      "a": [
+        1,
+        -5,
+        6
+      ],
+      "expect": [
+        2.0,
+        3.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "algebra",
+      "id": "poly_eval",
+      "op": "alg.poly_eval",
+      "a": [
+        [
+          2,
+          3,
+          4
+        ],
+        5
+      ],
+      "expect": 69.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "algebra",
+      "id": "modinv_bad",
+      "op": "alg.mod_inverse",
+      "a": [
+        6,
+        9
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "complex",
+      "id": "add",
+      "op": "cplx.add",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        4.0,
+        6.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "mul",
+      "op": "cplx.mul",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        -5.0,
+        10.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "div",
+      "op": "cplx.div",
+      "a": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": [
+        0.44,
+        0.08
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "abs",
+      "op": "cplx.abs",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 5.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "arg",
+      "op": "cplx.arg",
+      "a": [
+        [
+          0,
+          1
+        ]
+      ],
+      "expect": 1.5707963267948966,
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "frompolar",
+      "op": "cplx.from_polar",
+      "a": [
+        2,
+        1.5707963267948966
+      ],
+      "expect": [
+        0.0,
+        2.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "expipi",
+      "op": "cplx.exp",
+      "a": [
+        [
+          0,
+          3.141592653589793
+        ]
+      ],
+      "expect": [
+        -1.0,
+        0.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "sqrtn1",
+      "op": "cplx.sqrt",
+      "a": [
+        [
+          -1,
+          0
+        ]
+      ],
+      "expect": [
+        0.0,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "pow2",
+      "op": "cplx.pow_int",
+      "a": [
+        [
+          1,
+          1
+        ],
+        2
+      ],
+      "expect": [
+        0.0,
+        2.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "complex",
+      "id": "rotate90",
+      "op": "cplx.rotate_deg",
+      "a": [
+        [
+          1,
+          0
+        ],
+        90
+      ],
+      "expect": [
+        0.0,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "rank",
+      "op": "mat.rank",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expect": 1,
+      "tol": 0
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "solve",
+      "op": "mat.solve",
+      "a": [
+        [
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            -1
+          ]
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "expect": [
+        2.0,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "hadamard",
+      "op": "mat.hadamard",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          5.0,
+          12.0
+        ],
+        [
+          21.0,
+          32.0
+        ]
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "norm1",
+      "op": "mat.norm1",
+      "a": [
+        [
+          [
+            1,
+            -2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": 6.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "symmetric",
+      "op": "mat.is_symmetric",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "minor",
+      "op": "mat.minor",
+      "a": [
+        [
+          [
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            1,
+            0,
+            6
+          ]
+        ],
+        0,
+        0
+      ],
+      "expect": 24.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "power",
+      "op": "mat.power",
+      "a": [
+        [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        5
+      ],
+      "expect": [
+        [
+          8.0,
+          5.0
+        ],
+        [
+          5.0,
+          3.0
+        ]
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "cholesky",
+      "op": "mat.cholesky",
+      "a": [
+        [
+          [
+            4,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          2.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.4142135623730951
+        ]
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "matrix_advanced",
+      "id": "cholesky_bad",
+      "op": "mat.cholesky",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "regression",
+      "id": "linear",
+      "op": "reg.linear",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expect": {
+        "slope": 2.0,
+        "intercept": 0.0,
+        "r2": 1.0
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "regression",
+      "id": "predict",
+      "op": "reg.predict",
+      "a": [
+        2,
+        1,
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "expect": [
+        1.0,
+        3.0,
+        5.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "regression",
+      "id": "origin",
+      "op": "reg.origin_slope",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          4,
+          6
+        ]
+      ],
+      "expect": 2.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "hypothesis",
+      "id": "t_one",
+      "op": "test.t_one_sample",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        2
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "hypothesis",
+      "id": "welch",
+      "op": "test.t_welch",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": -1.224744871391589,
+      "tol": 1e-12
+    },
+    {
+      "category": "hypothesis",
+      "id": "chi_gof",
+      "op": "test.chi_square_gof",
+      "a": [
+        [
+          10,
+          20
+        ],
+        [
+          15,
+          15
+        ]
+      ],
+      "expect": 3.3333333333333335,
+      "tol": 1e-12
+    },
+    {
+      "category": "hypothesis",
+      "id": "cohen_d",
+      "op": "test.cohen_d",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "expect": -1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "statistics_advanced",
+      "id": "trimmed",
+      "op": "stat.trimmed_mean",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          100
+        ],
+        25
+      ],
+      "expect": 2.5,
+      "tol": 1e-12
+    },
+    {
+      "category": "statistics_advanced",
+      "id": "mad_median",
+      "op": "stat.median_abs_deviation",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "statistics_advanced",
+      "id": "gini",
+      "op": "stat.gini_coefficient",
+      "a": [
+        [
+          0,
+          0,
+          1,
+          1
+        ]
+      ],
+      "expect": 0.5,
+      "tol": 1e-12
+    },
+    {
+      "category": "statistics_advanced",
+      "id": "spearman",
+      "op": "stat.spearman",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          3,
+          2,
+          1
+        ]
+      ],
+      "expect": -1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "statistics_advanced",
+      "id": "outlier_iqr",
+      "op": "stat.outlier_iqr",
+      "a": [
+        [
+          1,
+          2,
+          3,
+          4,
+          100
+        ]
+      ],
+      "expect": [
+        100.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "geom_pmf",
+      "op": "prob.geometric_pmf",
+      "a": [
+        3,
+        0.5
+      ],
+      "expect": 0.125,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "geom_cdf",
+      "op": "prob.geometric_cdf",
+      "a": [
+        3,
+        0.5
+      ],
+      "expect": 0.875,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "neg_bin",
+      "op": "prob.negative_binomial_pmf",
+      "a": [
+        4,
+        2,
+        0.5
+      ],
+      "expect": 0.1875,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "hypergeom",
+      "op": "prob.hypergeometric_pmf",
+      "a": [
+        10,
+        5,
+        4,
+        2
+      ],
+      "expect": 0.47619047619047616,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "normal_z",
+      "op": "prob.normal_z",
+      "a": [
+        7,
+        5,
+        2
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "expect",
+      "op": "prob.expected_value",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          0.2,
+          0.3,
+          0.5
+        ]
+      ],
+      "expect": 2.3,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "variance",
+      "op": "prob.discrete_variance",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          0.2,
+          0.3,
+          0.5
+        ]
+      ],
+      "expect": 0.61,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "bayes_pos",
+      "op": "prob.bayes_positive",
+      "a": [
+        0.1,
+        0.9,
+        0.8
+      ],
+      "expect": 0.3333333333333333,
+      "tol": 1e-12
+    },
+    {
+      "category": "probability_advanced",
+      "id": "bce",
+      "op": "prob.binary_cross_entropy",
+      "a": [
+        1,
+        0.8
+      ],
+      "expect": 0.2231435513142097,
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "dft_impulse",
+      "op": "signal.dft",
+      "a": [
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal_advanced",
+      "id": "fft_impulse",
+      "op": "signal.fft",
+      "a": [
+        [
+          1,
+          0,
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal_advanced",
+      "id": "ifft_ones",
+      "op": "signal.ifft",
+      "a": [
+        [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "signal_advanced",
+      "id": "hann5",
+      "op": "signal.window_hann",
+      "a": [
+        5
+      ],
+      "expect": [
+        0.0,
+        0.5,
+        1.0,
+        0.5,
+        0.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "rms34",
+      "op": "signal.rms",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 3.5355339059327378,
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "db20",
+      "op": "signal.db20",
+      "a": [
+        10
+      ],
+      "expect": 20.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "resample",
+      "op": "signal.resample_linear",
+      "a": [
+        [
+          0,
+          10
+        ],
+        3
+      ],
+      "expect": [
+        0.0,
+        5.0,
+        10.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "dc_remove",
+      "op": "signal.dc_remove",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": [
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "signal_advanced",
+      "id": "fft_shape",
+      "op": "signal.fft",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "error": "SHAPE"
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "secant",
+      "op": "num.secant",
+      "a": [
+        {
+          "e": "x^2-2"
+        },
+        1,
+        2
+      ],
+      "expect": 1.4142135623730951,
+      "tol": 1e-09
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "midpoint",
+      "op": "num.integrate_midpoint",
+      "a": [
+        {
+          "e": "x^2"
+        },
+        0,
+        1,
+        1000
+      ],
+      "expect": 0.3333333333333333,
+      "tol": 1e-06
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "simpson_expr",
+      "op": "num.integrate_simpson_expr",
+      "a": [
+        {
+          "e": "x^2"
+        },
+        0,
+        1,
+        100
+      ],
+      "expect": 0.3333333333333333,
+      "tol": 1e-10
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "euler",
+      "op": "num.euler_ode",
+      "a": [
+        {
+          "e": "y"
+        },
+        0,
+        1,
+        1,
+        1000
+      ],
+      "expect": 2.718281828459045,
+      "tol": 0.002
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "rk4",
+      "op": "num.rk4_ode",
+      "a": [
+        {
+          "e": "y"
+        },
+        0,
+        1,
+        1,
+        10
+      ],
+      "expect": 2.718281828459045,
+      "tol": 1e-05
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "lagrange",
+      "op": "num.interpolate_lagrange",
+      "a": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          5
+        ],
+        1.5
+      ],
+      "expect": 3.25,
+      "tol": 1e-12
+    },
+    {
+      "category": "numerical_advanced",
+      "id": "linspace",
+      "op": "num.linspace",
+      "a": [
+        0,
+        1,
+        5
+      ],
+      "expect": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "ke",
+      "op": "phys.kinetic_energy",
+      "a": [
+        2,
+        3
+      ],
+      "expect": 9.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "pe",
+      "op": "phys.potential_energy",
+      "a": [
+        2,
+        9.8,
+        5
+      ],
+      "expect": 98.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "projectile",
+      "op": "phys.projectile_range",
+      "a": [
+        10,
+        0.7853981633974483,
+        10
+      ],
+      "expect": 10.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "centripetal",
+      "op": "phys.centripetal_accel",
+      "a": [
+        10,
+        5
+      ],
+      "expect": 20.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "photon",
+      "op": "phys.photon_energy",
+      "a": [
+        100000000000000.0
+      ],
+      "expect": 6.62607015e-20,
+      "tol": 1e-12
+    },
+    {
+      "category": "physics",
+      "id": "mass_energy",
+      "op": "phys.mass_energy",
+      "a": [
+        1
+      ],
+      "expect": 8.987551787368176e+16,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "ohm_v",
+      "op": "eng.ohm_voltage",
+      "a": [
+        2,
+        5
+      ],
+      "expect": 10.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "parallel",
+      "op": "eng.resistance_parallel",
+      "a": [
+        [
+          10,
+          10
+        ]
+      ],
+      "expect": 5.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "xc",
+      "op": "eng.reactance_capacitive",
+      "a": [
+        50,
+        0.0001
+      ],
+      "expect": 31.830988618379067,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "divider",
+      "op": "eng.voltage_divider",
+      "a": [
+        12,
+        1000,
+        1000
+      ],
+      "expect": 6.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "ideal_gas",
+      "op": "eng.ideal_gas_pressure",
+      "a": [
+        1,
+        300,
+        0.024
+      ],
+      "expect": 103930.7827269155,
+      "tol": 1e-12
+    },
+    {
+      "category": "engineering",
+      "id": "stress",
+      "op": "eng.stress",
+      "a": [
+        1000,
+        0.01
+      ],
+      "expect": 100000.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "discrete",
+      "id": "ncr",
+      "op": "disc.ncr",
+      "a": [
+        10,
+        3
+      ],
+      "expect": "120",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "npr",
+      "op": "disc.npr",
+      "a": [
+        10,
+        3
+      ],
+      "expect": "720",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "derange",
+      "op": "disc.derangements",
+      "a": [
+        6
+      ],
+      "expect": "265",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "stirling",
+      "op": "disc.stirling2",
+      "a": [
+        5,
+        2
+      ],
+      "expect": "15",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "bell",
+      "op": "disc.bell",
+      "a": [
+        5
+      ],
+      "expect": "52",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "multi",
+      "op": "disc.multinomial",
+      "a": [
+        [
+          2,
+          3,
+          1
+        ]
+      ],
+      "expect": "60",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "trib",
+      "op": "disc.tribonacci",
+      "a": [
+        10
+      ],
+      "expect": "81",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "lucas",
+      "op": "disc.lucas",
+      "a": [
+        10
+      ],
+      "expect": "123",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "pell",
+      "op": "disc.pell",
+      "a": [
+        7
+      ],
+      "expect": "169",
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "collatz",
+      "op": "disc.collatz_steps",
+      "a": [
+        6
+      ],
+      "expect": 8,
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "dsum",
+      "op": "disc.digit_sum",
+      "a": [
+        "123456"
+      ],
+      "expect": 21,
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "droot",
+      "op": "disc.digital_root",
+      "a": [
+        "123456"
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "discrete",
+      "id": "ncr_err",
+      "op": "disc.ncr",
+      "a": [
+        3,
+        5
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "chemistry",
+      "id": "moles",
+      "op": "chem.moles_from_mass",
+      "a": [
+        18.01528,
+        18.01528
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "particles",
+      "op": "chem.particles_from_moles",
+      "a": [
+        1
+      ],
+      "expect": 6.02214076e+23,
+      "tol": 1e-12
+    },
+    {
+      "category": "chemistry",
+      "id": "molarity",
+      "op": "chem.molarity",
+      "a": [
+        2,
+        0.5
+      ],
+      "expect": 4.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "masspct",
+      "op": "chem.mass_percent",
+      "a": [
+        5,
+        20
+      ],
+      "expect": 25.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "dilution",
+      "op": "chem.dilution_c2",
+      "a": [
+        1,
+        0.1,
+        0.5
+      ],
+      "expect": 0.2,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "ideal",
+      "op": "chem.ideal_gas_pressure",
+      "a": [
+        1,
+        300,
+        0.024
+      ],
+      "expect": 103930.7827269155,
+      "tol": 1e-12
+    },
+    {
+      "category": "chemistry",
+      "id": "ph",
+      "op": "chem.ph_from_h",
+      "a": [
+        1e-07
+      ],
+      "expect": 7.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "h",
+      "op": "chem.h_from_ph",
+      "a": [
+        3
+      ],
+      "expect": 0.001,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "phpoh",
+      "op": "chem.ph_from_poh",
+      "a": [
+        4
+      ],
+      "expect": 10.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "hh",
+      "op": "chem.henderson_hasselbalch",
+      "a": [
+        4.76,
+        1,
+        1
+      ],
+      "expect": 4.76,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "beer",
+      "op": "chem.beer_lambert",
+      "a": [
+        2,
+        1,
+        0.5
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "freeze",
+      "op": "chem.freezing_point_depression",
+      "a": [
+        2,
+        1.86,
+        0.5
+      ],
+      "expect": 1.86,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "sg",
+      "op": "chem.specific_gravity",
+      "a": [
+        1000,
+        1000
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "chemistry",
+      "id": "badvol",
+      "op": "chem.molarity",
+      "a": [
+        1,
+        0
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "networking",
+      "id": "ip2u",
+      "op": "net.ipv4_to_u32",
+      "a": [
+        "192.168.1.1"
+      ],
+      "expect": 3232235777,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "u2ip",
+      "op": "net.u32_to_ipv4",
+      "a": [
+        3232235777
+      ],
+      "expect": "192.168.1.1",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "mask",
+      "op": "net.mask_from_prefix",
+      "a": [
+        24
+      ],
+      "expect": "255.255.255.0",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "prefix",
+      "op": "net.prefix_from_mask",
+      "a": [
+        "255.255.255.0"
+      ],
+      "expect": 24,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "wild",
+      "op": "net.wildcard_from_prefix",
+      "a": [
+        24
+      ],
+      "expect": "0.0.0.255",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "network",
+      "op": "net.network",
+      "a": [
+        "192.168.1.123",
+        24
+      ],
+      "expect": "192.168.1.0",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "broadcast",
+      "op": "net.broadcast",
+      "a": [
+        "192.168.1.123",
+        24
+      ],
+      "expect": "192.168.1.255",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "first",
+      "op": "net.first_host",
+      "a": [
+        "192.168.1.123",
+        24
+      ],
+      "expect": "192.168.1.1",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "last",
+      "op": "net.last_host",
+      "a": [
+        "192.168.1.123",
+        24
+      ],
+      "expect": "192.168.1.254",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "count",
+      "op": "net.address_count",
+      "a": [
+        24
+      ],
+      "expect": 256,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "usable",
+      "op": "net.usable_host_count",
+      "a": [
+        24
+      ],
+      "expect": 254,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "contains",
+      "op": "net.contains",
+      "a": [
+        "10.0.0.0/8",
+        "10.2.3.4"
+      ],
+      "expect": true,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "nth",
+      "op": "net.nth_host",
+      "a": [
+        "10.0.0.0/24",
+        42
+      ],
+      "expect": "10.0.0.42",
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "frag",
+      "op": "net.fragment_count",
+      "a": [
+        4000,
+        1500,
+        20
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "serial",
+      "op": "net.serialization_delay",
+      "a": [
+        1500,
+        1000000
+      ],
+      "expect": 0.012,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "bpsym",
+      "op": "net.bits_per_symbol",
+      "a": [
+        16
+      ],
+      "expect": 4.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "networking",
+      "id": "badmask",
+      "op": "net.prefix_from_mask",
+      "a": [
+        "255.0.255.0"
+      ],
+      "error": "MASK"
+    },
+    {
+      "category": "color",
+      "id": "hex",
+      "op": "color.rgb_to_hex",
+      "a": [
+        [
+          255,
+          165,
+          0
+        ]
+      ],
+      "expect": "#FFA500",
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "rgb",
+      "op": "color.hex_to_rgb",
+      "a": [
+        "#00FF7F"
+      ],
+      "expect": [
+        0,
+        255,
+        127
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "hsv",
+      "op": "color.rgb_to_hsv",
+      "a": [
+        [
+          255,
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "hsv2",
+      "op": "color.hsv_to_rgb",
+      "a": [
+        [
+          120,
+          1,
+          1
+        ]
+      ],
+      "expect": [
+        0.0,
+        255.0,
+        0.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "hsl",
+      "op": "color.rgb_to_hsl",
+      "a": [
+        [
+          255,
+          255,
+          255
+        ]
+      ],
+      "expect": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "cmyk",
+      "op": "color.rgb_to_cmyk",
+      "a": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "contrast",
+      "op": "color.contrast_ratio",
+      "a": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          255,
+          255,
+          255
+        ]
+      ],
+      "expect": 21.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "invert",
+      "op": "color.invert",
+      "a": [
+        [
+          10,
+          20,
+          30
+        ]
+      ],
+      "expect": [
+        245.0,
+        235.0,
+        225.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "mix",
+      "op": "color.mix",
+      "a": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        0.5
+      ],
+      "expect": [
+        127.5,
+        127.5,
+        127.5
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "lum0",
+      "op": "color.relative_luminance",
+      "a": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "lum1",
+      "op": "color.relative_luminance",
+      "a": [
+        [
+          255,
+          255,
+          255
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "gray",
+      "op": "color.grayscale_luma",
+      "a": [
+        [
+          255,
+          0,
+          0
+        ]
+      ],
+      "expect": [
+        54.213,
+        54.213,
+        54.213
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "color",
+      "id": "clamp",
+      "op": "color.clamp_rgb",
+      "a": [
+        [
+          -10,
+          128,
+          300
+        ]
+      ],
+      "expect": [
+        0.0,
+        128.0,
+        255.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "color",
+      "id": "badhex",
+      "op": "color.hex_to_rgb",
+      "a": [
+        "xyz"
+      ],
+      "error": "COLOR"
+    },
+    {
+      "category": "information",
+      "id": "entropy",
+      "op": "info.shannon_entropy",
+      "a": [
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "cross",
+      "op": "info.cross_entropy",
+      "a": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "kl",
+      "op": "info.kl_divergence",
+      "a": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "js",
+      "op": "info.js_divergence",
+      "a": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "surprise",
+      "op": "info.surprisal",
+      "a": [
+        0.25
+      ],
+      "expect": 2.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "uniform",
+      "op": "info.uniform_entropy",
+      "a": [
+        8
+      ],
+      "expect": 3.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "ham",
+      "op": "info.hamming_string",
+      "a": [
+        "kitten",
+        "sitten"
+      ],
+      "expect": 1,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "lev",
+      "op": "info.levenshtein",
+      "a": [
+        "kitten",
+        "sitting"
+      ],
+      "expect": 3,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "jac",
+      "op": "info.jaccard_chars",
+      "a": [
+        "abc",
+        "bcd"
+      ],
+      "expect": 0.5,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "dice",
+      "op": "info.dice_chars",
+      "a": [
+        "abc",
+        "bcd"
+      ],
+      "expect": 0.6666666666666666,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "ratio",
+      "op": "info.compression_ratio",
+      "a": [
+        1000,
+        250
+      ],
+      "expect": 0.25,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "bsc",
+      "op": "info.channel_capacity_bsc",
+      "a": [
+        1000,
+        0.5
+      ],
+      "expect": 0.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "shannon",
+      "op": "info.shannon_capacity",
+      "a": [
+        1000000,
+        9
+      ],
+      "expect": 3321928.0948873623,
+      "tol": 1e-12
+    },
+    {
+      "category": "information",
+      "id": "checksum",
+      "op": "info.checksum8",
+      "a": [
+        [
+          255,
+          1
+        ]
+      ],
+      "expect": 0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "xor",
+      "op": "info.xor_checksum",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "nyq",
+      "op": "info.nyquist_bitrate",
+      "a": [
+        3000,
+        4
+      ],
+      "expect": 12000.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "information",
+      "id": "badprob",
+      "op": "info.shannon_entropy",
+      "a": [
+        [
+          0.4,
+          0.4
+        ]
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "astronomy",
+      "id": "escape",
+      "op": "astro.escape_velocity",
+      "a": [
+        5.9722e+24,
+        6371000.0
+      ],
+      "expect": 11186.165197346223,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "orbit",
+      "op": "astro.orbital_velocity",
+      "a": [
+        5.9722e+24,
+        6371000.0
+      ],
+      "expect": 7909.813266516469,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "gravity",
+      "op": "astro.surface_gravity",
+      "a": [
+        5.9722e+24,
+        6371000.0
+      ],
+      "expect": 9.820302293385645,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "rs",
+      "op": "astro.schwarzschild_radius",
+      "a": [
+        1.98847e+30
+      ],
+      "expect": 2953.3393820668784,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "mod",
+      "op": "astro.distance_modulus",
+      "a": [
+        10
+      ],
+      "expect": 0.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "astronomy",
+      "id": "parallax",
+      "op": "astro.parallax_distance_pc",
+      "a": [
+        0.1
+      ],
+      "expect": 10.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "astronomy",
+      "id": "wien",
+      "op": "astro.wien_peak",
+      "a": [
+        5800
+      ],
+      "expect": 4.996158543103448e-07,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "light",
+      "op": "astro.light_travel_time",
+      "a": [
+        299792458.0
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "astronomy",
+      "id": "pc",
+      "op": "astro.parsec_to_m",
+      "a": [
+        1
+      ],
+      "expect": 3.085677581491367e+16,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "photon",
+      "op": "astro.photon_energy_wavelength",
+      "a": [
+        5e-07
+      ],
+      "expect": 3.972891714297857e-19,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "rocket",
+      "op": "astro.rocket_delta_v",
+      "a": [
+        3000,
+        1000,
+        500
+      ],
+      "expect": 2079.441541679836,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "syn",
+      "op": "astro.synodic_period",
+      "a": [
+        365,
+        687
+      ],
+      "expect": 778.7422360248447,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "fluxratio",
+      "op": "astro.magnitude_flux_ratio",
+      "a": [
+        1,
+        6
+      ],
+      "expect": 100.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "astronomy",
+      "id": "badr",
+      "op": "astro.escape_velocity",
+      "a": [
+        1,
+        0
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "time",
+      "id": "minsec",
+      "op": "time.minutes_to_seconds",
+      "a": [
+        2
+      ],
+      "expect": 120.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "time",
+      "id": "leap",
+      "op": "time.is_leap_year",
+      "a": [
+        2024
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "time",
+      "id": "dim",
+      "op": "time.days_in_month",
+      "a": [
+        2024,
+        2
+      ],
+      "expect": 29,
+      "tol": 0
+    },
+    {
+      "category": "time",
+      "id": "period",
+      "op": "time.hz_to_period",
+      "a": [
+        2
+      ],
+      "expect": 0.5,
+      "tol": 1e-09
+    },
+    {
+      "category": "time",
+      "id": "eta",
+      "op": "time.eta",
+      "a": [
+        100,
+        20
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "geodesy",
+      "id": "circ",
+      "op": "geod.sphere_circumference",
+      "a": [
+        1
+      ],
+      "expect": 6.283185307179586,
+      "tol": 1e-09
+    },
+    {
+      "category": "geodesy",
+      "id": "area",
+      "op": "geod.sphere_area",
+      "a": [
+        1
+      ],
+      "expect": 12.566370614359172,
+      "tol": 1e-09
+    },
+    {
+      "category": "geodesy",
+      "id": "norm",
+      "op": "geod.normalize_lon",
+      "a": [
+        190
+      ],
+      "expect": -170.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "geodesy",
+      "id": "nm",
+      "op": "geod.nautical_miles_to_m",
+      "a": [
+        1
+      ],
+      "expect": 1852.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "geodesy",
+      "id": "antipode",
+      "op": "geod.antipode_lon",
+      "a": [
+        10
+      ],
+      "expect": -170.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "thermodynamics",
+      "id": "heat",
+      "op": "thermo.heat",
+      "a": [
+        2,
+        4,
+        3
+      ],
+      "expect": 24.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "thermodynamics",
+      "id": "carnot",
+      "op": "thermo.carnot_efficiency",
+      "a": [
+        400,
+        300
+      ],
+      "expect": 0.25,
+      "tol": 1e-09
+    },
+    {
+      "category": "thermodynamics",
+      "id": "kelvin",
+      "op": "thermo.celsius_to_kelvin",
+      "a": [
+        0
+      ],
+      "expect": 273.15,
+      "tol": 1e-09
+    },
+    {
+      "category": "thermodynamics",
+      "id": "u",
+      "op": "thermo.u_value",
+      "a": [
+        2
+      ],
+      "expect": 0.5,
+      "tol": 1e-09
+    },
+    {
+      "category": "thermodynamics",
+      "id": "wien",
+      "op": "thermo.wien_peak",
+      "a": [
+        1000
+      ],
+      "expect": 2.897771955e-06,
+      "tol": 1e-09
+    },
+    {
+      "category": "mechanics",
+      "id": "ke",
+      "op": "mech.kinetic_energy",
+      "a": [
+        2,
+        3
+      ],
+      "expect": 9.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "mechanics",
+      "id": "gear",
+      "op": "mech.gear_ratio",
+      "a": [
+        40,
+        20
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "mechanics",
+      "id": "rpm",
+      "op": "mech.rpm_to_rad_s",
+      "a": [
+        60
+      ],
+      "expect": 6.283185307179586,
+      "tol": 1e-09
+    },
+    {
+      "category": "mechanics",
+      "id": "spring",
+      "op": "mech.spring_energy",
+      "a": [
+        2,
+        3
+      ],
+      "expect": 9.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "mechanics",
+      "id": "friction",
+      "op": "mech.friction_force",
+      "a": [
+        0.5,
+        100
+      ],
+      "expect": 50.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "fluid",
+      "id": "density",
+      "op": "fluid.density",
+      "a": [
+        10,
+        2
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "fluid",
+      "id": "flow",
+      "op": "fluid.flow_rate",
+      "a": [
+        2,
+        3
+      ],
+      "expect": 6.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "fluid",
+      "id": "mach",
+      "op": "fluid.mach",
+      "a": [
+        340,
+        340
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "fluid",
+      "id": "sg",
+      "op": "fluid.specific_gravity",
+      "a": [
+        1000,
+        1000
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "fluid",
+      "id": "compress",
+      "op": "fluid.compressibility",
+      "a": [
+        2
+      ],
+      "expect": 0.5,
+      "tol": 1e-09
+    },
+    {
+      "category": "electrical",
+      "id": "ohm",
+      "op": "elec.voltage",
+      "a": [
+        2,
+        5
+      ],
+      "expect": 10.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "electrical",
+      "id": "parallel",
+      "op": "elec.parallel_two",
+      "a": [
+        10,
+        10
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "electrical",
+      "id": "battery",
+      "op": "elec.battery_energy_wh",
+      "a": [
+        12,
+        10
+      ],
+      "expect": 120.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "electrical",
+      "id": "divider",
+      "op": "elec.voltage_divider",
+      "a": [
+        12,
+        1000,
+        1000
+      ],
+      "expect": 6.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "electrical",
+      "id": "db",
+      "op": "elec.db_power_ratio",
+      "a": [
+        10
+      ],
+      "expect": 10.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "optics",
+      "id": "freq",
+      "op": "optics.frequency",
+      "a": [
+        299792458.0
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "optics",
+      "id": "power",
+      "op": "optics.lens_power_diopter",
+      "a": [
+        0.5
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "optics",
+      "id": "fnum",
+      "op": "optics.f_number",
+      "a": [
+        50,
+        25
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "optics",
+      "id": "trans",
+      "op": "optics.transmittance",
+      "a": [
+        100,
+        25
+      ],
+      "expect": 0.25,
+      "tol": 1e-09
+    },
+    {
+      "category": "optics",
+      "id": "ri",
+      "op": "optics.refractive_index",
+      "a": [
+        149896229.0
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "wave",
+      "id": "speed",
+      "op": "wave.speed",
+      "a": [
+        2,
+        3
+      ],
+      "expect": 6.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "wave",
+      "id": "period",
+      "op": "wave.period",
+      "a": [
+        2
+      ],
+      "expect": 0.5,
+      "tol": 1e-09
+    },
+    {
+      "category": "wave",
+      "id": "beat",
+      "op": "wave.beat_frequency",
+      "a": [
+        440,
+        442
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "wave",
+      "id": "rms",
+      "op": "wave.rms_sine",
+      "a": [
+        1.4142135623730951
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "wave",
+      "id": "mach",
+      "op": "wave.mach",
+      "a": [
+        340,
+        340
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "data",
+      "id": "bits",
+      "op": "data.bytes_to_bits",
+      "a": [
+        2
+      ],
+      "expect": 16.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "data",
+      "id": "ceil",
+      "op": "data.ceil_div",
+      "a": [
+        10,
+        3
+      ],
+      "expect": 4,
+      "tol": 0
+    },
+    {
+      "category": "data",
+      "id": "xor",
+      "op": "data.xor_checksum",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 0,
+      "tol": 0
+    },
+    {
+      "category": "data",
+      "id": "pop",
+      "op": "data.hamming_weight",
+      "a": [
+        15
+      ],
+      "expect": 4,
+      "tol": 0
+    },
+    {
+      "category": "data",
+      "id": "entropy",
+      "op": "data.entropy_uniform",
+      "a": [
+        8
+      ],
+      "expect": 3.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "finite",
+      "op": "verify.finite",
+      "a": [
+        1
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "finite_all",
+      "op": "verify.finite_all",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "near",
+      "op": "verify.near",
+      "a": [
+        1,
+        1.000001,
+        1e-05,
+        0
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "abs_change",
+      "op": "verify.abs_change",
+      "a": [
+        10,
+        12.5
+      ],
+      "expect": 2.5,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "rel_change",
+      "op": "verify.rel_change",
+      "a": [
+        100,
+        110
+      ],
+      "expect": 0.09090909090909091,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "mon_inc",
+      "op": "verify.monotonic_inc",
+      "a": [
+        [
+          1,
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "mon_dec",
+      "op": "verify.monotonic_dec",
+      "a": [
+        [
+          3,
+          2,
+          2,
+          1
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "bounded",
+      "op": "verify.bounded",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        1,
+        3
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "res_l2",
+      "op": "verify.residual_l2",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "res_rms",
+      "op": "verify.residual_rms",
+      "a": [
+        [
+          3,
+          4
+        ]
+      ],
+      "expect": 3.5355339059327378,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "res_max",
+      "op": "verify.residual_max",
+      "a": [
+        [
+          -3,
+          4
+        ]
+      ],
+      "expect": 4.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "range",
+      "op": "verify.in_range",
+      "a": [
+        5,
+        0,
+        10
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "positive",
+      "op": "verify.positive",
+      "a": [
+        1
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "nonnegative",
+      "op": "verify.nonnegative",
+      "a": [
+        0
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "nonzero",
+      "op": "verify.nonzero",
+      "a": [
+        0.01,
+        0.001
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "pcterr",
+      "op": "verify.percent_error",
+      "a": [
+        105,
+        100
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "digits",
+      "op": "verify.stable_digits",
+      "a": [
+        1,
+        1.001
+      ],
+      "expect": 3,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "sign",
+      "op": "verify.sign_consistent",
+      "a": [
+        [
+          1,
+          2,
+          0,
+          3
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "shape",
+      "op": "verify.shape_equal",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            6
+          ],
+          [
+            7,
+            8
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "converge",
+      "op": "verify.convergence",
+      "a": [
+        [
+          1.1,
+          1.01,
+          1.001
+        ],
+        0.01,
+        0.01
+      ],
+      "expect": {
+        "ok": true,
+        "v": 1.001,
+        "da": 0.009000000000000119,
+        "dr": 0.00891089108910903,
+        "p": 3.321928094887362
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "grid",
+      "op": "verify.grid_convergence",
+      "a": [
+        [
+          1.25,
+          1.0625,
+          1.015625,
+          1.00390625
+        ],
+        [
+          10,
+          20,
+          40,
+          80
+        ],
+        0.02,
+        0.02
+      ],
+      "expect": {
+        "ok": true,
+        "v": 1.00390625,
+        "da": 0.01171875,
+        "dr": 0.011538461538461539,
+        "p": 2.0,
+        "r": 2.0
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "verify",
+      "id": "condition",
+      "op": "verify.condition_ok",
+      "a": [
+        1000000.0,
+        100000000.0
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "verify",
+      "id": "sequence",
+      "op": "verify.sequence_audit",
+      "a": [
+        [
+          1.1,
+          1.01,
+          1.001
+        ],
+        0.01,
+        0.01
+      ],
+      "expect": {
+        "f": true,
+        "m": true,
+        "c": true,
+        "da": 0.009000000000000119,
+        "dr": 0.00891089108910903
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "vec",
+      "op": "frame.vec3",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        "A"
+      ],
+      "expect": {
+        "f": "A",
+        "t": "v",
+        "v": [
+          1.0,
+          2.0,
+          3.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "point",
+      "op": "frame.point3",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        "A"
+      ],
+      "expect": {
+        "f": "A",
+        "t": "p",
+        "v": [
+          1.0,
+          2.0,
+          3.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "identity",
+      "op": "frame.identity",
+      "a": [
+        "A"
+      ],
+      "expect": {
+        "from": "A",
+        "to": "A",
+        "r": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "p": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "translate",
+      "op": "frame.translate",
+      "a": [
+        [
+          10,
+          0,
+          0
+        ],
+        "A",
+        "B"
+      ],
+      "expect": {
+        "from": "A",
+        "to": "B",
+        "r": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "p": [
+          10.0,
+          0.0,
+          0.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "transform_point",
+      "op": "frame.transform_point",
+      "a": [
+        {
+          "from": "A",
+          "to": "B",
+          "r": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "p": [
+            10.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "p",
+          "v": [
+            1.0,
+            2.0,
+            3.0
+          ]
+        }
+      ],
+      "expect": {
+        "f": "B",
+        "t": "p",
+        "v": [
+          11.0,
+          2.0,
+          3.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "transform_vec",
+      "op": "frame.transform_vec",
+      "a": [
+        {
+          "from": "A",
+          "to": "B",
+          "r": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "p": [
+            10.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            1.0,
+            2.0,
+            3.0
+          ]
+        }
+      ],
+      "expect": {
+        "f": "B",
+        "t": "v",
+        "v": [
+          1.0,
+          2.0,
+          3.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "dot",
+      "op": "frame.dot",
+      "a": [
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "expect": 0.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "cross",
+      "op": "frame.cross",
+      "a": [
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "expect": {
+        "f": "A",
+        "t": "v",
+        "v": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "distance",
+      "op": "frame.distance",
+      "a": [
+        {
+          "f": "A",
+          "t": "p",
+          "v": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "p",
+          "v": [
+            3,
+            4,
+            0
+          ]
+        }
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "frame",
+      "id": "mismatch",
+      "op": "frame.add_vec",
+      "a": [
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "f": "B",
+          "t": "v",
+          "v": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "error": "FRAME"
+    },
+    {
+      "category": "curve",
+      "id": "closed",
+      "op": "curve.is_closed",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "closure",
+      "op": "curve.closure_error",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "signed_area",
+      "op": "curve.signed_area",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 4.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "area",
+      "op": "curve.area",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 4.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "length",
+      "op": "curve.arc_length",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 8.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "bbox",
+      "op": "curve.bbox",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          2.0
+        ]
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "orient",
+      "op": "curve.orientation",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": "ccw",
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "intersections",
+      "op": "curve.self_intersections",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 1,
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "simple",
+      "op": "curve.is_simple_closed",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "not_simple",
+      "op": "curve.is_simple_closed",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": false,
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "centroid",
+      "op": "curve.centroid",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": [
+        1.0,
+        1.0
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "fraction",
+      "op": "curve.point_at_fraction",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ]
+        ],
+        0.25
+      ],
+      "expect": [
+        2.5,
+        0.0
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "predicate",
+      "id": "point_poly",
+      "op": "predicate.point_in_polygon",
+      "a": [
+        [
+          5,
+          5
+        ],
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "point_seg",
+      "op": "predicate.point_on_segment",
+      "a": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "segments",
+      "op": "predicate.segments_intersect",
+      "a": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "point_circle",
+      "op": "predicate.point_in_circle",
+      "a": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        1
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "circle_circle",
+      "op": "predicate.circle_in_circle",
+      "a": [
+        [
+          0,
+          0
+        ],
+        1,
+        [
+          0,
+          0
+        ],
+        2
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "aabb",
+      "op": "predicate.aabb_intersects",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "poly_contain",
+      "op": "predicate.polygon_in_polygon",
+      "a": [
+        [
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "poly_disjoint",
+      "op": "predicate.disjoint",
+      "a": [
+        [
+          [
+            2,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            20,
+            20
+          ],
+          [
+            21,
+            20
+          ],
+          [
+            21,
+            21
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            20,
+            20
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "circle_poly",
+      "op": "predicate.circle_in_polygon",
+      "a": [
+        [
+          5,
+          5
+        ],
+        4,
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "circle_clear",
+      "op": "predicate.circle_polygon_clearance",
+      "a": [
+        [
+          5,
+          5
+        ],
+        4,
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "predicate",
+      "id": "point_clear",
+      "op": "predicate.point_polygon_clearance",
+      "a": [
+        [
+          5,
+          5
+        ],
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 5.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "predicate",
+      "id": "seg_circle",
+      "op": "predicate.segment_circle_intersect",
+      "a": [
+        [
+          -2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        1
+      ],
+      "expect": true,
+      "tol": 0
+    },
+    {
+      "category": "predicate",
+      "id": "bbox",
+      "op": "predicate.polygon_bbox",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          10.0,
+          10.0
+        ]
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "curve",
+      "id": "backtrack",
+      "op": "curve.backtrack_count",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": 2,
+      "tol": 0
+    },
+    {
+      "category": "curve",
+      "id": "retrace_not_simple",
+      "op": "curve.is_simple_closed",
+      "a": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": false,
+      "tol": 0
+    },
+    {
+      "category": "frame",
+      "id": "nonrigid_rejected",
+      "op": "frame.transform_vec",
+      "a": [
+        {
+          "from": "A",
+          "to": "B",
+          "r": [
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "p": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "f": "A",
+          "t": "v",
+          "v": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "error": "FRAME"
+    },
+    {
+      "category": "predicate",
+      "id": "circle_breaks_outline",
+      "op": "predicate.circle_polygon_clearance",
+      "a": [
+        [
+          1,
+          1
+        ],
+        2,
+        [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": -1.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "eig_diag",
+      "op": "linalg.eigenvalues_symmetric",
+      "a": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": [
+        3.0,
+        1.0
+      ],
+      "tol": 1e-10
+    },
+    {
+      "category": "linalg",
+      "id": "sv_diag",
+      "op": "linalg.singular_values",
+      "a": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": [
+        3.0,
+        1.0
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "pinv_diag",
+      "op": "linalg.pinv",
+      "a": [
+        [
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            4
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          0.5,
+          0.0
+        ],
+        [
+          0.0,
+          0.25
+        ]
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "cond_diag",
+      "op": "linalg.condition_number",
+      "a": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": 3.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "rank_one",
+      "op": "linalg.rank",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expect": 1,
+      "tol": 0
+    },
+    {
+      "category": "linalg",
+      "id": "nullity_one",
+      "op": "linalg.nullity",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "expect": 1,
+      "tol": 0
+    },
+    {
+      "category": "linalg",
+      "id": "cov_simple",
+      "op": "linalg.covariance",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            5,
+            6
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          4.0,
+          4.0
+        ],
+        [
+          4.0,
+          4.0
+        ]
+      ],
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "project_axis",
+      "op": "linalg.project",
+      "a": [
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "expect": [
+        2.0,
+        0.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "gram_simple",
+      "op": "linalg.gram",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": [
+        [
+          10.0,
+          14.0
+        ],
+        [
+          14.0,
+          20.0
+        ]
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "orth_i",
+      "op": "linalg.orthogonality_error",
+      "a": [
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "recon_same",
+      "op": "linalg.reconstruction_error",
+      "a": [
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "rayleigh",
+      "op": "linalg.rayleigh_quotient",
+      "a": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "expect": 3.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "spectral",
+      "op": "linalg.spectral_norm",
+      "a": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": 3.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "center",
+      "op": "linalg.center_columns",
+      "a": [
+        [
+          [
+            1,
+            3
+          ],
+          [
+            3,
+            5
+          ]
+        ]
+      ],
+      "expect": {
+        "data": [
+          [
+            -1.0,
+            -1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ],
+        "mean": [
+          2.0,
+          4.0
+        ]
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "gamma5",
+      "op": "special.gamma",
+      "a": [
+        5
+      ],
+      "expect": 24.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "special",
+      "id": "lgamma1",
+      "op": "special.log_gamma",
+      "a": [
+        1
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "beta11",
+      "op": "special.beta",
+      "a": [
+        1,
+        1
+      ],
+      "expect": 1.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "special",
+      "id": "logbeta11",
+      "op": "special.log_beta",
+      "a": [
+        1,
+        1
+      ],
+      "expect": 0.0,
+      "tol": 1e-10
+    },
+    {
+      "category": "special",
+      "id": "erf0",
+      "op": "special.erf",
+      "a": [
+        0
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "erfc0",
+      "op": "special.erfc",
+      "a": [
+        0
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "digamma1",
+      "op": "special.digamma",
+      "a": [
+        1
+      ],
+      "expect": -0.5772156649015329,
+      "tol": 2e-08
+    },
+    {
+      "category": "special",
+      "id": "trigamma1",
+      "op": "special.trigamma",
+      "a": [
+        1
+      ],
+      "expect": 1.6449340668482264,
+      "tol": 2e-08
+    },
+    {
+      "category": "special",
+      "id": "j0zero",
+      "op": "special.bessel_j0",
+      "a": [
+        0
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "j1zero",
+      "op": "special.bessel_j1",
+      "a": [
+        0
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "jnzero",
+      "op": "special.bessel_jn",
+      "a": [
+        3,
+        0
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "i0zero",
+      "op": "special.bessel_i0",
+      "a": [
+        0
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "i1zero",
+      "op": "special.bessel_i1",
+      "a": [
+        0
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "zeta2",
+      "op": "special.zeta",
+      "a": [
+        2
+      ],
+      "expect": 1.6449340668482264,
+      "tol": 1e-08
+    },
+    {
+      "category": "special",
+      "id": "w0zero",
+      "op": "special.lambert_w0",
+      "a": [
+        0
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "w0one",
+      "op": "special.lambert_w0",
+      "a": [
+        1
+      ],
+      "expect": 0.5671432904097838,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "sinc0",
+      "op": "special.sinc",
+      "a": [
+        0
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "optimize",
+      "id": "stationary",
+      "op": "optimize.stationary_residual",
+      "a": [
+        {
+          "e": "(x-2)^2"
+        },
+        2
+      ],
+      "expect": 0.0,
+      "tol": 1e-07
+    },
+    {
+      "category": "optimize",
+      "id": "grad2",
+      "op": "optimize.finite_diff_grad2d",
+      "a": [
+        {
+          "e": "(x-1)^2+(y+2)^2"
+        },
+        1,
+        -2
+      ],
+      "expect": [
+        0.0,
+        0.0
+      ],
+      "tol": 1e-07
+    },
+    {
+      "category": "optimize",
+      "id": "hess2",
+      "op": "optimize.finite_diff_hessian2d",
+      "a": [
+        {
+          "e": "(x-1)^2+(y+2)^2"
+        },
+        1,
+        -2
+      ],
+      "expect": [
+        [
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.0
+        ]
+      ],
+      "tol": 1e-05
+    },
+    {
+      "category": "optimize",
+      "id": "armijo",
+      "op": "optimize.armijo_step2d",
+      "a": [
+        {
+          "e": "x^2+y^2"
+        },
+        1,
+        1,
+        -2,
+        -2
+      ],
+      "expect": 0.5,
+      "tol": 1e-12
+    },
+    {
+      "category": "optimize",
+      "id": "audit",
+      "op": "optimize.audit_minimum",
+      "a": [
+        {
+          "e": "(x-2)^2"
+        },
+        2
+      ],
+      "expect": {
+        "fx": 0.0,
+        "grad": 0.0,
+        "curvature": 2.0,
+        "stationary": true,
+        "local_min": true
+      },
+      "tol": 1e-05
+    },
+    {
+      "category": "ode",
+      "id": "euler_zero",
+      "op": "ode.euler",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        1,
+        10
+      ],
+      "expect": {
+        "x": 1.0,
+        "y": 3.0,
+        "steps": 10
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "heun_zero",
+      "op": "ode.heun",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        1,
+        10
+      ],
+      "expect": {
+        "x": 1.0,
+        "y": 3.0,
+        "steps": 10
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "midpoint_zero",
+      "op": "ode.midpoint",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        1,
+        10
+      ],
+      "expect": {
+        "x": 1.0,
+        "y": 3.0,
+        "steps": 10
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "rk4_zero",
+      "op": "ode.rk4",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        1,
+        10
+      ],
+      "expect": {
+        "x": 1.0,
+        "y": 3.0,
+        "steps": 10
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "step_zero",
+      "op": "ode.step_doubling_error",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        0.1,
+        4
+      ],
+      "expect": {
+        "coarse": 3.0,
+        "fine": 3.0,
+        "error": 0.0
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "residual_zero",
+      "op": "ode.residual",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        3,
+        0.1
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "ode",
+      "id": "compare_zero",
+      "op": "ode.compare_methods",
+      "a": [
+        {
+          "e": "0"
+        },
+        0,
+        3,
+        1,
+        10
+      ],
+      "expect": {
+        "euler": 3.0,
+        "heun": 3.0,
+        "midpoint": 3.0,
+        "rk4": 3.0
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "partial",
+      "op": "series.partial_sum",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "expect": 6.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "kahan",
+      "op": "series.kahan_sum",
+      "a": [
+        [
+          1e+16,
+          1,
+          -1e+16
+        ]
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "conv",
+      "op": "series.convergence",
+      "a": [
+        [
+          1,
+          1.5,
+          1.75,
+          1.875
+        ],
+        0.2,
+        0
+      ],
+      "expect": {
+        "value": 1.875,
+        "delta": 0.125,
+        "ratio": 0.5,
+        "converged": true
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "aitken",
+      "op": "series.aitken",
+      "a": [
+        [
+          1,
+          1.5,
+          1.75
+        ]
+      ],
+      "expect": 2.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "rich",
+      "op": "series.richardson_limit",
+      "a": [
+        1.0,
+        1.5,
+        1
+      ],
+      "expect": 2.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "geom_inf",
+      "op": "series.geometric_sum",
+      "a": [
+        1,
+        0.5
+      ],
+      "expect": 2.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "geom_finite",
+      "op": "series.geometric_sum",
+      "a": [
+        1,
+        0.5,
+        3
+      ],
+      "expect": 1.75,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "power",
+      "op": "series.power_eval",
+      "a": [
+        [
+          1,
+          2,
+          3
+        ],
+        2
+      ],
+      "expect": 17.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "taylor_eval",
+      "op": "series.taylor_eval",
+      "a": [
+        [
+          1,
+          1,
+          0.5
+        ],
+        1
+      ],
+      "expect": 2.5,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "exp0",
+      "op": "series.taylor_exp",
+      "a": [
+        0,
+        10
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "sin0",
+      "op": "series.taylor_sin",
+      "a": [
+        0,
+        10
+      ],
+      "expect": 0.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "cos0",
+      "op": "series.taylor_cos",
+      "a": [
+        0,
+        10
+      ],
+      "expect": 1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "fourier_const",
+      "op": "series.fourier_coefficients",
+      "a": [
+        [
+          1,
+          1,
+          1,
+          1
+        ],
+        1
+      ],
+      "expect": {
+        "a": [
+          1.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          0.0
+        ],
+        "period": 6.283185307179586
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "cheb_const",
+      "op": "series.chebyshev_coefficients",
+      "a": [
+        {
+          "e": "1"
+        },
+        -1,
+        1,
+        3
+      ],
+      "expect": {
+        "c": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "cond_singular_null",
+      "op": "linalg.condition_number",
+      "a": [
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "expect": null,
+      "tol": 1e-12
+    },
+    {
+      "category": "linalg",
+      "id": "cond_tiny_scaled",
+      "op": "linalg.condition_number",
+      "a": [
+        [
+          [
+            1e-20,
+            0
+          ],
+          [
+            0,
+            2e-20
+          ]
+        ]
+      ],
+      "expect": 2.0,
+      "tol": 1e-09
+    },
+    {
+      "category": "linalg",
+      "id": "rank_tiny_scaled",
+      "op": "linalg.rank",
+      "a": [
+        [
+          [
+            1e-20,
+            0
+          ],
+          [
+            0,
+            2e-20
+          ]
+        ]
+      ],
+      "expect": 2,
+      "tol": 0
+    },
+    {
+      "category": "linalg",
+      "id": "moore_penrose_identity",
+      "op": "linalg.moore_penrose_error",
+      "a": [
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "expect": {
+        "a_pa": 0.0,
+        "p_ap": 0.0,
+        "ap_sym": 0.0,
+        "pa_sym": 0.0
+      },
+      "tol": 1e-10
+    },
+    {
+      "category": "linalg",
+      "id": "power_nonunique_dominant",
+      "op": "linalg.power_iteration",
+      "a": [
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            -1
+          ]
+        ],
+        1e-10,
+        1000
+      ],
+      "error": "NO_CONVERGE"
+    },
+    {
+      "category": "special",
+      "id": "gamma_negative_integer_pole",
+      "op": "special.gamma",
+      "a": [
+        -1
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "special",
+      "id": "bessel_j0_40",
+      "op": "special.bessel_j0",
+      "a": [
+        40
+      ],
+      "expect": 0.00736689058423729,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "bessel_j20_1",
+      "op": "special.bessel_jn",
+      "a": [
+        20,
+        1
+      ],
+      "expect": 3.8735030085246576e-25,
+      "tol": 1e-28
+    },
+    {
+      "category": "special",
+      "id": "zeta_half",
+      "op": "special.zeta",
+      "a": [
+        0.5
+      ],
+      "expect": -1.4603545088095868,
+      "tol": 1e-11
+    },
+    {
+      "category": "special",
+      "id": "eta_point1",
+      "op": "special.eta",
+      "a": [
+        0.1
+      ],
+      "expect": 0.5222702824645705,
+      "tol": 1e-12
+    },
+    {
+      "category": "special",
+      "id": "lambert_wm1_branch",
+      "op": "special.lambert_wm1",
+      "a": [
+        -0.36787944117144233
+      ],
+      "expect": -1.0,
+      "tol": 1e-12
+    },
+    {
+      "category": "optimize",
+      "id": "bracket_min_at_start",
+      "op": "optimize.bracket",
+      "a": [
+        {
+          "e": "x^2"
+        },
+        0,
+        1,
+        64
+      ],
+      "expect": [
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "tol": 1e-12
+    },
+    {
+      "category": "optimize",
+      "id": "coordinate_zero_tol",
+      "op": "optimize.coordinate_descent2d",
+      "a": [
+        {
+          "e": "x^2+y^2"
+        },
+        1,
+        1,
+        10,
+        0,
+        100
+      ],
+      "error": "DOMAIN"
+    },
+    {
+      "category": "ode",
+      "id": "rk45_zero_interval",
+      "op": "ode.rk45",
+      "a": [
+        {
+          "e": "y"
+        },
+        2,
+        3,
+        2
+      ],
+      "expect": {
+        "x": 2.0,
+        "y": 3.0,
+        "accepted": 0,
+        "rejected": 0,
+        "converged": true
+      },
+      "tol": 1e-12
+    },
+    {
+      "category": "series",
+      "id": "fourier_nyquist",
+      "op": "series.fourier_coefficients",
+      "a": [
+        [
+          1,
+          -1,
+          1,
+          -1
+        ],
+        2
+      ],
+      "expect": {
+        "a": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "b": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "period": 6.283185307179586
+      },
+      "tol": 1e-12
+    },
+    {
+      "id": "hf6_data_throughput_bps_identity",
+      "op": "data.throughput_bps",
+      "a": [
+        800.0,
+        2.0
+      ],
+      "expect": 3200.0,
+      "tol": 1e-12,
+      "category": "data"
+    },
+    {
+      "id": "hf6_data_throughput_Bps_identity",
+      "op": "data.throughput_Bps",
+      "a": [
+        800.0,
+        2.0
+      ],
+      "expect": 400.0,
+      "tol": 1e-12,
+      "category": "data"
+    }
+  ]
+}

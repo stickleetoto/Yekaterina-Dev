@@ -1,0 +1,303 @@
+{
+  "benchmark": "yekaterina-micro",
+  "drift_ratio": 1.7291222289844443,
+  "rows": [
+    {
+      "case": "stat.cumsum n=4096 (start)",
+      "group": "canary",
+      "iters": 3068,
+      "mode": "loop",
+      "ns_per_op": 33430.50847457627,
+      "per_unit_ns": 8.161745233050848,
+      "unit": "element"
+    },
+    {
+      "case": "resolve canonical (math.add)",
+      "group": "registry",
+      "iters": 15076984,
+      "mode": "loop",
+      "ns_per_op": 15.432701925000385,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "resolve alias (avg)",
+      "group": "registry",
+      "iters": 4194304,
+      "mode": "loop",
+      "ns_per_op": 36.27760410308838,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "resolve mixed case (Math.Add)",
+      "group": "registry",
+      "iters": 1930236,
+      "mode": "loop",
+      "ns_per_op": 117.29234145462006,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "resolve miss (zzz.nope)",
+      "group": "registry",
+      "iters": 1940370,
+      "mode": "loop",
+      "ns_per_op": 125.75910779902802,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "search(\"mean\", 5)",
+      "group": "registry",
+      "iters": 512,
+      "mode": "loop",
+      "ns_per_op": 177340.625,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "search(\"norm\", 20)",
+      "group": "registry",
+      "iters": 1024,
+      "mode": "loop",
+      "ns_per_op": 212204.98046875,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "parse_step object form",
+      "group": "dispatch",
+      "iters": 1442186,
+      "mode": "loop",
+      "ns_per_op": 200.59430614359036,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "parse_step array form",
+      "group": "dispatch",
+      "iters": 667553,
+      "mode": "loop",
+      "ns_per_op": 193.1268378690531,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "math.add",
+      "group": "execute",
+      "iters": 3234182,
+      "mode": "loop",
+      "ns_per_op": 81.70087521357796,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "stat.sum n=100",
+      "group": "execute",
+      "iters": 246572,
+      "mode": "loop",
+      "ns_per_op": 952.5720681991467,
+      "per_unit_ns": 9.525720681991466,
+      "unit": "element"
+    },
+    {
+      "case": "stat.cumsum n=100",
+      "group": "execute",
+      "iters": 95824,
+      "mode": "loop",
+      "ns_per_op": 2227.6757388545666,
+      "per_unit_ns": 22.276757388545665,
+      "unit": "element"
+    },
+    {
+      "case": "stat.sum n=10000",
+      "group": "execute",
+      "iters": 3017,
+      "mode": "loop",
+      "ns_per_op": 35323.235001657275,
+      "per_unit_ns": 3.5323235001657274,
+      "unit": "element"
+    },
+    {
+      "case": "stat.cumsum n=10000",
+      "group": "execute",
+      "iters": 1024,
+      "mode": "loop",
+      "ns_per_op": 140495.41015625,
+      "per_unit_ns": 14.049541015625,
+      "unit": "element"
+    },
+    {
+      "case": "mat.mul 100x100",
+      "group": "execute",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 530700.0,
+      "per_unit_ns": 0.5307,
+      "unit": "MAC"
+    },
+    {
+      "case": "mat.shape 100x100",
+      "group": "execute",
+      "iters": 2988,
+      "mode": "loop",
+      "ns_per_op": 77612.98527443106,
+      "per_unit_ns": null,
+      "unit": "call"
+    },
+    {
+      "case": "signal.fft n=2048",
+      "group": "execute",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 364600.0,
+      "per_unit_ns": 178.02734375,
+      "unit": "sample"
+    },
+    {
+      "case": "num.integrate n=10000",
+      "group": "execute",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 3470100.0,
+      "per_unit_ns": 346.97530246975305,
+      "unit": "eval"
+    },
+    {
+      "case": "ode.rk4 n=10000",
+      "group": "execute",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 13612300.0,
+      "per_unit_ns": 340.3075,
+      "unit": "eval"
+    },
+    {
+      "case": "eval \"x*x\"",
+      "group": "formula",
+      "iters": 522053,
+      "mode": "loop",
+      "ns_per_op": 231.36041742888173,
+      "per_unit_ns": null,
+      "unit": "eval"
+    },
+    {
+      "case": "eval \"(x+1)*(x-1)/2+x^2\"",
+      "group": "formula",
+      "iters": 262144,
+      "mode": "loop",
+      "ns_per_op": 556.0127258300781,
+      "per_unit_ns": null,
+      "unit": "eval"
+    },
+    {
+      "case": "clone vars map + insert x (per-eval overhead)",
+      "group": "formula",
+      "iters": 513078,
+      "mode": "loop",
+      "ns_per_op": 220.86719758009502,
+      "per_unit_ns": null,
+      "unit": "op"
+    },
+    {
+      "case": "serde_json parse 1000 floats",
+      "group": "input",
+      "iters": 6486,
+      "mode": "loop",
+      "ns_per_op": 38591.3506012951,
+      "per_unit_ns": 38.5913506012951,
+      "unit": "element"
+    },
+    {
+      "case": "Value::to_string 1000 floats",
+      "group": "output",
+      "iters": 4288,
+      "mode": "loop",
+      "ns_per_op": 54323.53078358209,
+      "per_unit_ns": 54.32353078358209,
+      "unit": "element"
+    },
+    {
+      "case": "Value -> Vec<f64> 1000",
+      "group": "input",
+      "iters": 169320,
+      "mode": "loop",
+      "ns_per_op": 1421.6105598866052,
+      "per_unit_ns": 1.4216105598866051,
+      "unit": "element"
+    },
+    {
+      "case": "serde_json parse 10000 floats",
+      "group": "input",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 198700.0,
+      "per_unit_ns": 19.87,
+      "unit": "element"
+    },
+    {
+      "case": "Value::to_string 10000 floats",
+      "group": "output",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 227400.0,
+      "per_unit_ns": 22.74,
+      "unit": "element"
+    },
+    {
+      "case": "Value -> Vec<f64> 10000",
+      "group": "input",
+      "iters": 25526,
+      "mode": "loop",
+      "ns_per_op": 14802.808900728669,
+      "per_unit_ns": 1.480280890072867,
+      "unit": "element"
+    },
+    {
+      "case": "serde_json parse 50000 floats",
+      "group": "input",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 2937300.0,
+      "per_unit_ns": 58.746,
+      "unit": "element"
+    },
+    {
+      "case": "Value::to_string 50000 floats",
+      "group": "output",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 2391900.0,
+      "per_unit_ns": 47.838,
+      "unit": "element"
+    },
+    {
+      "case": "Value -> Vec<f64> 50000",
+      "group": "input",
+      "iters": 3122,
+      "mode": "loop",
+      "ns_per_op": 67958.55221012172,
+      "per_unit_ns": 1.3591710442024345,
+      "unit": "element"
+    },
+    {
+      "case": "serde_json parse 1000-item batch",
+      "group": "input",
+      "iters": 15,
+      "mode": "burst",
+      "ns_per_op": 248700.0,
+      "per_unit_ns": 248.7,
+      "unit": "item"
+    },
+    {
+      "case": "stat.cumsum n=4096 (end)",
+      "group": "canary",
+      "iters": 1987,
+      "mode": "loop",
+      "ns_per_op": 57805.43532964268,
+      "per_unit_ns": 14.112655109776044,
+      "unit": "element"
+    }
+  ]
+}

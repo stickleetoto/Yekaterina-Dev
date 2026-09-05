@@ -1,0 +1,10 @@
+Yekaterina alpha.12 acceptance order
+
+1) .\VERIFY_WINDOWS.bat
+   Expected: 1215 ops, 527/527 golden, 44 categories, release build PASS.
+
+2) .\RUN_FULL_CAPABILITY_AUDIT_WINDOWS.bat
+   Target: yk.spec 1215/1215, valid fixtures 1215/1215, clean yk.compute replay 1215/1215.
+
+3) Rerun MCP Real-World Benchmark.
+   Required: exactly 3 tools and frozen schema budget (historical baseline 412 tokens / 1725 bytes).

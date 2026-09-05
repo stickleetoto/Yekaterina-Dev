@@ -1,0 +1,8 @@
+Yekaterina v0.1.0-alpha.10 acceptance target
+
+- >= 1050 unique registered opcodes (current source target: 1054)
+- exactly 3 MCP tools
+- all registered operations have implementation/control references
+- cargo fmt/test/clippy/release build PASS
+- MCP golden corpus: 391 cases across 35 categories
+- rerun MCP Real-World Benchmark after build

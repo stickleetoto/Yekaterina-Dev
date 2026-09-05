@@ -1,0 +1,17 @@
+Yekaterina v0.1.0-alpha.11 — TEST FIRST
+
+Windows project root:
+  .\VERIFY_WINDOWS.bat
+
+Acceptance target:
+  1130 registered built-in/control opcodes
+  MCP tools exactly 3
+  alpha.10 MCP model/tool schema source frozen
+  cargo test PASS
+  cargo clippy PASS
+  release build PASS
+  MCP golden 453/453
+  39/39 categories at 100%
+
+After local acceptance, rerun the MCP Real-World Benchmark with the alpha.11 release EXE.
+Expected schema baseline: 3 tools / 412 tokens. Investigate any schema drift before alpha.11 is frozen.

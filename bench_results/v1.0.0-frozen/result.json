@@ -1,0 +1,1626 @@
+{
+  "benchmark": "yekaterina-bench",
+  "label": "v1.0.0 FROZEN BASELINE (pristine source, sequential)",
+  "workers": null,
+  "runs": 5,
+  "environment": {
+    "harness_version": "1.0",
+    "workload_set_version": 1,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "python": "3.13.4",
+    "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)",
+    "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+    "logical_cpus": 16,
+    "exe": "D:\\Users\\leejy\\Downloads\\project\\포폴\\Yekaterina\\Yekaterina_v1.0.0_Source\\Yekaterina_v1.0.0\\target\\release\\yekaterina.exe",
+    "exe_sha256": "753b64f8087de6285a5b1caf9e0c6e42a59d29cea0bf09ad7d08905c3e39dea4",
+    "exe_bytes": 4822528,
+    "physical_cpus": 10,
+    "total_ram_bytes": 16868884480,
+    "src_sha256": "4c48025e92be87691e86e2ebb0f2cb9ff7defa66e9312537cdcc2c894c69453a",
+    "files": "55"
+  },
+  "schema": {
+    "tools": 3,
+    "names": [
+      "yk.compute",
+      "yk.find",
+      "yk.spec"
+    ],
+    "schema_bytes": 1725,
+    "serialization": "json.dumps({'tools':...}, separators=(',',':'), sort_keys=True)",
+    "schema_tokens": 412,
+    "tokenizer": "tiktoken:o200k_base",
+    "frozen_surface_ok": true,
+    "drift": []
+  },
+  "cold_start": {
+    "n": 20,
+    "p50_ms": 6.5001999999999995,
+    "p95_ms": 8.162325000000001,
+    "min_ms": 6.1859,
+    "mean_ms": 6.708975,
+    "run_p50_ms": [
+      6.5001999999999995
+    ],
+    "p50_stable_ms": 6.5001999999999995,
+    "run_spread_pct": 0.0,
+    "ops_per_sec": 153.8414202639919
+  },
+  "workloads": {
+    "protocol.floor_arg_error": {
+      "n": 1000,
+      "p50_ms": 0.08155000000000001,
+      "p95_ms": 0.14297499999999994,
+      "min_ms": 0.054,
+      "mean_ms": 0.0884231,
+      "run_p50_ms": [
+        0.060200000000000004,
+        0.0829,
+        0.09820000000000001,
+        0.0611,
+        0.09025
+      ],
+      "p99_ms": 0.2422209999999999,
+      "p50_stable_ms": 0.0829,
+      "run_spread_pct": 45.838359469240054,
+      "ops_per_sec": 12262.415695892088,
+      "category": "protocol",
+      "description": "Empty compute request; round trip with zero compute.",
+      "ops_per_iter": 1,
+      "tags": [
+        "floor"
+      ],
+      "response_sha256": [
+        "5a77bf66c5fc21f92e128a6d2c4c7fc7252fda2eac007ad7742eea2a601b9edc"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 11,
+      "response_head": "{\"e\":\"ARG\"}",
+      "error_envelope": true
+    },
+    "protocol.tools_list": {
+      "n": 500,
+      "p50_ms": 0.0935,
+      "p95_ms": 0.17183499999999988,
+      "min_ms": 0.0742,
+      "mean_ms": 0.1087806,
+      "run_p50_ms": [
+        0.08695,
+        0.08149999999999999,
+        0.12285,
+        0.08155,
+        0.0931
+      ],
+      "p99_ms": 0.3168799999999991,
+      "p50_stable_ms": 0.08695,
+      "run_spread_pct": 47.556066705002884,
+      "ops_per_sec": 10695.187165775402,
+      "category": "protocol",
+      "description": "tools/list round trip.",
+      "ops_per_iter": 1,
+      "tags": [
+        "floor"
+      ],
+      "response_sha256": [
+        "76e2021fd3ea2f57d1202952bce59a9613d43b153d0fae4a2a63a5730f8b828d"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 1725,
+      "response_head": "{\"tools\":[{\"description\":\"Run one opcode, compact batch, pip",
+      "error_envelope": false
+    },
+    "protocol.find": {
+      "n": 500,
+      "p50_ms": 0.16315000000000002,
+      "p95_ms": 0.22071999999999997,
+      "min_ms": 0.135,
+      "mean_ms": 0.1697106,
+      "run_p50_ms": [
+        0.16795,
+        0.155,
+        0.16399999999999998,
+        0.14555,
+        0.16785
+      ],
+      "p99_ms": 0.28823999999999994,
+      "p50_stable_ms": 0.16399999999999998,
+      "run_spread_pct": 13.658536585365841,
+      "ops_per_sec": 6129.328838492185,
+      "category": "protocol",
+      "description": "yk.find lazy discovery.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "713f22b5807cc5340684e1bdb7dc117897ea269b6d8c8c427215d54c2865eac4"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 72,
+      "response_head": "{\"r\":[\"stat.mean\",\"mat.mean\",\"signal.mean\",\"stat.mad\",\"test.",
+      "error_envelope": false
+    },
+    "protocol.spec": {
+      "n": 500,
+      "p50_ms": 0.0642,
+      "p95_ms": 0.10572999999999998,
+      "min_ms": 0.055,
+      "mean_ms": 0.0721874,
+      "run_p50_ms": [
+        0.06465,
+        0.06409999999999999,
+        0.061149999999999996,
+        0.063,
+        0.06885
+      ],
+      "p99_ms": 0.143209,
+      "p50_stable_ms": 0.06409999999999999,
+      "run_spread_pct": 12.012480499219969,
+      "ops_per_sec": 15576.323987538944,
+      "category": "protocol",
+      "description": "yk.spec contract lookup.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "98412682dc2e714dfd90802b26e151052495a4d7597e76204c4fafa245a7cf82"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 73,
+      "response_head": "{\"a\":[\"number[]\"],\"c\":\"dv\",\"k\":\"n\",\"op\":\"stat.mean\",\"r\":\"num",
+      "error_envelope": false
+    },
+    "single.math_add": {
+      "n": 125,
+      "p50_ms": 0.0637,
+      "p95_ms": 0.0967,
+      "min_ms": 0.0575,
+      "mean_ms": 0.069108,
+      "run_p50_ms": [
+        0.0759,
+        0.0722,
+        0.0605,
+        0.0601,
+        0.0646
+      ],
+      "p99_ms": 0.10198,
+      "p50_stable_ms": 0.0646,
+      "run_spread_pct": 24.458204334365316,
+      "ops_per_sec": 15698.587127158555,
+      "category": "single",
+      "description": "Cheapest possible op.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "7032162eec548cb4cd108f3292226b188e1dabd31575b14c5ab913e373d90e53"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 9,
+      "response_head": "{\"r\":3.0}",
+      "error_envelope": false
+    },
+    "single.stat_mean_100": {
+      "n": 125,
+      "p50_ms": 0.0839,
+      "p95_ms": 0.15015999999999996,
+      "min_ms": 0.0742,
+      "mean_ms": 0.0983192,
+      "run_p50_ms": [
+        0.0833,
+        0.0802,
+        0.0784,
+        0.0863,
+        0.1238
+      ],
+      "p99_ms": 0.18629200000000007,
+      "p50_stable_ms": 0.0833,
+      "run_spread_pct": 54.50180072028811,
+      "ops_per_sec": 11918.951132300357,
+      "category": "single",
+      "description": "Small array reduction.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "3d949c90a76f9f0a841516f7291ac385762cf27266be855d50fcb5017edfa100"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 10,
+      "response_head": "{\"r\":49.5}",
+      "error_envelope": false
+    },
+    "single.mat_mul_100": {
+      "n": 125,
+      "p50_ms": 5.6531,
+      "p95_ms": 7.5926599999999995,
+      "min_ms": 5.3011,
+      "mean_ms": 5.9664928,
+      "run_p50_ms": [
+        5.459,
+        5.7637,
+        6.7472,
+        5.663,
+        5.6362
+      ],
+      "p99_ms": 7.7881800000000005,
+      "p50_stable_ms": 5.663,
+      "run_spread_pct": 22.747660250750496,
+      "ops_per_sec": 176.8940935062178,
+      "category": "single",
+      "description": "1,000,000 MAC; below the 2M product cap.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "ac7f9abd7bdee781b576802f75b32f3d3df5667f4f3e399c200416541fe29253"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 67432,
+      "response_head": "{\"r\":[[100.0,395.0,396.0,397.0,398.0,399.0,400.0,100.0,395.0",
+      "error_envelope": false
+    },
+    "single.mat_shape_100": {
+      "n": 125,
+      "p50_ms": 2.5181,
+      "p95_ms": 3.6639399999999993,
+      "min_ms": 2.0896,
+      "mean_ms": 2.6772359999999997,
+      "run_p50_ms": [
+        2.2907,
+        2.9756,
+        2.9824,
+        2.4178,
+        2.286
+      ],
+      "p99_ms": 4.018468,
+      "p50_stable_ms": 2.4178,
+      "run_spread_pct": 28.803044089668294,
+      "ops_per_sec": 397.12481632977244,
+      "category": "single",
+      "description": "Same input shape as mat_mul_100 with O(1) compute; isolates the input path.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "ac93eae9c8990119c376208fc02cd65b0ec3653d44e5bc4a5e751a3adb1bdcad"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 15,
+      "response_head": "{\"r\":[100,100]}",
+      "error_envelope": false
+    },
+    "single.signal_fft_2048": {
+      "n": 125,
+      "p50_ms": 1.4747,
+      "p95_ms": 2.0576,
+      "min_ms": 1.2251,
+      "mean_ms": 1.5656528,
+      "run_p50_ms": [
+        1.3249,
+        1.6985,
+        1.5588,
+        1.3968,
+        1.4299
+      ],
+      "p99_ms": 2.5200040000000006,
+      "p50_stable_ms": 1.4299,
+      "run_spread_pct": 26.1277012378488,
+      "ops_per_sec": 678.1040211568455,
+      "category": "single",
+      "description": "O(n log n) transform with a large result payload.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "3ac33298f6084dd35b395170a8b599dba4691a1499b53a33eb729342864e3da1"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 81623,
+      "response_head": "{\"r\":[[12267.0,0.0],[-21.00065889332692,-0.04295301184738235",
+      "error_envelope": false
+    },
+    "single.num_integrate_10k": {
+      "n": 125,
+      "p50_ms": 1.8546,
+      "p95_ms": 2.8164999999999996,
+      "min_ms": 1.7361,
+      "mean_ms": 1.9771320000000001,
+      "run_p50_ms": [
+        1.8109,
+        2.0331,
+        1.8347,
+        1.8552,
+        1.8662
+      ],
+      "p99_ms": 3.690636,
+      "p50_stable_ms": 1.8552,
+      "run_spread_pct": 11.977145321259174,
+      "ops_per_sec": 539.1998274560552,
+      "category": "single",
+      "description": "10,001 expression evaluations.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "00170a44cebf7366d854c13ed849cf926ebb686ec7ac0b30af5b411e920532c0"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 25,
+      "response_head": "{\"r\":0.33333333499999834}",
+      "error_envelope": false
+    },
+    "single.ode_rk4_10k": {
+      "n": 125,
+      "p50_ms": 6.7629,
+      "p95_ms": 7.27988,
+      "min_ms": 6.4759,
+      "mean_ms": 6.8592648,
+      "run_p50_ms": [
+        6.6845,
+        6.7759,
+        6.8737,
+        6.7366,
+        6.7579
+      ],
+      "p99_ms": 9.246332,
+      "p50_stable_ms": 6.7579,
+      "run_spread_pct": 2.799686293079218,
+      "ops_per_sec": 147.86556063227312,
+      "category": "single",
+      "description": "40,000 expression evaluations.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "0245162fc30a5da37884a58dd97e0ca53b84986e194f7465979ea2bce60829ce"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 67,
+      "response_head": "{\"r\":{\"steps\":10000,\"x\":0.9999999999999062,\"y\":2.71828182845",
+      "error_envelope": false
+    },
+    "single.int_pow_exact": {
+      "n": 125,
+      "p50_ms": 0.1228,
+      "p95_ms": 0.27559999999999996,
+      "min_ms": 0.0831,
+      "mean_ms": 0.1464264,
+      "run_p50_ms": [
+        0.097,
+        0.1481,
+        0.1928,
+        0.1084,
+        0.0951
+      ],
+      "p99_ms": 0.3923320000000001,
+      "p50_stable_ms": 0.1084,
+      "run_spread_pct": 90.12915129151291,
+      "ops_per_sec": 8143.322475570032,
+      "category": "single",
+      "description": "BigInt exact path.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "348172631a51fca859d3f253276558e34754b2a275b844ae3e3aabaebdd8aba2"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 1699,
+      "response_head": "{\"r\":\"157065220561816210907702588940887213335174461096862604",
+      "error_envelope": false
+    },
+    "single.dec_mul_exact": {
+      "n": 125,
+      "p50_ms": 0.0849,
+      "p95_ms": 0.15884,
+      "min_ms": 0.0588,
+      "mean_ms": 0.09513920000000001,
+      "run_p50_ms": [
+        0.0689,
+        0.1069,
+        0.1112,
+        0.0648,
+        0.0733
+      ],
+      "p99_ms": 0.19774800000000015,
+      "p50_stable_ms": 0.0733,
+      "run_spread_pct": 63.30150068212823,
+      "ops_per_sec": 11778.563015312131,
+      "category": "single",
+      "description": "BigDecimal exact path.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "4600b5db5aca086891afcf8847697581ae1ffcc647bd242ed7490b7a3ee6a183"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 30,
+      "response_head": "{\"r\":\"3.50000000000000000035\"}",
+      "error_envelope": false
+    },
+    "single.expr_eval": {
+      "n": 125,
+      "p50_ms": 0.0921,
+      "p95_ms": 0.16396,
+      "min_ms": 0.0591,
+      "mean_ms": 0.1003704,
+      "run_p50_ms": [
+        0.0633,
+        0.1225,
+        0.1304,
+        0.074,
+        0.0889
+      ],
+      "p99_ms": 0.18713200000000002,
+      "p50_stable_ms": 0.0889,
+      "run_spread_pct": 75.47806524184476,
+      "ops_per_sec": 10857.763300760043,
+      "category": "single",
+      "description": "Stateless expression evaluation.",
+      "ops_per_iter": 1,
+      "tags": [],
+      "response_sha256": [
+        "89e5adc97c0db967260163d85f75e576bfde4b17d611782cd596fdc97adf3a4e"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 10,
+      "response_head": "{\"r\":11.0}",
+      "error_envelope": false
+    },
+    "batch.scalar_10": {
+      "n": 75,
+      "p50_ms": 0.1012,
+      "p95_ms": 0.17799999999999988,
+      "min_ms": 0.072,
+      "mean_ms": 0.11140800000000001,
+      "run_p50_ms": [
+        0.0908,
+        0.1186,
+        0.121,
+        0.0972,
+        0.0833
+      ],
+      "p50_stable_ms": 0.0972,
+      "run_spread_pct": 38.78600823045267,
+      "ops_per_sec": 98814.22924901187,
+      "us_per_op": 10.120000000000001,
+      "category": "batch",
+      "description": "10 independent math.add items in one batch.",
+      "ops_per_iter": 10,
+      "tags": [
+        "independent"
+      ],
+      "response_sha256": [
+        "e809b45e1fb85ae47673a26a802fe7aa8e62af0c79d55d7f0c5db813a07edad5"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 47,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0]}",
+      "error_envelope": false
+    },
+    "batch.scalar_100": {
+      "n": 75,
+      "p50_ms": 0.2392,
+      "p95_ms": 0.37559999999999993,
+      "min_ms": 0.1787,
+      "mean_ms": 0.2748106666666667,
+      "run_p50_ms": [
+        0.23,
+        0.2942,
+        0.2762,
+        0.2103,
+        0.2139
+      ],
+      "p50_stable_ms": 0.23,
+      "run_spread_pct": 36.478260869565226,
+      "ops_per_sec": 418060.2006688963,
+      "us_per_op": 2.392,
+      "category": "batch",
+      "description": "100 independent math.add items in one batch.",
+      "ops_per_iter": 100,
+      "tags": [
+        "independent"
+      ],
+      "response_sha256": [
+        "393e1ae7c3cd6a9538b10a6fe717e1d53314d371b81d9968272e56ad12478473"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 407,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "batch.scalar_1000": {
+      "n": 55,
+      "p50_ms": 2.3831,
+      "p95_ms": 2.95322,
+      "min_ms": 2.137,
+      "mean_ms": 2.44506,
+      "run_p50_ms": [
+        2.2468,
+        2.6335,
+        2.613,
+        2.3831,
+        2.2604
+      ],
+      "p50_stable_ms": 2.3831,
+      "run_spread_pct": 16.226763459359667,
+      "ops_per_sec": 419621.50140573195,
+      "us_per_op": 2.3831,
+      "category": "batch",
+      "description": "1000 independent math.add items in one batch.",
+      "ops_per_iter": 1000,
+      "tags": [
+        "independent"
+      ],
+      "response_sha256": [
+        "7c84a77fcdd5a9e19d70f2d21cc3800224628b127df68d3278cd4abb9d496f0a"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 4007,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "batch.scalar_10000_chunked": {
+      "n": 35,
+      "p50_ms": 23.5484,
+      "p95_ms": 27.281629999999996,
+      "min_ms": 22.175,
+      "mean_ms": 24.206162857142857,
+      "run_p50_ms": [
+        22.6685,
+        26.6211,
+        23.7228,
+        24.0637,
+        22.6493
+      ],
+      "p50_stable_ms": 23.7228,
+      "run_spread_pct": 16.74254303876439,
+      "ops_per_sec": 424657.301557643,
+      "us_per_op": 2.3548400000000003,
+      "category": "batch",
+      "description": "10,000 math.add items as 10 sequential batches of 1,000 (MAX_BATCH=1024).",
+      "ops_per_iter": 10000,
+      "tags": [
+        "independent"
+      ],
+      "response_sha256": [
+        "21a36fec5aff0d593ac0583cdd2503b8c768a295e3af10b54a360ce8d2365130"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 40079,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "cheap.scalar_2": {
+      "n": 1000,
+      "p50_ms": 0.0851,
+      "p95_ms": 0.163015,
+      "min_ms": 0.0568,
+      "mean_ms": 0.0970587,
+      "run_p50_ms": [
+        0.07605,
+        0.09345,
+        0.07125,
+        0.08945,
+        0.0795
+      ],
+      "p99_ms": 0.26622199999999985,
+      "p50_stable_ms": 0.0795,
+      "run_spread_pct": 27.92452830188681,
+      "ops_per_sec": 23501.762632197417,
+      "us_per_op": 42.55,
+      "category": "cheap",
+      "description": "2 trivial items; must never regress and should stay sequential.",
+      "ops_per_iter": 2,
+      "tags": [
+        "independent",
+        "regression-guard"
+      ],
+      "response_sha256": [
+        "eacd2602c2ad0236fe3013771a01227ff5a6bf8a4a19d0db9a89f565cdd8ac8b"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 15,
+      "response_head": "{\"r\":[3.0,3.0]}",
+      "error_envelope": false
+    },
+    "cheap.scalar_4": {
+      "n": 1000,
+      "p50_ms": 0.08695,
+      "p95_ms": 0.14931999999999998,
+      "min_ms": 0.0593,
+      "mean_ms": 0.09620390000000001,
+      "run_p50_ms": [
+        0.08105000000000001,
+        0.1024,
+        0.07650000000000001,
+        0.07385,
+        0.08654999999999999
+      ],
+      "p99_ms": 0.28266699999999995,
+      "p50_stable_ms": 0.08105000000000001,
+      "run_spread_pct": 35.22516964836521,
+      "ops_per_sec": 46003.45025876941,
+      "us_per_op": 21.7375,
+      "category": "cheap",
+      "description": "4 trivial items; must never regress and should stay sequential.",
+      "ops_per_iter": 4,
+      "tags": [
+        "independent",
+        "regression-guard"
+      ],
+      "response_sha256": [
+        "8e4e9b6991a1befe81d08f61ab9cbac99f905d2addf6771ad07f22d8114eaa85"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 23,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0]}",
+      "error_envelope": false
+    },
+    "cheap.scalar_8": {
+      "n": 1000,
+      "p50_ms": 0.0919,
+      "p95_ms": 0.16417499999999993,
+      "min_ms": 0.0659,
+      "mean_ms": 0.10212600000000001,
+      "run_p50_ms": [
+        0.08760000000000001,
+        0.10375000000000001,
+        0.07825,
+        0.08045,
+        0.09209999999999999
+      ],
+      "p99_ms": 0.2975269999999996,
+      "p50_stable_ms": 0.08760000000000001,
+      "run_spread_pct": 29.109589041095894,
+      "ops_per_sec": 87051.14254624592,
+      "us_per_op": 11.487499999999999,
+      "category": "cheap",
+      "description": "8 trivial items; must never regress and should stay sequential.",
+      "ops_per_iter": 8,
+      "tags": [
+        "independent",
+        "regression-guard"
+      ],
+      "response_sha256": [
+        "db83b9636ac681020e9e74333bf80d2384ffb2659e8ab0242549c23b8da6c03b"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 39,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0]}",
+      "error_envelope": false
+    },
+    "cheap.scalar_16": {
+      "n": 1000,
+      "p50_ms": 0.11080000000000001,
+      "p95_ms": 0.2994799999999999,
+      "min_ms": 0.0746,
+      "mean_ms": 0.158173,
+      "run_p50_ms": [
+        0.08155,
+        0.12340000000000001,
+        0.1134,
+        0.16870000000000002,
+        0.09655
+      ],
+      "p99_ms": 1.491026999999999,
+      "p50_stable_ms": 0.1134,
+      "run_spread_pct": 76.85185185185188,
+      "ops_per_sec": 144404.33212996388,
+      "us_per_op": 6.925000000000001,
+      "category": "cheap",
+      "description": "16 trivial items; must never regress and should stay sequential.",
+      "ops_per_iter": 16,
+      "tags": [
+        "independent",
+        "regression-guard"
+      ],
+      "response_sha256": [
+        "45646bbc372324606f485e22e7fdd7dab9846e3114092f6a0415af4803125dc6"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 71,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "cheap.scalar_32": {
+      "n": 1000,
+      "p50_ms": 0.1235,
+      "p95_ms": 0.2122149999999998,
+      "min_ms": 0.0908,
+      "mean_ms": 0.1437857,
+      "run_p50_ms": [
+        0.1049,
+        0.14195,
+        0.1082,
+        0.13505,
+        0.12029999999999999
+      ],
+      "p99_ms": 0.5703139999999983,
+      "p50_stable_ms": 0.12029999999999999,
+      "run_spread_pct": 30.798004987531176,
+      "ops_per_sec": 259109.3117408907,
+      "us_per_op": 3.859375,
+      "category": "cheap",
+      "description": "32 trivial items; must never regress and should stay sequential.",
+      "ops_per_iter": 32,
+      "tags": [
+        "independent",
+        "regression-guard"
+      ],
+      "response_sha256": [
+        "5edf5815b84afe90359666482cc5256861b67a17d7733b825143b1f792db0736"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 135,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "rescan.cumsum100_x10": {
+      "n": 45,
+      "p50_ms": 0.3988,
+      "p95_ms": 0.6728999999999998,
+      "min_ms": 0.3273,
+      "mean_ms": 0.45748666666666665,
+      "run_p50_ms": [
+        0.3556,
+        0.5554,
+        0.3622,
+        0.5275,
+        0.3799
+      ],
+      "p50_stable_ms": 0.3799,
+      "run_spread_pct": 52.592787575677804,
+      "ops_per_sec": 25075.225677031092,
+      "us_per_op": 39.88,
+      "category": "rescan",
+      "description": "10 x stat.cumsum over 100 floats; exercises accumulated-result validation.",
+      "ops_per_iter": 10,
+      "tags": [
+        "independent",
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "4bc9b535cf6341b671b418612b9a70ace72ae418b81a96e6404abba5fa567ed6"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 6397,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "rescan.cumsum100_x50": {
+      "n": 45,
+      "p50_ms": 2.0064,
+      "p95_ms": 2.74218,
+      "min_ms": 1.7313,
+      "mean_ms": 2.158068888888889,
+      "run_p50_ms": [
+        1.932,
+        2.5334,
+        1.9282,
+        2.517,
+        1.8593
+      ],
+      "p50_stable_ms": 1.932,
+      "run_spread_pct": 34.891304347826086,
+      "ops_per_sec": 24920.255183413075,
+      "us_per_op": 40.128,
+      "category": "rescan",
+      "description": "50 x stat.cumsum over 100 floats; exercises accumulated-result validation.",
+      "ops_per_iter": 50,
+      "tags": [
+        "independent",
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "6b473e51edf37a498e08e63a37085a6c24e73cd46da313f6994e839e31fbeac0"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 31957,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "rescan.cumsum100_x100": {
+      "n": 45,
+      "p50_ms": 4.4641,
+      "p95_ms": 5.248399999999999,
+      "min_ms": 3.9488,
+      "mean_ms": 4.5279444444444445,
+      "run_p50_ms": [
+        4.1302,
+        4.3908,
+        4.4641,
+        4.7197,
+        4.5056
+      ],
+      "p50_stable_ms": 4.4641,
+      "run_spread_pct": 13.205349342532632,
+      "ops_per_sec": 22400.931878766154,
+      "us_per_op": 44.641000000000005,
+      "category": "rescan",
+      "description": "100 x stat.cumsum over 100 floats; exercises accumulated-result validation.",
+      "ops_per_iter": 100,
+      "tags": [
+        "independent",
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "62f44f064b024c9e0571de1a29757d65a7015658f95647e3cb550f768bb127d3"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 63907,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "rescan.cumsum100_x200": {
+      "n": 35,
+      "p50_ms": 10.9056,
+      "p95_ms": 13.82621,
+      "min_ms": 10.0373,
+      "mean_ms": 11.419608571428572,
+      "run_p50_ms": [
+        10.735,
+        11.9943,
+        10.765,
+        12.9944,
+        10.3471
+      ],
+      "p50_stable_ms": 10.765,
+      "run_spread_pct": 24.591732466326068,
+      "ops_per_sec": 18339.201877934272,
+      "us_per_op": 54.528,
+      "category": "rescan",
+      "description": "200 x stat.cumsum over 100 floats; exercises accumulated-result validation.",
+      "ops_per_iter": 200,
+      "tags": [
+        "independent",
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "de4721974887c42c34682b4dae2964da33a9af34789605d0fb3a8daa059506d6"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 127807,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "rescan.cumsum100_x400": {
+      "n": 35,
+      "p50_ms": 29.1444,
+      "p95_ms": 33.37817999999999,
+      "min_ms": 27.8838,
+      "mean_ms": 30.097725714285712,
+      "run_p50_ms": [
+        28.5255,
+        32.4512,
+        29.2787,
+        31.6434,
+        28.5821
+      ],
+      "p50_stable_ms": 29.2787,
+      "run_spread_pct": 13.408040657542852,
+      "ops_per_sec": 13724.763590947145,
+      "us_per_op": 72.861,
+      "category": "rescan",
+      "description": "400 x stat.cumsum over 100 floats; exercises accumulated-result validation.",
+      "ops_per_iter": 400,
+      "tags": [
+        "independent",
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "6f0e19c58c235d697377c8398e292c9b346b8bfd6a7efb59a400091c5e8c2fd0"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 255607,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "heavy.integrate1000_x4": {
+      "n": 45,
+      "p50_ms": 0.8384,
+      "p95_ms": 0.99278,
+      "min_ms": 0.748,
+      "mean_ms": 0.8516422222222223,
+      "run_p50_ms": [
+        0.825,
+        0.8455,
+        0.8389,
+        0.9073,
+        0.8171
+      ],
+      "p50_stable_ms": 0.8389,
+      "run_spread_pct": 10.752175467874592,
+      "ops_per_sec": 4770.992366412213,
+      "us_per_op": 209.60000000000002,
+      "category": "heavy",
+      "description": "4 x num.integrate (1,000 steps); independent, compute-bound, small payload.",
+      "ops_per_iter": 4,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "3b5b159881024a3c26ba6f926fe72976b1e65556a49d0427fc3c8879c049f2c0"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 87,
+      "response_head": "{\"r\":[0.33333349999999995,0.33333349999999995,0.333333499999",
+      "error_envelope": false
+    },
+    "heavy.integrate1000_x16": {
+      "n": 45,
+      "p50_ms": 2.9247,
+      "p95_ms": 3.2108399999999997,
+      "min_ms": 2.7555,
+      "mean_ms": 2.968406666666667,
+      "run_p50_ms": [
+        2.9335,
+        3.0092,
+        2.8011,
+        2.9955,
+        2.8884
+      ],
+      "p50_stable_ms": 2.9335,
+      "run_spread_pct": 7.093915118459177,
+      "ops_per_sec": 5470.646562040551,
+      "us_per_op": 182.79375000000002,
+      "category": "heavy",
+      "description": "16 x num.integrate (1,000 steps); independent, compute-bound, small payload.",
+      "ops_per_iter": 16,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "648462108b2d3080357bf64c822d3b29c851a75d779c48ea9add2c19daea428c"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 327,
+      "response_head": "{\"r\":[0.33333349999999995,0.33333349999999995,0.333333499999",
+      "error_envelope": false
+    },
+    "heavy.integrate1000_x64": {
+      "n": 45,
+      "p50_ms": 11.3684,
+      "p95_ms": 12.955739999999999,
+      "min_ms": 10.824,
+      "mean_ms": 11.52666,
+      "run_p50_ms": [
+        11.4568,
+        11.3684,
+        11.0594,
+        11.7237,
+        11.277
+      ],
+      "p50_stable_ms": 11.3684,
+      "run_spread_pct": 5.8433904507230485,
+      "ops_per_sec": 5629.6400548889915,
+      "us_per_op": 177.63125,
+      "category": "heavy",
+      "description": "64 x num.integrate (1,000 steps); independent, compute-bound, small payload.",
+      "ops_per_iter": 64,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "d017b1449bc27b4e51fc0a8b1c7b2a6415b8f10284faefa31a6149e750587939"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 1287,
+      "response_head": "{\"r\":[0.33333349999999995,0.33333349999999995,0.333333499999",
+      "error_envelope": false
+    },
+    "heavy.fft512_x8": {
+      "n": 45,
+      "p50_ms": 2.6501,
+      "p95_ms": 3.0926799999999997,
+      "min_ms": 2.181,
+      "mean_ms": 2.6929755555555555,
+      "run_p50_ms": [
+        2.5666,
+        2.5781,
+        2.9784,
+        2.6997,
+        2.5703
+      ],
+      "p50_stable_ms": 2.5781,
+      "run_spread_pct": 15.973003374578177,
+      "ops_per_sec": 3018.7540092826684,
+      "us_per_op": 331.2625,
+      "category": "heavy",
+      "description": "8 x signal.fft over 512 samples; independent, large result payload.",
+      "ops_per_iter": 8,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "7938e76048024521bb0c23d6b56368ac19de1d5f569c2cf29f151dfab7985124"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 163655,
+      "response_head": "{\"r\":[[[3052.0,0.0],[-20.0105485734518,0.0000258932884819595",
+      "error_envelope": false
+    },
+    "heavy.fft512_x16": {
+      "n": 45,
+      "p50_ms": 5.4787,
+      "p95_ms": 7.6381,
+      "min_ms": 4.9481,
+      "mean_ms": 5.836004444444445,
+      "run_p50_ms": [
+        5.1466,
+        5.8461,
+        5.233,
+        7.3395,
+        5.3094
+      ],
+      "p50_stable_ms": 5.3094,
+      "run_spread_pct": 41.302218706445174,
+      "ops_per_sec": 2920.4008250132333,
+      "us_per_op": 342.41875,
+      "category": "heavy",
+      "description": "16 x signal.fft over 512 samples; independent, large result payload.",
+      "ops_per_iter": 16,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "768eb534ce60651de41339bfc50890046af2a67873b74ad27923ddb3e3cd1553"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 327303,
+      "response_head": "{\"r\":[[[3052.0,0.0],[-20.0105485734518,0.0000258932884819595",
+      "error_envelope": false
+    },
+    "heavy.fft512_x32": {
+      "n": 45,
+      "p50_ms": 11.8718,
+      "p95_ms": 14.12762,
+      "min_ms": 10.9482,
+      "mean_ms": 12.300902222222224,
+      "run_p50_ms": [
+        11.1836,
+        12.3244,
+        11.7118,
+        13.7525,
+        11.7634
+      ],
+      "p50_stable_ms": 11.7634,
+      "run_spread_pct": 21.8380740262169,
+      "ops_per_sec": 2695.463198504018,
+      "us_per_op": 370.99375000000003,
+      "category": "heavy",
+      "description": "32 x signal.fft over 512 samples; independent, large result payload.",
+      "ops_per_iter": 32,
+      "tags": [
+        "independent",
+        "parallel-candidate"
+      ],
+      "response_sha256": [
+        "7754fe2e30d77b4a8a6cbc88f2d04870372afeacdb94edcafabe5c830b33bdb7"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 654599,
+      "response_head": "{\"r\":[[[3052.0,0.0],[-20.0105485734518,0.0000258932884819595",
+      "error_envelope": false
+    },
+    "heavy.mixed_skew_16": {
+      "n": 35,
+      "p50_ms": 7.4387,
+      "p95_ms": 8.23453,
+      "min_ms": 7.0074,
+      "mean_ms": 7.5294799999999995,
+      "run_p50_ms": [
+        7.2512,
+        7.5478,
+        7.3386,
+        7.8944,
+        7.4156
+      ],
+      "p50_stable_ms": 7.4156,
+      "run_spread_pct": 8.673606990668322,
+      "ops_per_sec": 2150.9134660626187,
+      "us_per_op": 464.91875,
+      "category": "heavy",
+      "description": "Skewed batch: alternating signal.dft(256) and math.add, so completion order necessarily differs from input order.",
+      "ops_per_iter": 16,
+      "tags": [
+        "independent",
+        "parallel-candidate",
+        "skew"
+      ],
+      "response_sha256": [
+        "80c6b4a7c933880406b549e67de8f391de2a5e7592bf35ccf6c1e0a4a070e170"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 81751,
+      "response_head": "{\"r\":[[[1518.0,0.0],[-18.027172342869694,-0.590456803783744]",
+      "error_envelope": false
+    },
+    "dependent.chain_64": {
+      "n": 75,
+      "p50_ms": 0.1756,
+      "p95_ms": 0.2589499999999999,
+      "min_ms": 0.1398,
+      "mean_ms": 0.18058666666666667,
+      "run_p50_ms": [
+        0.1711,
+        0.1476,
+        0.1708,
+        0.1747,
+        0.2061
+      ],
+      "p50_stable_ms": 0.1711,
+      "run_spread_pct": 34.190531852717704,
+      "ops_per_sec": 364464.6924829157,
+      "us_per_op": 2.74375,
+      "category": "dependent",
+      "description": "64-item batch where each item references the previous via $N.",
+      "ops_per_iter": 64,
+      "tags": [
+        "dependent"
+      ],
+      "response_sha256": [
+        "934429b342043fc25ee99651ef18cf63f7937340b1f6248739dc8d0e258da577"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 320,
+      "response_head": "{\"r\":[3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,1",
+      "error_envelope": false
+    },
+    "dependent.half_64": {
+      "n": 75,
+      "p50_ms": 0.1845,
+      "p95_ms": 0.32788,
+      "min_ms": 0.1327,
+      "mean_ms": 0.20144,
+      "run_p50_ms": [
+        0.1473,
+        0.2077,
+        0.1473,
+        0.1924,
+        0.2027
+      ],
+      "p50_stable_ms": 0.1924,
+      "run_spread_pct": 31.392931392931402,
+      "ops_per_sec": 346883.46883468836,
+      "us_per_op": 2.8828125,
+      "category": "dependent",
+      "description": "64-item batch: first 32 independent, last 32 chained; exercises wave planning.",
+      "ops_per_iter": 64,
+      "tags": [
+        "mixed"
+      ],
+      "response_sha256": [
+        "82269bd87ad798aaabdbf60317b95d48cef14c3a438c196e5ac606135803e3b6"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 289,
+      "response_head": "{\"r\":[3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.0,3.",
+      "error_envelope": false
+    },
+    "pipeline.chain_10": {
+      "n": 75,
+      "p50_ms": 0.1004,
+      "p95_ms": 0.14788999999999997,
+      "min_ms": 0.0709,
+      "mean_ms": 0.10505733333333334,
+      "run_p50_ms": [
+        0.113,
+        0.0988,
+        0.1017,
+        0.0809,
+        0.123
+      ],
+      "p50_stable_ms": 0.1017,
+      "run_spread_pct": 41.39626352015732,
+      "ops_per_sec": 99601.593625498,
+      "us_per_op": 10.040000000000001,
+      "category": "pipeline",
+      "description": "10-step chained pipeline, last value only.",
+      "ops_per_iter": 10,
+      "tags": [],
+      "response_sha256": [
+        "6b8e4bb314f686c42076d8564e5c51a2c0c5f27ef609887825a4c48d18e197c5"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 10,
+      "response_head": "{\"r\":12.0}",
+      "error_envelope": false
+    },
+    "pipeline.chain_100": {
+      "n": 75,
+      "p50_ms": 0.2044,
+      "p95_ms": 0.3384499999999999,
+      "min_ms": 0.1755,
+      "mean_ms": 0.227684,
+      "run_p50_ms": [
+        0.2021,
+        0.2396,
+        0.2026,
+        0.2078,
+        0.1889
+      ],
+      "p50_stable_ms": 0.2026,
+      "run_spread_pct": 25.024679170779855,
+      "ops_per_sec": 489236.7906066536,
+      "us_per_op": 2.044,
+      "category": "pipeline",
+      "description": "100-step chained pipeline, last value only.",
+      "ops_per_iter": 100,
+      "tags": [],
+      "response_sha256": [
+        "aff63921664b55128b6282f853899b4fef642048921d3b8f55f141823ade6df0"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 11,
+      "response_head": "{\"r\":102.0}",
+      "error_envelope": false
+    },
+    "pipeline.chain_256": {
+      "n": 75,
+      "p50_ms": 0.4566,
+      "p95_ms": 0.6045999999999999,
+      "min_ms": 0.4209,
+      "mean_ms": 0.48237599999999997,
+      "run_p50_ms": [
+        0.448,
+        0.456,
+        0.4768,
+        0.4566,
+        0.4557
+      ],
+      "p50_stable_ms": 0.456,
+      "run_spread_pct": 6.315789473684208,
+      "ops_per_sec": 560665.7906263688,
+      "us_per_op": 1.78359375,
+      "category": "pipeline",
+      "description": "256-step chained pipeline, last value only.",
+      "ops_per_iter": 256,
+      "tags": [],
+      "response_sha256": [
+        "b2b6c80906cd1b730b51fda3598af0b5b2802e8cf5fde5e9a18491f5d99ee038"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 11,
+      "response_head": "{\"r\":258.0}",
+      "error_envelope": false
+    },
+    "pipeline.cumsum100_all_10": {
+      "n": 45,
+      "p50_ms": 0.3938,
+      "p95_ms": 0.5290999999999999,
+      "min_ms": 0.331,
+      "mean_ms": 0.4340822222222222,
+      "run_p50_ms": [
+        0.3714,
+        0.3934,
+        0.4621,
+        0.3923,
+        0.3938
+      ],
+      "p50_stable_ms": 0.3934,
+      "run_spread_pct": 23.055414336553127,
+      "ops_per_sec": 25393.60081259523,
+      "us_per_op": 39.38,
+      "category": "pipeline",
+      "description": "10 independent cumsum steps with all=true; exercises result accumulation.",
+      "ops_per_iter": 10,
+      "tags": [
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "4bc9b535cf6341b671b418612b9a70ace72ae418b81a96e6404abba5fa567ed6"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 6397,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "pipeline.cumsum100_all_100": {
+      "n": 45,
+      "p50_ms": 4.1114,
+      "p95_ms": 4.80776,
+      "min_ms": 3.7346,
+      "mean_ms": 4.250746666666667,
+      "run_p50_ms": [
+        3.8788,
+        4.0527,
+        4.3032,
+        4.2485,
+        4.5054
+      ],
+      "p50_stable_ms": 4.2485,
+      "run_spread_pct": 14.748734847593264,
+      "ops_per_sec": 24322.615167582822,
+      "us_per_op": 41.114,
+      "category": "pipeline",
+      "description": "100 independent cumsum steps with all=true; exercises result accumulation.",
+      "ops_per_iter": 100,
+      "tags": [
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "62f44f064b024c9e0571de1a29757d65a7015658f95647e3cb550f768bb127d3"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 63907,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "pipeline.cumsum100_all_256": {
+      "n": 45,
+      "p50_ms": 14.8593,
+      "p95_ms": 18.725199999999994,
+      "min_ms": 13.9232,
+      "mean_ms": 15.601764444444443,
+      "run_p50_ms": [
+        14.2629,
+        14.7571,
+        16.3648,
+        16.5349,
+        14.7436
+      ],
+      "p50_stable_ms": 14.7571,
+      "run_spread_pct": 15.39597888474023,
+      "ops_per_sec": 17228.26781880708,
+      "us_per_op": 58.044140625,
+      "category": "pipeline",
+      "description": "256 independent cumsum steps with all=true; exercises result accumulation.",
+      "ops_per_iter": 256,
+      "tags": [
+        "quadratic-probe"
+      ],
+      "response_sha256": [
+        "ea19a5600fba9b76edcd816ed14dd6e42b97bf80e7e51bb0821714e922a5cd6e"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 163591,
+      "response_head": "{\"r\":[[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66",
+      "error_envelope": false
+    },
+    "iopath.count_1000": {
+      "n": 45,
+      "p50_ms": 0.2714,
+      "p95_ms": 0.45764,
+      "min_ms": 0.2152,
+      "mean_ms": 0.3990044444444445,
+      "run_p50_ms": [
+        0.2661,
+        0.2373,
+        0.4024,
+        0.4263,
+        0.2543
+      ],
+      "p50_stable_ms": 0.2661,
+      "run_spread_pct": 71.02593010146562,
+      "ops_per_sec": 3684.5983787767136,
+      "category": "iopath",
+      "description": "stat.count over 1000 floats: input path with O(1) compute and tiny output.",
+      "ops_per_iter": 1,
+      "tags": [
+        "input-path"
+      ],
+      "response_sha256": [
+        "261d4724c97ab326b25a21455966e54c87a682e5cadf1fb806c848d0b41a8be8"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 10,
+      "response_head": "{\"r\":1000}",
+      "error_envelope": false
+    },
+    "iopath.cumsum_1000": {
+      "n": 45,
+      "p50_ms": 0.358,
+      "p95_ms": 0.7709199999999997,
+      "min_ms": 0.2988,
+      "mean_ms": 0.4547688888888889,
+      "run_p50_ms": [
+        0.321,
+        0.3342,
+        0.4394,
+        0.6297,
+        0.3409
+      ],
+      "p50_stable_ms": 0.3409,
+      "run_spread_pct": 90.55441478439427,
+      "ops_per_sec": 2793.296089385475,
+      "category": "iopath",
+      "description": "stat.cumsum over 1000 floats: same input, 1000-element output. Delta against iopath.count_1000 isolates the output path.",
+      "ops_per_iter": 1,
+      "tags": [
+        "output-path"
+      ],
+      "response_sha256": [
+        "c9044601b101ea27aede3d663b6e54d9e82c3ce847ff9bcfb3b2a693004fe866"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 8356,
+      "response_head": "{\"r\":[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66.",
+      "error_envelope": false
+    },
+    "iopath.count_10000": {
+      "n": 45,
+      "p50_ms": 2.3836,
+      "p95_ms": 3.4812600000000002,
+      "min_ms": 1.9363,
+      "mean_ms": 2.5250355555555553,
+      "run_p50_ms": [
+        1.9763,
+        2.3377,
+        2.869,
+        3.1804,
+        2.0089
+      ],
+      "p50_stable_ms": 2.3377,
+      "run_spread_pct": 51.50789237284511,
+      "ops_per_sec": 419.533478771606,
+      "category": "iopath",
+      "description": "stat.count over 10000 floats: input path with O(1) compute and tiny output.",
+      "ops_per_iter": 1,
+      "tags": [
+        "input-path"
+      ],
+      "response_sha256": [
+        "fa5aa074a54264aac0fff138063ad17d73226d9404900f0a583b3ee9a4e01926"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 11,
+      "response_head": "{\"r\":10000}",
+      "error_envelope": false
+    },
+    "iopath.cumsum_10000": {
+      "n": 45,
+      "p50_ms": 3.0451,
+      "p95_ms": 4.12594,
+      "min_ms": 2.4644,
+      "mean_ms": 3.1872355555555556,
+      "run_p50_ms": [
+        2.668,
+        2.8591,
+        3.1132,
+        4.0724,
+        3.0451
+      ],
+      "p50_stable_ms": 3.0451,
+      "run_spread_pct": 46.119996059242716,
+      "ops_per_sec": 328.3964401825884,
+      "category": "iopath",
+      "description": "stat.cumsum over 10000 floats: same input, 10000-element output. Delta against iopath.count_10000 isolates the output path.",
+      "ops_per_iter": 1,
+      "tags": [
+        "output-path"
+      ],
+      "response_sha256": [
+        "b18a53089def5469ae3a622b48ab184a85646eff90df9c5454c001ecd8106b7a"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 103470,
+      "response_head": "{\"r\":[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66.",
+      "error_envelope": false
+    },
+    "iopath.count_50000": {
+      "n": 45,
+      "p50_ms": 15.2061,
+      "p95_ms": 19.0236,
+      "min_ms": 12.3966,
+      "mean_ms": 15.553600000000001,
+      "run_p50_ms": [
+        13.7841,
+        17.2134,
+        17.2468,
+        17.4025,
+        12.7208
+      ],
+      "p50_stable_ms": 17.2134,
+      "run_spread_pct": 27.197996909384546,
+      "ops_per_sec": 65.76308192107116,
+      "category": "iopath",
+      "description": "stat.count over 50000 floats: input path with O(1) compute and tiny output.",
+      "ops_per_iter": 1,
+      "tags": [
+        "input-path"
+      ],
+      "response_sha256": [
+        "a8105ff638143684e2ec3087d6e10b97211c679d7029911e512e7882018ed4e3"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 11,
+      "response_head": "{\"r\":50000}",
+      "error_envelope": false
+    },
+    "iopath.cumsum_50000": {
+      "n": 45,
+      "p50_ms": 18.6983,
+      "p95_ms": 23.686239999999998,
+      "min_ms": 15.7468,
+      "mean_ms": 19.63719111111111,
+      "run_p50_ms": [
+        21.4936,
+        22.6856,
+        20.1355,
+        17.2765,
+        16.4832
+      ],
+      "p50_stable_ms": 20.1355,
+      "run_spread_pct": 30.8033075910705,
+      "ops_per_sec": 53.48079771957878,
+      "category": "iopath",
+      "description": "stat.cumsum over 50000 floats: same input, 50000-element output. Delta against iopath.count_50000 isolates the output path.",
+      "ops_per_iter": 1,
+      "tags": [
+        "output-path"
+      ],
+      "response_sha256": [
+        "8ad39b797088fbf5203db5ac1c3bf59747bc4925159ff47e1de06bc2f2676099"
+      ],
+      "deterministic_across_runs": true,
+      "response_bytes": 584607,
+      "response_head": "{\"r\":[0.0,1.0,3.0,6.0,10.0,15.0,21.0,28.0,36.0,45.0,55.0,66.",
+      "error_envelope": false
+    },
+    "stateful.udo_formula_define": {
+      "n": 100,
+      "p50_ms": 2.25945,
+      "p95_ms": 3.561984999999999,
+      "min_ms": 1.4847,
+      "mean_ms": 2.340083,
+      "run_p50_ms": [
+        2.2560000000000002,
+        2.3447,
+        2.40405,
+        1.9273,
+        1.7204000000000002
+      ],
+      "p99_ms": 5.680842000000019,
+      "p50_stable_ms": 2.2560000000000002,
+      "run_spread_pct": 30.30363475177303,
+      "ops_per_sec": 442.58558498749693,
+      "category": "stateful",
+      "description": "udo.formula definition: registry write lock, full snapshot, fsync, rename.",
+      "ops_per_iter": 1,
+      "tags": [
+        "serialized",
+        "fsync"
+      ],
+      "response_sha256": [
+        "bfd82dbdf7835fe9405c82f17fc557ffdaeed59f544b197e21367ce692061a05"
+      ],
+      "deterministic_across_runs": true,
+      "note": "response text intentionally excluded from fingerprint (opcode name varies)"
+    }
+  },
+  "process_metrics": [
+    {
+      "rss_bytes": 12218368,
+      "cpu_user_s": 1.65625,
+      "cpu_system_s": 0.453125,
+      "num_threads": 23,
+      "peak_rss_bytes": 20717568
+    },
+    {
+      "rss_bytes": 11874304,
+      "cpu_user_s": 1.796875,
+      "cpu_system_s": 0.4375,
+      "num_threads": 22,
+      "peak_rss_bytes": 20381696
+    },
+    {
+      "rss_bytes": 12427264,
+      "cpu_user_s": 1.84375,
+      "cpu_system_s": 0.390625,
+      "num_threads": 23,
+      "peak_rss_bytes": 21622784
+    },
+    {
+      "rss_bytes": 12079104,
+      "cpu_user_s": 1.65625,
+      "cpu_system_s": 0.53125,
+      "num_threads": 23,
+      "peak_rss_bytes": 21417984
+    },
+    {
+      "rss_bytes": 12759040,
+      "cpu_user_s": 1.90625,
+      "cpu_system_s": 0.234375,
+      "num_threads": 24,
+      "peak_rss_bytes": 22335488
+    }
+  ]
+}

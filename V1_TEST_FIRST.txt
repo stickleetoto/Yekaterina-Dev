@@ -1,0 +1,16 @@
+Yekaterina v1.0.0 acceptance order
+
+1. .\VERIFY_WINDOWS.bat
+2. .\RUN_FULL_CAPABILITY_AUDIT_WINDOWS.bat
+3. Run Yekaterina Self-Regression Benchmark against target\release\yekaterina.exe with opcode count 1215.
+
+Frozen acceptance targets:
+- 1215 registered opcodes
+- exactly 3 MCP tools
+- 527/527 Golden
+- 1215/1215 yk.spec
+- 1215/1215 fixture coverage
+- 1215/1215 clean replay/type contract
+- Golden oracle 100%
+- schema 412 tokens
+- fixed 10k arithmetic wire = 159794 tokens

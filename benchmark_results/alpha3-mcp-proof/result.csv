@@ -1,0 +1,7 @@
+﻿section,workload,engine,n,calls,wire_tokens,accuracy,total_ms,p50_ms,p95_ms
+arithmetic,mixed_arithmetic_100,arithma,100,100,7935,1.0,64.5211,0.6258,0.712255
+arithmetic,mixed_arithmetic_100,yekaterina,100,1,1666,1.0,0.4178,0.4178,0.4178
+arithmetic,mixed_arithmetic_1000,arithma,1000,1000,79422,1.0,615.4043,0.6091,0.68294
+arithmetic,mixed_arithmetic_1000,yekaterina,1000,1,15987,1.0,2.7649,2.7649,2.7649
+arithmetic,mixed_arithmetic_10000,arithma,10000,10000,812100,1.0,6041.256,0.5981,0.666
+arithmetic,mixed_arithmetic_10000,yekaterina,10000,10,159794,1.0,25.6898,2.65335,2.779515

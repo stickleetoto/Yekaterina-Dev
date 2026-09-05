@@ -1,0 +1,695 @@
+{
+  "linalg.eigen_symmetric": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.eigenvalues_symmetric": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.svd": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.singular_values": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.pinv": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.condition_number": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.rank": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.nullity": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.pca": [
+    [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    2
+  ],
+  "linalg.covariance": [
+    [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        5,
+        6
+      ]
+    ]
+  ],
+  "linalg.least_squares": [
+    [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      2,
+      3
+    ]
+  ],
+  "linalg.project": [
+    [
+      2,
+      2
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "linalg.gram": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.orthogonality_error": [
+    [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.reconstruction_error": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.moore_penrose_error": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.power_iteration": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.rayleigh_quotient": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    [
+      1,
+      0
+    ]
+  ],
+  "linalg.spectral_norm": [
+    [
+      [
+        3,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ]
+  ],
+  "linalg.center_columns": [
+    [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        5,
+        6
+      ]
+    ]
+  ],
+  "special.gamma": [
+    2
+  ],
+  "special.log_gamma": [
+    2
+  ],
+  "special.beta": [
+    2,
+    3
+  ],
+  "special.log_beta": [
+    2,
+    3
+  ],
+  "special.erf": [
+    0.5
+  ],
+  "special.erfc": [
+    0.5
+  ],
+  "special.digamma": [
+    2
+  ],
+  "special.trigamma": [
+    2
+  ],
+  "special.bessel_j0": [
+    0.5
+  ],
+  "special.bessel_j1": [
+    0.5
+  ],
+  "special.bessel_jn": [
+    2,
+    1
+  ],
+  "special.bessel_i0": [
+    0.5
+  ],
+  "special.bessel_i1": [
+    0.5
+  ],
+  "special.zeta": [
+    2
+  ],
+  "special.eta": [
+    2
+  ],
+  "special.lambert_w0": [
+    0.5
+  ],
+  "special.lambert_wm1": [
+    -0.1
+  ],
+  "special.sinc": [
+    0.5
+  ],
+  "optimize.golden_section": [
+    {
+      "e": "(x-2)^2"
+    },
+    -5,
+    5
+  ],
+  "optimize.brent": [
+    {
+      "e": "(x-2)^2"
+    },
+    -5,
+    5
+  ],
+  "optimize.bracket": [
+    {
+      "e": "(x-2)^2"
+    },
+    0,
+    1
+  ],
+  "optimize.argmin_grid": [
+    {
+      "e": "(x-2)^2"
+    },
+    -5,
+    5,
+    101
+  ],
+  "optimize.newton": [
+    {
+      "e": "(x-2)^2"
+    },
+    0
+  ],
+  "optimize.gradient_descent1d": [
+    {
+      "e": "(x-2)^2"
+    },
+    0,
+    0.1
+  ],
+  "optimize.gradient_descent2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    4,
+    4,
+    0.1
+  ],
+  "optimize.nelder_mead2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    4,
+    4
+  ],
+  "optimize.coordinate_descent2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    4,
+    4
+  ],
+  "optimize.finite_diff_grad2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    1,
+    -2
+  ],
+  "optimize.finite_diff_hessian2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    1,
+    -2
+  ],
+  "optimize.armijo_step2d": [
+    {
+      "e": "x^2+y^2"
+    },
+    1,
+    1,
+    -2,
+    -2
+  ],
+  "optimize.bfgs2d": [
+    {
+      "e": "(x-1)^2+(y+2)^2"
+    },
+    4,
+    4
+  ],
+  "optimize.line_search1d": [
+    {
+      "e": "(x-2)^2"
+    },
+    -5,
+    5
+  ],
+  "optimize.stationary_residual": [
+    {
+      "e": "(x-2)^2"
+    },
+    2
+  ],
+  "optimize.audit_minimum": [
+    {
+      "e": "(x-2)^2"
+    },
+    2
+  ],
+  "ode.euler": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    100
+  ],
+  "ode.heun": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    100
+  ],
+  "ode.midpoint": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    100
+  ],
+  "ode.rk4": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    100
+  ],
+  "ode.rk45": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1
+  ],
+  "ode.rk45_trajectory": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1
+  ],
+  "ode.rk45_stats": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1
+  ],
+  "ode.step_doubling_error": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    0.1,
+    4
+  ],
+  "ode.convergence_rk4": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    10,
+    4
+  ],
+  "ode.solve_grid": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    [
+      0.25,
+      0.5,
+      1.0
+    ]
+  ],
+  "ode.event_target": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    2,
+    2,
+    0.01
+  ],
+  "ode.residual": [
+    {
+      "e": "0"
+    },
+    0,
+    1,
+    1,
+    0.1
+  ],
+  "ode.local_error_rk4": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    0.1
+  ],
+  "ode.adaptive_reject_ratio": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1
+  ],
+  "ode.compare_methods": [
+    {
+      "e": "y"
+    },
+    0,
+    1,
+    1,
+    100
+  ],
+  "series.partial_sum": [
+    [
+      1,
+      0.5,
+      0.25
+    ]
+  ],
+  "series.kahan_sum": [
+    [
+      1,
+      0.5,
+      0.25
+    ]
+  ],
+  "series.convergence": [
+    [
+      1,
+      1.5,
+      1.75,
+      1.875
+    ],
+    0.2,
+    0
+  ],
+  "series.aitken": [
+    [
+      1,
+      1.5,
+      1.75
+    ]
+  ],
+  "series.richardson_limit": [
+    1,
+    1.5,
+    1
+  ],
+  "series.euler_transform": [
+    [
+      1,
+      0.5,
+      0.25,
+      0.125
+    ]
+  ],
+  "series.geometric_sum": [
+    1,
+    0.5
+  ],
+  "series.power_eval": [
+    [
+      1,
+      2,
+      3
+    ],
+    0.5
+  ],
+  "series.taylor_eval": [
+    [
+      1,
+      2,
+      3
+    ],
+    0.5
+  ],
+  "series.taylor_exp": [
+    0.5,
+    12
+  ],
+  "series.taylor_sin": [
+    0.5,
+    12
+  ],
+  "series.taylor_cos": [
+    0.5,
+    12
+  ],
+  "series.fourier_coefficients": [
+    [
+      1,
+      0,
+      -1,
+      0
+    ],
+    1
+  ],
+  "series.fourier_eval": [
+    {
+      "a": [
+        0,
+        1
+      ],
+      "b": [
+        0,
+        0
+      ],
+      "period": 6.283185307179586
+    },
+    0.5
+  ],
+  "series.chebyshev_coefficients": [
+    {
+      "e": "x^2"
+    },
+    -1,
+    1,
+    8
+  ],
+  "series.chebyshev_eval": [
+    {
+      "c": [
+        0.5,
+        0,
+        0.5
+      ],
+      "lo": -1,
+      "hi": 1
+    },
+    0.3
+  ]
+}

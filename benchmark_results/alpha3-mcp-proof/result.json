@@ -1,0 +1,420 @@
+{
+  "benchmark": "yekaterina-mcp-realworld-v0.1",
+  "scope": "MCP-only; no LLM/API",
+  "tokenizer": "tiktoken:o200k_base",
+  "seed": 42,
+  "schema": {
+    "arithma": {
+      "tools": 174,
+      "tokens": 16896,
+      "bytes": 67797,
+      "elapsed_ms": 1.8327
+    },
+    "yekaterina": {
+      "tools": 3,
+      "tokens": 412,
+      "bytes": 1725,
+      "elapsed_ms": 0.5233
+    },
+    "token_reduction_pct": 97.56155303030303
+  },
+  "cold_start": {
+    "arithma": {
+      "repeats": 10,
+      "success": 10,
+      "failures": [],
+      "start": {
+        "count": 10,
+        "total_ms": 75.6972,
+        "mean_ms": 7.569719999999999,
+        "p50_ms": 7.0847999999999995,
+        "p95_ms": 9.824484999999996,
+        "p99_ms": 11.429617,
+        "max_ms": 11.8309
+      },
+      "initialize": {
+        "count": 10,
+        "total_ms": 46.3805,
+        "mean_ms": 4.63805,
+        "p50_ms": 4.49035,
+        "p95_ms": 5.238364999999999,
+        "p99_ms": 5.538713,
+        "max_ms": 5.6138
+      },
+      "tools_list": {
+        "count": 10,
+        "total_ms": 18.9795,
+        "mean_ms": 1.8979500000000002,
+        "p50_ms": 1.8973499999999999,
+        "p95_ms": 2.050495,
+        "p99_ms": 2.085379,
+        "max_ms": 2.0941
+      },
+      "rss_bytes_mean": 8433664,
+      "rss_bytes_max": 8462336
+    },
+    "yekaterina": {
+      "repeats": 10,
+      "success": 10,
+      "failures": [],
+      "start": {
+        "count": 10,
+        "total_ms": 62.742000000000004,
+        "mean_ms": 6.2742,
+        "p50_ms": 5.947900000000001,
+        "p95_ms": 7.944089999999996,
+        "p99_ms": 9.180978000000001,
+        "max_ms": 9.4902
+      },
+      "initialize": {
+        "count": 10,
+        "total_ms": 34.4879,
+        "mean_ms": 3.4487900000000002,
+        "p50_ms": 3.2907,
+        "p95_ms": 4.189839999999999,
+        "p99_ms": 4.617088000000001,
+        "max_ms": 4.7239
+      },
+      "tools_list": {
+        "count": 10,
+        "total_ms": 3.7382,
+        "mean_ms": 0.37382,
+        "p50_ms": 0.3784,
+        "p95_ms": 0.39942500000000003,
+        "p99_ms": 0.404285,
+        "max_ms": 0.4055
+      },
+      "rss_bytes_mean": 6242304,
+      "rss_bytes_max": 6279168
+    }
+  },
+  "arithmetic": [
+    {
+      "name": "mixed_arithmetic_100",
+      "n": 100,
+      "arithma": {
+        "calls": 100,
+        "request_tokens": 3737,
+        "response_tokens": 4198,
+        "wire_tokens": 7935,
+        "correct": 100,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 100,
+          "total_ms": 64.5211,
+          "mean_ms": 0.6452110000000001,
+          "p50_ms": 0.6258,
+          "p95_ms": 0.712255,
+          "p99_ms": 1.3087300000000002,
+          "max_ms": 1.3216
+        }
+      },
+      "yekaterina": {
+        "calls": 1,
+        "request_tokens": 1010,
+        "response_tokens": 656,
+        "wire_tokens": 1666,
+        "correct": 100,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1,
+          "total_ms": 0.4178,
+          "mean_ms": 0.4178,
+          "p50_ms": 0.4178,
+          "p95_ms": 0.4178,
+          "p99_ms": 0.4178,
+          "max_ms": 0.4178
+        }
+      },
+      "call_reduction_pct": 99.0,
+      "wire_token_reduction_pct": 79.00441083805923
+    },
+    {
+      "name": "mixed_arithmetic_1000",
+      "n": 1000,
+      "arithma": {
+        "calls": 1000,
+        "request_tokens": 37383,
+        "response_tokens": 42039,
+        "wire_tokens": 79422,
+        "correct": 1000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1000,
+          "total_ms": 615.4043,
+          "mean_ms": 0.6154043,
+          "p50_ms": 0.6091,
+          "p95_ms": 0.68294,
+          "p99_ms": 0.786525,
+          "max_ms": 1.7649
+        }
+      },
+      "yekaterina": {
+        "calls": 1,
+        "request_tokens": 9822,
+        "response_tokens": 6165,
+        "wire_tokens": 15987,
+        "correct": 1000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1,
+          "total_ms": 2.7649,
+          "mean_ms": 2.7649,
+          "p50_ms": 2.7649,
+          "p95_ms": 2.7649,
+          "p99_ms": 2.7649,
+          "max_ms": 2.7649
+        }
+      },
+      "call_reduction_pct": 99.9,
+      "wire_token_reduction_pct": 79.87081665029841
+    },
+    {
+      "name": "mixed_arithmetic_10000",
+      "n": 10000,
+      "arithma": {
+        "calls": 10000,
+        "request_tokens": 382923,
+        "response_tokens": 429177,
+        "wire_tokens": 812100,
+        "correct": 10000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 10000,
+          "total_ms": 6041.256,
+          "mean_ms": 0.6041256,
+          "p50_ms": 0.5981,
+          "p95_ms": 0.666,
+          "p99_ms": 0.7411130000000002,
+          "max_ms": 1.7957
+        }
+      },
+      "yekaterina": {
+        "calls": 10,
+        "request_tokens": 98334,
+        "response_tokens": 61460,
+        "wire_tokens": 159794,
+        "correct": 10000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 10,
+          "total_ms": 25.6898,
+          "mean_ms": 2.5689800000000003,
+          "p50_ms": 2.65335,
+          "p95_ms": 2.779515,
+          "p99_ms": 2.7893429999999997,
+          "max_ms": 2.7918
+        }
+      },
+      "call_reduction_pct": 99.9,
+      "wire_token_reduction_pct": 80.32335919221771
+    }
+  ],
+  "yekaterina_modes": {
+    "independent": {
+      "n": 1000,
+      "serial": {
+        "calls": 1000,
+        "request_tokens": 41307,
+        "response_tokens": 39643,
+        "wire_tokens": 80950,
+        "correct": 1000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1000,
+          "total_ms": 75.662,
+          "mean_ms": 0.07566200000000001,
+          "p50_ms": 0.0696,
+          "p95_ms": 0.10511,
+          "p99_ms": 0.14972299999999997,
+          "max_ms": 0.7804
+        }
+      },
+      "batch": {
+        "calls": 1,
+        "request_tokens": 9828,
+        "response_tokens": 6165,
+        "wire_tokens": 15993,
+        "correct": 1000,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1,
+          "total_ms": 2.3672,
+          "mean_ms": 2.3672,
+          "p50_ms": 2.3672,
+          "p95_ms": 2.3672,
+          "p99_ms": 2.3672,
+          "max_ms": 2.3672
+        }
+      },
+      "call_reduction_pct": 99.9,
+      "wire_token_reduction_pct": 80.24336009882643
+    },
+    "workflow": {
+      "tasks": 250,
+      "steps_per_task": 4,
+      "serial": {
+        "calls": 1000,
+        "request_tokens": 42433,
+        "response_tokens": 39680,
+        "wire_tokens": 82113,
+        "correct": 250,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 1000,
+          "total_ms": 72.7784,
+          "mean_ms": 0.07277840000000001,
+          "p50_ms": 0.0691,
+          "p95_ms": 0.09490499999999999,
+          "p99_ms": 0.13111199999999998,
+          "max_ms": 0.2862
+        }
+      },
+      "pipeline": {
+        "calls": 250,
+        "request_tokens": 17500,
+        "response_tokens": 9747,
+        "wire_tokens": 27247,
+        "correct": 250,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 250,
+          "total_ms": 19.4486,
+          "mean_ms": 0.0777944,
+          "p50_ms": 0.07494999999999999,
+          "p95_ms": 0.10163999999999998,
+          "p99_ms": 0.12362399999999997,
+          "max_ms": 0.1542
+        }
+      },
+      "composite_udo": {
+        "calls": 250,
+        "request_tokens": 10000,
+        "response_tokens": 9747,
+        "wire_tokens": 19747,
+        "correct": 250,
+        "accuracy": 1.0,
+        "latency": {
+          "count": 250,
+          "total_ms": 18.9092,
+          "mean_ms": 0.07563679999999999,
+          "p50_ms": 0.0721,
+          "p95_ms": 0.10201999999999996,
+          "p99_ms": 0.116461,
+          "max_ms": 0.131
+        },
+        "setup": {
+          "calls": 1,
+          "request_tokens": 91,
+          "response_tokens": 40,
+          "wire_tokens": 131,
+          "elapsed_ms": 2.8737
+        }
+      },
+      "pipeline_vs_serial": {
+        "call_reduction_pct": 75.0,
+        "wire_token_reduction_pct": 66.81767807777088
+      },
+      "udo_vs_serial": {
+        "call_reduction_pct": 75.0,
+        "wire_token_reduction_pct": 75.95143278165455
+      },
+      "udo_vs_pipeline": {
+        "wire_token_reduction_pct": 27.525966161412263
+      }
+    }
+  },
+  "discovery": {
+    "yk.find": {
+      "calls": 100,
+      "request_tokens": 3700,
+      "response_tokens": 4000,
+      "wire_tokens": 7700,
+      "valid": 100,
+      "latency": {
+        "count": 100,
+        "total_ms": 7.2073,
+        "mean_ms": 0.072073,
+        "p50_ms": 0.06914999999999999,
+        "p95_ms": 0.08673499999999998,
+        "p99_ms": 0.11466500000000028,
+        "max_ms": 0.1706
+      }
+    },
+    "yk.spec": {
+      "calls": 100,
+      "request_tokens": 3400,
+      "response_tokens": 6300,
+      "wire_tokens": 9700,
+      "valid": 100,
+      "latency": {
+        "count": 100,
+        "total_ms": 6.7612,
+        "mean_ms": 0.06761199999999999,
+        "p50_ms": 0.0661,
+        "p95_ms": 0.08469499999999998,
+        "p99_ms": 0.11293700000000012,
+        "max_ms": 0.1364
+      }
+    }
+  },
+  "resilience": {
+    "arithma": {
+      "checks": [
+        {
+          "name": "unknown_tool",
+          "rpc_error": true,
+          "survived": true
+        },
+        {
+          "name": "divide_zero",
+          "response_text": "DIVIDE: ERROR\nREASON: [DIVISION_BY_ZERO] cannot divide by zero",
+          "survived": true
+        }
+      ],
+      "all_survived": true
+    },
+    "yekaterina": {
+      "checks": [
+        {
+          "name": "unknown_tool",
+          "rpc_error": true,
+          "survived": true
+        },
+        {
+          "name": "divide_zero",
+          "response_text": "{\"e\":\"DIV0\"}",
+          "survived": true
+        },
+        {
+          "name": "bad_ref",
+          "response_text": "{\"e\":\"REF\",\"i\":0}",
+          "survived": true
+        },
+        {
+          "name": "batch_limit",
+          "response_text": "{\"e\":\"LIMIT\"}",
+          "survived": true
+        }
+      ],
+      "all_survived": true
+    }
+  },
+  "udo_persistence": {
+    "pass": true,
+    "value": "28.0",
+    "listed": true,
+    "restart_start_ms": 6.4693,
+    "definition_wire_tokens": 200
+  },
+  "resources": {
+    "rss_before_bytes": {
+      "arithma": 8392704,
+      "yekaterina": 6234112
+    },
+    "rss_after_bytes": {
+      "arithma": 38981632,
+      "yekaterina": 7409664
+    }
+  }
+}
