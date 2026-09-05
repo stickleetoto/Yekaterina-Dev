@@ -16,15 +16,44 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install 'tiktoken>=0.7'
-      - run: python scripts/static_audit.py
+
+      # The v1.1 audit reproduces every v1.0.0 gate and adds the concurrency
+      # ones. It also hash-verifies that scripts/static_audit.py -- the frozen
+      # v1.0.0 audit -- has not been modified, so running that script separately
+      # would be redundant. It is deliberately not run here: it pins the package
+      # version to 1.0.0 and will fail by design once the v1.1 freeze bumps it.
+      - run: python scripts/static_audit_v11.py
       - run: python scripts/lexical_rust_audit.py
       - run: python scripts/operation_manifest.py
       - run: python scripts/validate_golden_manifest.py
       - run: python scripts/validate_full_audit.py
-      - run: cargo generate-lockfile
+
+      # Cargo.lock is committed, so `--locked` must validate *it*. Regenerating
+      # the lockfile first (as this workflow used to) made every later --locked
+      # step check the freshly generated file instead, which defeated the
+      # reproducibility guarantee the exact version pins exist to provide.
       - run: cargo test --locked --all-targets
       - run: cargo clippy --locked --all-targets
       - run: cargo build --locked --release
+
       - run: python golden/run_golden.py --exe ./target/release/yekaterina --out ./golden_results/ci
       - run: python scripts/check_golden_result.py ./golden_results/ci/result.json
       - run: python full_audit/run_full_audit.py --exe ./target/release/yekaterina --out ./full_audit_results/ci --strict
+
+      # Timing-independent half of the benchmark harness: the frozen MCP surface
+      # (3 tools / 412 tokens / 1725 bytes), byte-identical responses across
+      # runs, and no unexpected error envelopes. No --compare: wall-clock
+      # comparison against a baseline captured on other hardware would be noise,
+      # and performance decisions are made with bench/paired_ab.py locally.
+      - run: python bench/run_bench.py --exe ./target/release/yekaterina --out ./bench_results/ci --runs 2 --cold-reps 3 --label "ci"
+
+      - name: Upload verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-reports
+          path: |
+            golden_results/ci/
+            full_audit_results/ci/
+            bench_results/ci/
+          if-no-files-found: ignore
