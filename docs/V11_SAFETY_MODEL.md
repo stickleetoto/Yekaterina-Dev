@@ -125,12 +125,12 @@ engine module. That is out of reach of any classifier and is guarded elsewhere:
 the v1.1 audit's forbidden-pattern check rejects `std::process::Command`,
 sockets and `unsafe` crate-wide, and thread creation is confined to `pool.rs`.
 
-## Classification of the current 1,215 operations
+## Classification of the current 1,387 operations
 
 | Class | Count | Which |
 |---|---:|---|
-| `Serialized` | 7 | `udo.formula`, `udo.composite`, `udo.remove`, `udo.import`, `udo.uninstall` (mutate), `udo.list`, `udo.export` (read server state) |
-| `Pure` | 1,208 | everything else, including `expr.eval` |
+| `Serialized` | 8 | the seven `udo.*` operations, plus `expr.eval` |
+| `Pure` | 1,207 | everything else |
 
 Dynamic user operations (`user.*`, `pack.*`) are not in the static registry and
 therefore classify as `Serialized`. A user formula is in fact pure, and a
@@ -139,10 +139,38 @@ time and at any depth above zero), so both could be parallelised later. v1.1
 leaves them serialized deliberately: they are rare, the cost of serializing them
 is nil, and fail-closed is the stated preference.
 
-`expr.eval` is classified `Pure` even though the dispatcher handles it, because
-`eval_expression(args)` reads only its arguments. It is the one place where the
-"has a dispatcher arm" heuristic and actual purity differ, so it is called out
-explicitly in the match rather than left to a rule.
+### `expr.eval` was classified `Pure` and that was a defect
+
+v1.1 shipped with `expr.eval` classified `Pure`, on the reasoning that
+`eval_expression(args)` reads only its arguments and is therefore pure. The
+reasoning was sound and the conclusion was wrong, because purity is not the
+property this classification carries.
+
+`Pure` here means **a worker can run this**, and a worker runs a job by calling
+`engine::execute`. `engine::execute` has no `expr.eval` arm: the implementation
+lives in `server::eval_expression` and is reachable only from the request task.
+So a batch that mixed `expr.eval` with enough compute to clear the parallel
+threshold returned `{"e":"NYI"}` for the `expr.eval` slot at two or more workers
+and the correct value at one — a direct violation of the invariant that output is
+byte-identical across worker counts.
+
+Confirmed by execution, not by reading:
+`[["signal.dft", <256 samples>], ["expr.eval", {"e":"1+1"}]]` returned `2.0` at
+`--workers 1` and `{"e":"NYI"}` at `--workers 2` and `4`.
+
+The classification is now simply "has a dispatcher arm ⇒ `Serialized`", with no
+exception. Three things missed it and have been changed:
+
+* the unit test asserted the wrong property — it required `expr.eval` to be the
+  one pure control operation, so it pinned the bug rather than catching it. It
+  now asserts that **no** control operation is pure, and a second test checks the
+  real invariant directly: nothing with a dispatcher arm may be `Pure`.
+* `src/scheduler.rs` carried the comment "Control operations never reach a wave",
+  which was true of the seven `udo.*` operations and false of `expr.eval`.
+* the cross-worker equivalence test had twelve batch shapes and not one of them
+  put a control operation inside a run heavy enough to distribute. Two such
+  shapes were added, and reintroducing the old classification makes them fail
+  with `shape "control op inside a distributed run" differs at workers=2`.
 
 ## Tests
 

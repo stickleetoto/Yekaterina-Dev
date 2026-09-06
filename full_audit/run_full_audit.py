@@ -12,7 +12,7 @@ try:
 except Exception:
     tiktoken=None
 
-EXPECTED_OPS=1215
+EXPECTED_OPS=1387
 
 def registry_ops():
     """Load the frozen alpha.12 opcode manifest.
@@ -42,6 +42,7 @@ def load_primary_fixtures():
         if 'expect' in c and c['op'] not in out:
             out[c['op']]=c['a']
     for op,a in json.loads((ROOT/'full_audit/overrides_alpha12.json').read_text(encoding='utf-8')).items(): out.setdefault(op,a)
+    for op,a in json.loads((ROOT/'full_audit/fixtures_v12.json').read_text(encoding='utf-8'))['fixtures'].items(): out.setdefault(op,a)
     out['expr.eval']=[{'e':'1+2'}]
     return out
 
@@ -61,6 +62,7 @@ def load_family_fixture_corpus():
         if 'expect' in c:
             items.append((c['op'],c['a']))
     items.extend(json.loads((ROOT/'full_audit/overrides_alpha12.json').read_text(encoding='utf-8')).items())
+    items.extend(json.loads((ROOT/'full_audit/fixtures_v12.json').read_text(encoding='utf-8'))['fixtures'].items())
     for op,a in items:
         fam=op.split('.',1)[0]
         key=json.dumps(a,sort_keys=True,separators=(',',':'))
@@ -473,7 +475,7 @@ def main():
     result={'benchmark':'yekaterina-full-capability-audit-alpha12','expected_registered':EXPECTED_OPS,'enumeration_pass':total==EXPECTED_OPS,'scope':'all registered opcodes: live spec + executable fixture + return-type contract; golden oracle is reported separately','registered':total,'spec_valid':spec_valid,'spec_coverage':spec_valid/total if total else 1.0,'fixture_discovered':found,'fixture_coverage':found/total if total else 1.0,'replay_success':replay_ok,'replay_coverage':replay_ok/total if total else 1.0,'golden_oracle_passed':oracle_pass,'golden_oracle_total':oracle_total,'golden_oracle_accuracy':oracle_pass/oracle_total if oracle_total else 1.0,'mcp_tools':tools,'tool_surface_pass':sorted(tools)==['yk.compute','yk.find','yk.spec'],'families':fams,'missing':[{'op':x['op'],'errors':x['errors'],'attempts':x['attempts'],'last':x.get('last')} for x in missing],'oracle_failures':[r for r in oracle_rows if not r['ok']]}
     (out/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     (out/'learned_fixtures.json').write_text(json.dumps(learned,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    lines=['# Yekaterina v1.0.0 Full Capability Audit','',f'- Registered opcodes: **{total}**',f'- Valid fixtures discovered: **{found}/{total} ({result["fixture_coverage"]*100:.2f}%)**',f'- Clean replay success: **{replay_ok}/{total} ({result["replay_coverage"]*100:.2f}%)**',f'- MCP tool surface: **{"PASS" if result["tool_surface_pass"] else "FAIL"}**',f'- `yk.spec` coverage: **{spec_valid}/{total}**',f'- Golden oracle correctness: **{oracle_pass}/{oracle_total} ({result["golden_oracle_accuracy"]*100:.2f}%)**','', '> `1215/1215` below means live execution/type coverage, not proof that every mathematical result is correct.','', '| Family | Registered | Fixtures | Replay | p50 | p95 | Wire tokens |','|---|---:|---:|---:|---:|---:|---:|']
+    lines=['# Yekaterina v1.2.0 Full Capability Audit','',f'- Registered opcodes: **{total}**',f'- Valid fixtures discovered: **{found}/{total} ({result["fixture_coverage"]*100:.2f}%)**',f'- Clean replay success: **{replay_ok}/{total} ({result["replay_coverage"]*100:.2f}%)**',f'- MCP tool surface: **{"PASS" if result["tool_surface_pass"] else "FAIL"}**',f'- `yk.spec` coverage: **{spec_valid}/{total}**',f'- Golden oracle correctness: **{oracle_pass}/{oracle_total} ({result["golden_oracle_accuracy"]*100:.2f}%)**','', f'> `{total}/{total}` below means live execution/type coverage, not proof that every mathematical result is correct.','', '| Family | Registered | Fixtures | Replay | p50 | p95 | Wire tokens |','|---|---:|---:|---:|---:|---:|---:|']
     for fam,d in fams.items():lines.append(f'| {fam} | {d["registered"]} | {d["fixture_success"]} | {d["replay_success"]} | {d["p50_ms"]:.3f} ms | {d["p95_ms"]:.3f} ms | {d["wire_tokens"] if d["wire_tokens"] is not None else "n/a"} |')
     if missing:
         lines+=['','## Missing valid fixtures / unexpected failures']

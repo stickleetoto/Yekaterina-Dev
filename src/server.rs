@@ -726,6 +726,18 @@ mod tests {
                 ["math.div", 1, 0], ["math.mul", "$0", 10], ["stat.sum", big], ["math.add", 1, 2]
             ]), None),
             ("forward reference", json!([["math.mul", "$1", 10], ["math.add", 1, 2]]), None),
+            // A control operation mixed into a run heavy enough to be
+            // distributed. This shape is the one that caught expr.eval being
+            // classified Pure: it returned NYI at two or more workers and the
+            // right answer at one. Every earlier shape here is either all-pure
+            // or too cheap to distribute, so none of them could have found it.
+            ("control op inside a distributed run", json!([
+                ["signal.dft", signal], ["expr.eval", {"e": "1+1"}], ["signal.dft", signal]
+            ]), None),
+            ("every control op inside a distributed run", json!([
+                ["signal.dft", signal], ["expr.eval", {"e": "2*3"}], ["udo.list"],
+                ["signal.dft", signal], ["expr.eval", {"e": "x+1", "v": {"x": 4}}]
+            ]), None),
             ("malformed items mixed in", json!([
                 ["math.add", 1, 2], {"nope": 1}, [], "scalar", 42, ["stat.sum", big], ["zzz.nope"]
             ]), None),
@@ -877,7 +889,6 @@ mod tests {
             ("stat.mean", vec![json!([1, 2, 3])]),
             ("mat.transpose", vec![json!([[1, 2], [3, 4]])]),
             ("int.add", vec![json!("9"), json!("1")]),
-            ("expr.eval", vec![json!({"e": "1+1"})]),
             ("signal.fft", vec![json!([1, 0, 0, 0])]),
             // Also drive the error paths: a rejected pure call must not write
             // anything either.
@@ -892,6 +903,12 @@ mod tests {
             );
             let _ = yk.execute_any(op, args).await;
         }
+
+        // `expr.eval` is Serialized because `engine::execute` has no arm for it,
+        // not because it touches state. Run it here too: it must leave the
+        // server as untouched as the pure operations above.
+        assert_eq!(safety::classify("expr.eval"), safety::Safety::Serialized);
+        let _ = yk.execute_any("expr.eval", &[json!({"e": "1+1"})]).await;
 
         let after = yk.registry_snapshot().await;
         assert!(

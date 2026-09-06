@@ -4,7 +4,7 @@ Private development checkpoint. This is a short status marker, not a report.
 Detail lives in `docs/V11_BASELINE.md` (frozen baseline and measurement
 methodology) and `docs/ARCHITECTURE*.md`.
 
-**This tree is the v1.1 development baseline, not a v1.1 release.**
+**This document is the v1.1 record. The tree has since moved to 1.2.0; at the time of writing it was the v1.1 development baseline, not a v1.1 release.**
 
 ## Frozen v1.0.0 compatibility baseline
 

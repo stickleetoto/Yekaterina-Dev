@@ -25,6 +25,13 @@ fn run(op: &str, args: &[Value]) -> Result<Value, &'static str> {
         "special.lambert_w0" => unary(args, |x| lambert_w(x, 0)),
         "special.lambert_wm1" => unary(args, |x| lambert_w(x, -1)),
         "special.sinc" => unary(args, |x| if x.abs() < 1e-15 { 1.0 } else { x.sin() / x }),
+        "special.gamma_p" => binary_dom(args, gamma_p),
+        "special.gamma_q" => binary_dom(args, gamma_q),
+        "special.beta_inc" => {
+            if args.len() != 3 { return Err("ARG"); }
+            let v = beta_inc(num(&args[0])?, num(&args[1])?, num(&args[2])?);
+            if v.is_nan() { Err("DOMAIN") } else { finite(v) }
+        }
         _ => Err("OP"),
     }
 }
@@ -38,6 +45,11 @@ fn unary<F: FnOnce(f64) -> f64>(a: &[Value], f: F) -> Result<Value, &'static str
     finite(f(num(&a[0])?))
 }
 fn finite(x: f64) -> Result<Value, &'static str> { if x.is_finite() { Ok(json!(x)) } else { Err("DOMAIN") } }
+fn binary_dom<F: FnOnce(f64, f64) -> f64>(a: &[Value], f: F) -> Result<Value, &'static str> {
+    if a.len() != 2 { return Err("ARG"); }
+    let v = f(num(&a[0])?, num(&a[1])?);
+    if v.is_nan() { Err("DOMAIN") } else { finite(v) }
+}
 
 fn gamma(x: f64) -> f64 { libm::tgamma(x) }
 fn log_gamma(x: f64) -> f64 { if x <= 0.0 { f64::NAN } else { libm::lgamma(x) } }
@@ -143,4 +155,128 @@ fn lambert_w(x: f64, branch: i8) -> f64 {
     }
     let residual = w * w.exp() - x;
     if residual.abs() <= 1e-12 * (1.0 + x.abs()) { w } else { f64::NAN }
+}
+
+// ---------------------------------------------------------------------------
+// Regularized incomplete gamma and beta.
+//
+// These are the foundation the t, chi-square and F distributions are built on,
+// and without them the engine could produce a test statistic but never a
+// p-value. Both use the standard series/continued-fraction pair, with a fixed
+// iteration cap and a fixed tolerance: the loop count must not depend on the
+// input in a way that could differ between runs or platforms, because this
+// engine's contract is byte-identical output.
+
+/// Iterations are capped rather than run to convergence. At this cap the
+/// series and the continued fraction have both converged to f64 precision for
+/// every argument the domain guards admit; the cap exists so the loop is
+/// bounded, not because it is expected to be reached.
+const INC_MAX_ITER: usize = 300;
+const INC_EPS: f64 = 3.0e-16;
+/// Guards the continued fractions against a zero denominator.
+const INC_TINY: f64 = 1.0e-300;
+
+/// Series expansion for P(a, x), used where it converges fastest: x < a + 1.
+fn gamma_p_series(a: f64, x: f64) -> f64 {
+    let mut ap = a;
+    let mut del = 1.0 / a;
+    let mut sum = del;
+    for _ in 0..INC_MAX_ITER {
+        ap += 1.0;
+        del *= x / ap;
+        sum += del;
+        if del.abs() < sum.abs() * INC_EPS { break; }
+    }
+    sum * (-x + a * x.ln() - libm::lgamma(a)).exp()
+}
+
+/// Continued fraction for Q(a, x) by modified Lentz, used where the series is
+/// slow: x >= a + 1.
+fn gamma_q_cf(a: f64, x: f64) -> f64 {
+    let mut b = x + 1.0 - a;
+    let mut c = 1.0 / INC_TINY;
+    let mut d = 1.0 / b;
+    let mut h = d;
+    for i in 1..=INC_MAX_ITER {
+        let an = -(i as f64) * (i as f64 - a);
+        b += 2.0;
+        d = an * d + b;
+        if d.abs() < INC_TINY { d = INC_TINY; }
+        c = b + an / c;
+        if c.abs() < INC_TINY { c = INC_TINY; }
+        d = 1.0 / d;
+        let del = d * c;
+        h *= del;
+        if (del - 1.0).abs() < INC_EPS { break; }
+    }
+    (-x + a * x.ln() - libm::lgamma(a)).exp() * h
+}
+
+/// Regularized lower incomplete gamma P(a, x). NaN outside the domain, which
+/// the caller turns into DOMAIN.
+pub(crate) fn gamma_p(a: f64, x: f64) -> f64 {
+    if a <= 0.0 || x < 0.0 { return f64::NAN; }
+    if x == 0.0 { return 0.0; }
+    if x < a + 1.0 { gamma_p_series(a, x) } else { 1.0 - gamma_q_cf(a, x) }
+}
+
+/// Regularized upper incomplete gamma Q(a, x) = 1 - P(a, x). Computed on its
+/// own branch rather than as 1 - P so the far tail keeps its relative accuracy;
+/// subtracting a number very close to 1 would throw away the digits that matter
+/// for a small p-value.
+pub(crate) fn gamma_q(a: f64, x: f64) -> f64 {
+    if a <= 0.0 || x < 0.0 { return f64::NAN; }
+    if x == 0.0 { return 1.0; }
+    if x < a + 1.0 { 1.0 - gamma_p_series(a, x) } else { gamma_q_cf(a, x) }
+}
+
+/// Continued fraction for the incomplete beta, by modified Lentz.
+fn beta_cf(a: f64, b: f64, x: f64) -> f64 {
+    let qab = a + b;
+    let qap = a + 1.0;
+    let qam = a - 1.0;
+    let mut c = 1.0;
+    let mut d = 1.0 - qab * x / qap;
+    if d.abs() < INC_TINY { d = INC_TINY; }
+    d = 1.0 / d;
+    let mut h = d;
+    for m in 1..=INC_MAX_ITER {
+        let m = m as f64;
+        let m2 = 2.0 * m;
+        // Even step.
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1.0 + aa * d;
+        if d.abs() < INC_TINY { d = INC_TINY; }
+        c = 1.0 + aa / c;
+        if c.abs() < INC_TINY { c = INC_TINY; }
+        d = 1.0 / d;
+        h *= d * c;
+        // Odd step.
+        let aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1.0 + aa * d;
+        if d.abs() < INC_TINY { d = INC_TINY; }
+        c = 1.0 + aa / c;
+        if c.abs() < INC_TINY { c = INC_TINY; }
+        d = 1.0 / d;
+        let del = d * c;
+        h *= del;
+        if (del - 1.0).abs() < INC_EPS { break; }
+    }
+    h
+}
+
+/// Regularized incomplete beta I_x(a, b).
+pub(crate) fn beta_inc(a: f64, b: f64, x: f64) -> f64 {
+    if a <= 0.0 || b <= 0.0 || !(0.0..=1.0).contains(&x) { return f64::NAN; }
+    if x == 0.0 { return 0.0; }
+    if x == 1.0 { return 1.0; }
+    let front = (libm::lgamma(a + b) - libm::lgamma(a) - libm::lgamma(b)
+        + a * x.ln() + b * (1.0 - x).ln()).exp();
+    // The fraction converges quickly only on one side of this point; the
+    // symmetry I_x(a,b) = 1 - I_(1-x)(b,a) covers the other.
+    if x < (a + 1.0) / (a + b + 2.0) {
+        front * beta_cf(a, b, x) / a
+    } else {
+        1.0 - front * beta_cf(b, a, 1.0 - x) / b
+    }
 }

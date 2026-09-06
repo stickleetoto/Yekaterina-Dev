@@ -16,13 +16,17 @@ jobs:
         with:
           python-version: '3.x'
       - run: pip install 'tiktoken>=0.7'
+      # scipy, numpy and mpmath are the independent references the
+      # statistical operations are checked against. They are not runtime
+      # dependencies: the engine has none beyond its Rust crates.
+      - run: pip install 'scipy>=1.11' 'numpy>=1.26' 'mpmath>=1.3'
 
-      # The v1.1 audit reproduces every v1.0.0 gate and adds the concurrency
-      # ones. It also hash-verifies that scripts/static_audit.py -- the frozen
-      # v1.0.0 audit -- has not been modified, so running that script separately
-      # would be redundant. It is deliberately not run here: it pins the package
-      # version to 1.0.0 and will fail by design once the v1.1 freeze bumps it.
-      - run: python scripts/static_audit_v11.py
+      # The v1.2 audit reproduces every v1.0.0 and v1.1 gate, and hash-verifies
+      # that scripts/static_audit.py and scripts/static_audit_v11.py -- the
+      # frozen audits of those lines -- have not been modified. Running either
+      # of them here would be redundant and would fail by design: each pins its
+      # own line's package version and operation count, and v1.2 changed both.
+      - run: python scripts/static_audit_v12.py
       - run: python scripts/lexical_rust_audit.py
       - run: python scripts/operation_manifest.py
       - run: python scripts/validate_golden_manifest.py
@@ -36,6 +40,13 @@ jobs:
       - run: cargo clippy --locked --all-targets
       - run: cargo build --locked --release
 
+      # 164 assertions comparing every v1.2 operation against a value computed
+      # by a different route than the implementation uses.
+      - run: python scripts/verify_v12_operations.py
+      # 961 values checked against scipy, numpy and mpmath: the
+      # incomplete gamma and beta at 50 digits, then every distribution,
+      # test, interval and regression built on them.
+      - run: python scripts/verify_statistics.py
       - run: python golden/run_golden.py --exe ./target/release/yekaterina --out ./golden_results/ci
       - run: python scripts/check_golden_result.py ./golden_results/ci/result.json
       - run: python full_audit/run_full_audit.py --exe ./target/release/yekaterina --out ./full_audit_results/ci --strict

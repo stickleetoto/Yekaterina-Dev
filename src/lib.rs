@@ -35,6 +35,7 @@ pub mod formula;
 pub mod frame;
 pub mod geodesy;
 pub mod geometry;
+pub mod inference;
 pub mod information;
 pub mod limits;
 pub mod matrix;

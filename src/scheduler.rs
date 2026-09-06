@@ -190,7 +190,8 @@ pub fn estimated_cost(opcode: &str, args: &[Value]) -> Cost {
                 payload.saturating_mul(payload).min(COMPUTE_CAP)
             }
         }
-        // Control operations never reach a wave.
+        // Control operations are Serialized, so they are barriers rather
+        // than wave members; their cost only has to be finite.
         _ => 1,
     };
     Cost { compute: compute.min(COMPUTE_CAP), payload }
@@ -273,9 +274,24 @@ mod tests {
             json!(["math.add", 1, 2]),
             json!({"op": "stat.mean", "a": [[1, 2, 3]]}),
             json!(["signal.fft", [1, 0, 0, 0]]),
-            json!(["expr.eval", {"e": "1+1"}]),
         ];
-        assert_eq!(plan_batch(&items), vec![Placement::Concurrent; 4]);
+        assert_eq!(plan_batch(&items), vec![Placement::Concurrent; 3]);
+    }
+
+    /// `expr.eval` is stateless but has a dispatcher arm, so `engine::execute`
+    /// cannot run it and it must never be placed in a wave. This test asserted
+    /// the opposite until the classification was corrected.
+    #[test]
+    fn expr_eval_is_a_barrier_despite_being_stateless() {
+        let items = vec![
+            json!(["math.add", 1, 2]),
+            json!(["expr.eval", {"e": "1+1"}]),
+            json!(["signal.fft", [1, 0, 0, 0]]),
+        ];
+        assert_eq!(
+            plan_batch(&items),
+            vec![Placement::Concurrent, Placement::Ordered, Placement::Concurrent]
+        );
     }
 
     #[test]

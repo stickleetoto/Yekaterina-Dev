@@ -2,9 +2,9 @@
 
 This audit is deliberately separate from the mathematical Golden/property suites.
 
-It uses the frozen `opcodes_alpha12.json` list of exactly **1,215** opcodes. Static validation requires that list to match `src/registry.rs` exactly in count, uniqueness, order, and content. At runtime it then:
+It uses the frozen `opcodes_alpha12.json` list of exactly **1,387** opcodes. Static validation requires that list to match `src/registry.rs` exactly in count, uniqueness, order, and content. At runtime it then:
 
-1. calls `yk.spec` for all 1,215 opcodes,
+1. calls `yk.spec` for all 1,387 opcodes,
 2. obtains/reuses a valid canonical fixture,
 3. executes each opcode through real `yk.compute`,
 4. verifies the returned JSON shape against the `yk.spec` return-type contract,
@@ -20,14 +20,14 @@ Fixture selection order:
 
 `RUN_FULL_CAPABILITY_AUDIT_WINDOWS.bat` is strict. It exits non-zero unless:
 
-- registry/manifest scope is exactly 1,215,
+- registry/manifest scope is exactly 1,387,
 - MCP tool surface is exactly 3,
-- `yk.spec` is valid 1,215/1,215,
-- fixture discovery is 1,215/1,215,
-- clean replay + return-type contract is 1,215/1,215,
+- `yk.spec` is valid 1,387/1,387,
+- fixture discovery is 1,387/1,387,
+- clean replay + return-type contract is 1,387/1,387,
 - Golden oracle is 527/527.
 
-A **1,215/1,215 replay is execution/type coverage, not proof that every mathematical result is correct for every possible input.** Golden and direct property/regression tests are reported separately for correctness evidence.
+A **1,387/1,387 replay is execution/type coverage, not proof that every mathematical result is correct for every possible input.** Golden and direct property/regression tests are reported separately for correctness evidence.
 
 ## hotfix7 fixture discovery
 

@@ -152,9 +152,19 @@ pub fn classify(opcode: &str) -> Safety {
         return Safety::Serialized;
     };
     match control_op(spec.opcode) {
-        // Stateless despite having a dispatcher arm: reads only its arguments.
-        Some(ControlOp::ExprEval) => Safety::Pure,
-        // Mutates or reads server-owned state.
+        // Every operation with a dispatcher arm is serialized, including
+        // `expr.eval`.
+        //
+        // `expr.eval` is stateless -- it reads only its own arguments -- and an
+        // earlier version of this file classified it `Pure` for that reason.
+        // That was wrong, because statelessness is not the property the
+        // scheduler needs. `Pure` here means "a worker can run this", and a
+        // worker runs a job by calling `engine::execute`, which has no
+        // `expr.eval` arm: the implementation lives in `server::eval_expression`
+        // and is reachable only from the request task. Classified `Pure`, a
+        // mixed batch that cleared the parallel threshold returned `NYI` for the
+        // `expr.eval` slot at two or more workers and the right answer at one,
+        // which breaks the byte-identical-across-worker-counts invariant.
         Some(_) => Safety::Serialized,
         // No dispatcher arm => routed to `engine::execute`, which by its
         // signature cannot reach state.
@@ -199,8 +209,10 @@ mod tests {
         }
     }
 
+    /// Serialized is exactly the set of operations with a dispatcher arm, which
+    /// is the set `engine::execute` cannot run.
     #[test]
-    fn exactly_seven_registered_operations_are_serialized() {
+    fn exactly_the_dispatcher_operations_are_serialized() {
         let serialized: Vec<&str> = registry::OPERATIONS
             .iter()
             .map(|s| s.opcode)
@@ -208,10 +220,26 @@ mod tests {
             .collect();
         assert_eq!(
             serialized.len(),
-            7,
-            "expected the 7 udo.* control operations, got {serialized:?}"
+            8,
+            "expected the 7 udo.* control operations plus expr.eval, got {serialized:?}"
         );
-        assert!(serialized.iter().all(|op| op.starts_with("udo.")));
+        assert!(serialized.iter().all(|op| op.starts_with("udo.") || *op == "expr.eval"));
+        assert!(serialized.contains(&"expr.eval"),
+                "expr.eval has no engine::execute arm and must never reach a worker");
+    }
+
+    /// The property the classification actually has to guarantee: anything
+    /// marked Pure must be something `engine::execute` can run. Checked against
+    /// the dispatcher's own control set rather than against a list kept here,
+    /// so the two cannot drift apart.
+    #[test]
+    fn nothing_pure_has_a_dispatcher_arm() {
+        for spec in registry::OPERATIONS {
+            if control_op(spec.opcode).is_some() {
+                assert_eq!(classify(spec.opcode), Safety::Serialized,
+                           "{} has a dispatcher arm and must not run on a worker", spec.opcode);
+            }
+        }
     }
 
     #[test]
@@ -220,8 +248,12 @@ mod tests {
             .iter()
             .filter(|s| classify(s.opcode) == Safety::Pure)
             .count();
-        assert_eq!(pure, registry::OPERATIONS.len() - 7);
-        assert_eq!(pure, 1208);
+        // The structural invariant: everything without a dispatcher arm is
+        // pure. This holds at any registry size.
+        assert_eq!(pure, registry::OPERATIONS.len() - 8);
+        // The release-line count, which moves when operations are added and is
+        // here so that a change in the split is noticed rather than absorbed.
+        assert_eq!(pure, 1379);
     }
 
     /// FAIL_CLOSED. Nothing outside the static registry may be pure.
@@ -289,13 +321,21 @@ mod tests {
         );
     }
 
+    /// No control operation may be pure.
+    ///
+    /// This test previously asserted the opposite for `expr.eval` -- that it was
+    /// the one pure control operation, on the grounds that it is stateless. It
+    /// is stateless, but that is not the property being classified: a worker
+    /// executes a job through `engine::execute`, which has no arm for any
+    /// control opcode. The old assertion pinned the bug in place rather than
+    /// catching it.
     #[test]
-    fn expr_eval_is_the_only_pure_control_op() {
+    fn no_control_operation_is_pure() {
         let pure: Vec<&str> = ControlOp::ALL
             .iter()
             .filter(|c| classify(c.opcode()) == Safety::Pure)
             .map(|c| c.opcode())
             .collect();
-        assert_eq!(pure, vec!["expr.eval"]);
+        assert!(pure.is_empty(), "control operations must never run on a worker: {pure:?}");
     }
 }

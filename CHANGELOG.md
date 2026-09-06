@@ -1,3 +1,99 @@
+# Yekaterina v1.2.0
+
+Operation expansion. **1,215 -> 1,387**: 172 operations across nine families,
+plus one v1.1 correctness fix. Nothing else changed.
+
+**Unchanged and gate-verified**
+- Exactly 3 MCP tools; schema still **412 tokens / 1,725 bytes**. `tools/list`
+  never enumerated operations, so this costs the model nothing until it asks.
+- `src/model.rs` byte-identical to the frozen v1.0.0 schema surface.
+- MCP `initialize` still advertises version `1.0.0`; the crate is 1.2.0.
+- 30 error codes; no new code introduced.
+- 527/527 Golden with expectations untouched.
+- **All 1,215 v1.1 operations proven still registered, unrenamed and in the same
+  order** against `full_audit/opcodes_v11_frozen.json`.
+
+**Fixed: `expr.eval` returned `NYI` at more than one worker**
+v1.1 classified `expr.eval` as `Pure` because it is stateless. Statelessness is
+not the property that classification carries: `Pure` means a worker can run it,
+and a worker runs jobs through `engine::execute`, which has no `expr.eval` arm.
+A batch mixing `expr.eval` with enough compute to cross the parallel threshold
+returned `{"e":"NYI"}` at two or more workers and the right answer at one,
+breaking the byte-identical-across-worker-counts invariant. Now `Serialized`,
+with no exception to the "has a dispatcher arm" rule. The unit test that existed
+asserted the wrong property and pinned the bug; it now asserts that no control
+operation is pure. Two batch shapes were added to the cross-worker equivalence
+test, which had twelve shapes and no control operation inside a distributed run.
+Details in `docs/V11_SAFETY_MODEL.md`.
+
+**Added: statistical inference (69)**
+The engine could compute a t statistic and not a p-value, because `prob.*` had
+no t, chi-square or F distribution and `special.*` had no regularized incomplete
+gamma or beta. Built bottom up in three layers:
+- `special` 18 -> 21: `gamma_p`, `gamma_q`, `beta_inc`.
+- `prob` 55 -> 77: t, chi-square, F, gamma, beta, lognormal and Weibull, with a
+  survival function beside each CDF and quantiles for the first three.
+- `test` 10 -> 37: generic p-values, complete tests returning statistic/df/p,
+  ANOVA, Mann-Whitney, Wilcoxon, Levene, Bartlett, Kolmogorov-Smirnov, Fisher
+  exact, exact binomial, McNemar, four confidence intervals, sample sizing,
+  power. New module `src/inference.rs`.
+- `reg` 14 -> 31: multiple least squares, standard errors, slope t/p/CI, overall
+  F, adjusted R2, AIC, BIC, Durbin-Watson, polynomial, Kendall tau-b, three
+  linearisable fits, Theil-Sen.
+
+Tail probabilities are computed rather than subtracted: `prob.normal_sf(10,0,1)`
+is `7.6e-24` where `1 - cdf` is exactly `0.0`. Quantiles solve the CDF on the
+lower half and the survival function on the upper half, never forming `1 - p` on
+the tail being worked. The first quantile implementation did form it and was
+caught by the scipy comparison. Details in `docs/V12_STATISTICS.md`.
+
+**Added: exact arithmetic and applied families (103)**
+- `int` 8 -> 26 and `dec` 4 -> 20: exact arbitrary-precision arithmetic. `dec`
+  had only add/sub/mul/div -- no rounding, no comparison, no aggregation -- so it
+  could not be used for money at all. `0.1 + 0.2` is now exactly `0.3`, and
+  `dec.round("2.675", 2)` is `2.68` where anything float-backed gives `2.67`.
+  Two rounding modes, because ties-away and banker's rounding is a real
+  accounting choice rather than a default to inherit silently.
+- `geo` 8 -> 30, `fin` 8 -> 29, `vec` 9 -> 22, `unit` 13 -> 20, `pct` 3 -> 9.
+
+`alg.mod_pow`, `alg.mod_inverse`, `alg.ext_gcd` and `alg.floor_div` already
+existed and are **not** duplicated: each is capped at u64, i64 or u128 and fails
+above that, while the `int.*` versions have no ceiling.
+
+**Deliberately not added**
+- Nine drafted operations were dropped as duplicates found by checking the whole
+  registry rather than the target families: `pct.error`, `geo.sphere_volume`,
+  `geo.sphere_area`, `geo.circle_arc`, `vec.project`, `vec.mean`/`min`/`max`.
+- `dec.sqrt` was dropped on principle: a square root is irrational and this
+  family's contract is exactness. `dec.pow` refuses a negative exponent likewise.
+
+**Correctness**
+- `scripts/verify_statistics.py`: **961 values** against scipy, numpy and mpmath,
+  including three points where scipy itself disagrees with mpmath in the deep
+  tail and mpmath is used as the reference. Runs in CI.
+- `scripts/verify_v12_operations.py`: 164 assertions across 99 operations, with
+  Python's arbitrary-precision `int` and `decimal.Decimal` as the oracle for the
+  exact families. Exact results are compared as numbers, not strings, and a
+  separate assertion rejects exponent notation in any exact result.
+- 59 Rust tests built on identities a wrong formula would break: F equals t
+  squared on one degree of freedom, both integer division conventions
+  reconstructing the dividend, `root^2 <= n < (root+1)^2`, Minkowski at p=1 and
+  p=2 collapsing onto Manhattan and Euclidean, reflection being its own inverse,
+  a full-turn sector equalling the circle, multiple regression recovering an
+  exactly linear relationship, and NPV at the reported IRR being zero.
+- clippy's excessive-precision lint caught three unit constants that were one ULP
+  wrong (`lb/ft3`, `lb/in3`, `lbf*ft`); the round-trip tests were insensitive to
+  that error and would have shipped it.
+
+**Gates**
+- `scripts/static_audit_v12.py` reproduces every v1.0.0 and v1.1 gate and
+  hash-pins both earlier audits, which are untouched.
+- `validate_full_audit.py` proves the v1.1 set is intact and gates the new
+  fixture file as strictly as the alpha.12 one. Verified by mutation: renaming or
+  reordering an operation with the manifest regenerated to match is caught only
+  by this gate, and is caught.
+- Full Capability Audit **1,387/1,387**; Golden 527/527 at workers 1, 4 and 8.
+
 # Yekaterina v1.1.0
 
 Performance and internal concurrency only. No operation was added, removed,

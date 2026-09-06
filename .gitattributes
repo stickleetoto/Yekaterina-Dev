@@ -1,0 +1,12 @@
+# Line endings are frozen exactly as committed.
+#
+# SOURCE_INTEGRITY.txt, SOURCE_INTEGRITY_V11.txt and SOURCE_INTEGRITY_V12.txt
+# record SHA-256 over raw file bytes, and scripts/static_audit_v12.py verifies
+# them. Any line-ending translation between commit and checkout changes those
+# bytes and breaks every one of those hashes on a platform whose convention
+# differs from the one the file was written on.
+#
+# `-text` tells git to treat every path as binary for this purpose: store what
+# it is given, hand back exactly the same bytes. This is a correctness
+# requirement here, not a style preference.
+* -text
