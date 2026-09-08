@@ -1,4 +1,10 @@
-# Yekaterina
+# Yekaterina — Development
+
+**Development repository for Yekaterina Core.**
+
+This is where Yekaterina is actively built, optimized, benchmarked, and verified before changes are promoted to the stable distribution.
+
+> Looking for the stable release? Go to **[stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina)**.
 
 **Pure computation. Minimal tokens. Verified evolution.**
 
@@ -6,14 +12,14 @@ Yekaterina is a high-density Rust compute offloader for LLM agents over MCP. Its
 
 > Grow internal compute capability without growing the LLM-facing tool surface.
 
-This repository is the **public development line** for Yekaterina Core.
+### Development snapshot
 
-- Stable public distribution: [stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina)
 - Active development: **v1.2.0**
 - Language: **Rust**
 - MCP surface: **3 tools**
 - Registered operations: **1,387**
 - MCP schema footprint: **412 tokens / 1,725 bytes**
+- Stable distribution: **[stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina)**
 
 ## What Yekaterina does
 
