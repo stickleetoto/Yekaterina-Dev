@@ -253,7 +253,7 @@ mod tests {
         assert_eq!(pure, registry::OPERATIONS.len() - 8);
         // The release-line count, which moves when operations are added and is
         // here so that a change in the split is noticed rather than absorbed.
-        assert_eq!(pure, 1379);
+        assert_eq!(pure, 1402);
     }
 
     /// FAIL_CLOSED. Nothing outside the static registry may be pure.

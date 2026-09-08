@@ -12,7 +12,7 @@ try:
 except Exception:
     tiktoken=None
 
-EXPECTED_OPS=1387
+EXPECTED_OPS=1410
 
 def registry_ops():
     """Load the frozen alpha.12 opcode manifest.

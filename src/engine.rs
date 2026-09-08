@@ -3,7 +3,7 @@ use serde_json::{Value, json};
 use crate::{
     advanced_matrix, advanced_numerical, advanced_probability, advanced_signal, advanced_stats,
     algebra, complex_math, engineering, extra_math, geometry, matrix, numerical, physics,
-    practical, precision, probability, radix, registry, signal, stats, vector, discrete, chemistry, networking, color, information, astronomy, time_ops, geodesy, thermodynamics, mechanics, fluids, electrical, optics, waves, data_ops, verification, frame, curve, predicate, deep_linalg, special_functions, optimization, ode, series, inference,
+    practical, precision, probability, radix, registry, signal, stats, vector, discrete, chemistry, networking, color, information, astronomy, time_ops, geodesy, thermodynamics, mechanics, fluids, electrical, optics, waves, data_ops, verification, frame, curve, predicate, deep_linalg, special_functions, optimization, ode, series, inference, multiplicity,
 };
 
 pub fn execute(opcode: &str, args: &[Value]) -> Result<Value, &'static str> {
@@ -121,7 +121,11 @@ fn dispatch_module(op: &str, args: &[Value]) -> Option<Result<Value, &'static st
         // not itself implement, which would swallow every operation added to
         // those families afterwards. inference matches an explicit list, so
         // going first cannot shadow an existing operation.
-        "stat" | "reg" | "test" => inference::execute(op, args)
+        // multiplicity and inference both match explicit opcode lists, so
+        // neither can shadow an operation the other owns; both must precede
+        // advanced_stats, which claims the whole "test." and "reg." prefixes.
+        "stat" | "reg" | "test" => multiplicity::execute(op, args)
+            .or_else(|| inference::execute(op, args))
             .or_else(|| stats::execute(op, args))
             .or_else(|| advanced_stats::execute(op, args)),
         "vec" => vector::execute(op, args),

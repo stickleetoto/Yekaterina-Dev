@@ -28,7 +28,8 @@ SECTIONS = [
         "src/pool.rs", "src/scheduler.rs"]),
     ("v1.2 operation modules", [
         "src/practical.rs", "src/geometry.rs", "src/vector.rs", "src/precision.rs",
-        "src/inference.rs", "src/advanced_probability.rs", "src/special_functions.rs"]),
+        "src/inference.rs", "src/multiplicity.rs",
+        "src/advanced_probability.rs", "src/special_functions.rs"]),
     ("acceptance corpora", [
         "golden/cases.json", "full_audit/run_full_audit.py",
         "full_audit/opcodes_alpha12.json", "full_audit/overrides_alpha12.json",
@@ -38,7 +39,8 @@ SECTIONS = [
         "scripts/static_audit_v12.py",
         "scripts/validate_golden_manifest.py", "scripts/validate_full_audit.py",
         "scripts/gen_source_integrity_v12.py", "scripts/verify_v12_operations.py",
-        "scripts/verify_statistics.py", "scripts/mutate_gates.py",
+        "scripts/verify_statistics.py", "scripts/verify_multiplicity.py",
+        "scripts/mutate_gates.py",
         "scripts/register_ops.py"]),
     ("benchmark harness", [
         "bench/bench_client.py", "bench/workloads.py", "bench/run_bench.py",

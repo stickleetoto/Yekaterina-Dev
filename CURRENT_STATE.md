@@ -1,6 +1,6 @@
 # CURRENT_STATE.md
 
-> Snapshot of this working tree. Verified against the source on 2026-09-06.
+> Snapshot of this working tree. Verified against the source on 2026-09-09.
 
 ## Current milestone
 
@@ -11,7 +11,7 @@ and gated**. No batch is outstanding.
 |---|---|
 | Crate version | 1.2.0 (`Cargo.toml`, `Cargo.lock`) |
 | Advertised MCP version | `1.0.0` (deliberate; separate literal in `#[tool_handler]`) |
-| Registered opcodes | **1,387** in `src/registry.rs` |
+| Registered opcodes | **1,410** in `src/registry.rs` |
 | MCP tools | 3 — `yk.compute`, `yk.find`, `yk.spec` |
 | Schema footprint | 412 tokens / 1,725 bytes |
 | Error codes | 30 |
@@ -45,7 +45,7 @@ phases except Phase 8 are complete (`docs/V11_DEVELOPMENT_STATUS.md`):
 - Phase 9/10 — 1/2/4/8 worker sweep and concurrency stress runs.
 - Phase 11 — v1.1 freeze, `SOURCE_INTEGRITY_V11.txt`, MCP-identity hash gate.
 
-**v1.2** — 172 operations, 1,215 → 1,387, in two batches and one fix.
+**v1.2** — 195 operations, 1,215 → 1,410, in three batches and one fix.
 
 - Applied families, 103 ops: `int` 8→26, `dec` 4→20, `geo` 8→30, `fin` 8→29,
   `vec` 9→22, `unit` 13→20, `pct` 3→9. `docs/V12_OPERATIONS.md`, verified by
@@ -56,6 +56,10 @@ phases except Phase 8 are complete (`docs/V11_DEVELOPMENT_STATUS.md`):
   `src/inference.rs`. `docs/V12_STATISTICS.md`, verified by
   `scripts/verify_statistics.py` — 961 values against scipy, numpy and mpmath,
   which runs in CI.
+- Multiplicity, post-hoc and effect size, 23 ops: seven p-value corrections, two
+  pairwise families, eleven effect sizes, three risk measures. New module
+  `src/multiplicity.rs`, verified by `scripts/verify_multiplicity.py` — 577
+  assertions against statsmodels, scipy and numpy — plus 21 Rust identity tests.
 - **Fixed a v1.1 defect**: `expr.eval` was classified `Pure` and could be sent to
   a worker, where `engine::execute` has no arm for it, so a distributed mixed
   batch returned `NYI` at more than one worker. Now `Serialized`.
@@ -107,6 +111,7 @@ None.
 | `scripts/mutate_gates.py` | break what each gate guards and confirm it notices. All six mutations are caught. Run it after touching a gate; a gate that has never failed is a guess. |
 | `scripts/gen_source_integrity_v12.py` | regenerate `SOURCE_INTEGRITY_V12.txt` after any tracked file changes, or `static_audit_v12.py` fails. |
 | `scripts/verify_statistics.py` | 961 values against scipy, numpy and mpmath. Needs those three; skips cleanly without them. |
+| `scripts/verify_multiplicity.py` | 577 assertions for the multiplicity, post-hoc and effect-size operations. Additionally needs statsmodels. |
 | `scripts/verify_v12_operations.py` | 164 assertions for the applied and exact families. |
 
 Two ordering facts worth knowing before editing the dispatchers:

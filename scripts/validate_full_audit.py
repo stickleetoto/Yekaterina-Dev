@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-EXPECTED=1387
+EXPECTED=1410
 
 manifest=json.loads((ROOT/'full_audit/opcodes_alpha12.json').read_text(encoding='utf-8-sig'))
 ops=manifest.get('opcodes',[])
@@ -29,7 +29,7 @@ if registry_ops != ops:
         print('FAIL: registry/manifest opcode sets differ')
     raise SystemExit(1)
 
-allowed_returns={'value','number','integer','u64','boolean','string','opcode','number|null','object','pack','matrix','array','value[]','opcode[]','number[]','complex[]','number[2]','number[3]','integer[2]','integer[3]','point2'}
+allowed_returns={'value','number','integer','u64','boolean','string','opcode','number|null','object','pack','matrix','array','value[]','object[]','opcode[]','number[]','complex[]','number[2]','number[3]','integer[2]','integer[3]','point2'}
 return_specs=[]
 for line in registry.splitlines():
     if 'op("' not in line: continue

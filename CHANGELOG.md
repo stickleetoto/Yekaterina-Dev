@@ -1,6 +1,6 @@
 # Yekaterina v1.2.0
 
-Operation expansion. **1,215 -> 1,387**: 172 operations across nine families,
+Operation expansion. **1,215 -> 1,410**: 195 operations across nine families,
 plus one v1.1 correctness fix. Nothing else changed.
 
 **Unchanged and gate-verified**
@@ -47,6 +47,33 @@ lower half and the survival function on the upper half, never forming `1 - p` on
 the tail being worked. The first quantile implementation did form it and was
 caught by the scipy comparison. Details in `docs/V12_STATISTICS.md`.
 
+**Added: multiplicity, post-hoc and effect size (23)**
+A batch engine makes multiple comparisons cheap: `yk.compute` runs a whole array
+of tests in one call, and twenty independent tests at alpha 0.05 carry a 64%
+chance of a false positive. Shipping the tests without the corrections would have
+made that failure mode easier to reach than before.
+- Seven p-value corrections: Bonferroni, Sidak, Holm and Hochberg (family-wise
+  error rate), Benjamini-Hochberg and Benjamini-Yekutieli (false discovery rate),
+  plus `test.fdr_threshold`.
+- Two post-hoc families: `test.pairwise_t` and `test.pairwise_welch`, returning
+  every unordered pair in index order so a correction can be applied to the array.
+- Eleven effect sizes: Hedges g, Glass delta, eta squared, omega squared,
+  Cohen f/w/h, Cramer V, phi, rank-biserial, Cliff delta.
+- Three risk measures: risk ratio with its interval, and an odds ratio interval,
+  both computed on the log scale where the sampling distribution is approximately
+  normal. New module `src/multiplicity.rs`.
+
+Verified by `scripts/verify_multiplicity.py`: **577 assertions** against
+`statsmodels.multipletests`, `scipy.stats.contingency.association`,
+`scipy.stats.ttest_ind`, `scipy.stats.mannwhitneyu`, and an independent
+transcription of each procedure's definition -- two references for the
+corrections, because a step-up and a step-down procedure differ only in the
+direction of a running extremum and a wrong one still returns plausible numbers.
+21 further Rust tests carry identities: Sidak never exceeds Bonferroni, Holm
+equals Bonferroni when every p is equal, `fdr_threshold` rejects exactly the set
+`p_adjust_bh` rejects, Cliff delta equals the rank-biserial correlation, and
+omega squared goes negative when grouping explains nothing.
+
 **Added: exact arithmetic and applied families (103)**
 - `int` 8 -> 26 and `dec` 4 -> 20: exact arbitrary-precision arithmetic. `dec`
   had only add/sub/mul/div -- no rounding, no comparison, no aggregation -- so it
@@ -92,7 +119,7 @@ above that, while the `int.*` versions have no ceiling.
   fixture file as strictly as the alpha.12 one. Verified by mutation: renaming or
   reordering an operation with the manifest regenerated to match is caught only
   by this gate, and is caught.
-- Full Capability Audit **1,387/1,387**; Golden 527/527 at workers 1, 4 and 8.
+- Full Capability Audit **1,410/1,410**; Golden 527/527 at workers 1, 4 and 8.
 
 # Yekaterina v1.1.0
 

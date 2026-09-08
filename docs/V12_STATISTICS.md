@@ -1,7 +1,7 @@
 # Yekaterina v1.2 — statistical inference
 
-**1,318 → 1,387. Sixty-nine operations, and the reason they were the right
-sixty-nine.**
+**1,318 → 1,410. Ninety-two operations, and the reason they were the right
+ninety-two.**
 
 Before this batch the engine could compute a t statistic, a chi-square statistic,
 an F ratio and Cohen's d. It could not compute a single p-value. `test.*` held
@@ -22,6 +22,7 @@ up, each verified before the next was written.
 | `prob.*` | 22 | t, chi-square, F, gamma, beta, lognormal, Weibull |
 | `test.*` | 27 | p-values, complete tests, intervals, sample sizing |
 | `reg.*` | 17 | multiple regression and its diagnostics |
+| `test.*` again | 23 | multiplicity, post-hoc and effect size |
 
 ## The foundation
 
@@ -113,6 +114,52 @@ adjusted R², AIC and BIC, Durbin-Watson, polynomial fitting, Kendall's tau-b, t
 three linearisable fits, and Theil-Sen for when the data has an outlier in it.
 
 `stat.spearman` already existed, so no rank correlation was duplicated.
+
+## The layer after the p-value
+
+A p-value answers "could this be chance". It does not answer "how big is it" or
+"how many times did you look", and a batch engine makes the second question
+worse: `yk.compute` runs a whole array of tests in one call, so producing twenty
+p-values is now as easy as producing one. Twenty independent tests at α = 0.05
+give a 64% chance of at least one false positive. Shipping the tests without the
+corrections would have made that failure mode cheaper to reach than before.
+
+**Multiplicity, 7.** `test.p_adjust_bonferroni`, `sidak`, `holm`, `hochberg`,
+`bh`, `by`, and `test.fdr_threshold`. Two families with different guarantees:
+Bonferroni, Šidák, Holm and Hochberg control the family-wise error rate;
+Benjamini-Hochberg and Benjamini-Yekutieli control the false discovery rate, with
+BY paying a `log` penalty for arbitrary dependence where BH assumes it away.
+
+**Post-hoc, 2.** `test.pairwise_t` and `test.pairwise_welch` return every
+unordered pair in index order, so the result lines up with a correction applied
+to the whole array.
+
+**Effect size, 11.** `hedges_g` and `glass_delta` beside the existing
+`cohen_d`; `eta_squared`, `omega_squared` and `cohen_f` for ANOVA;
+`cramers_v`, `phi_coefficient`, `cohen_w` and `cohen_h` for categorical data;
+`rank_biserial` and `cliffs_delta` for the rank tests.
+
+**Risk, 3.** `risk_ratio` with `risk_ratio_ci` and `odds_ratio_ci`, both
+intervals built on the log scale, which is where the sampling distribution is
+approximately normal and the interval cannot cross zero.
+
+`scripts/verify_multiplicity.py` checks all 23 with **577 assertions**, against
+`statsmodels.multipletests`, `scipy.stats.contingency.association`,
+`scipy.stats.ttest_ind`, `scipy.stats.mannwhitneyu`, and a direct transcription
+of each procedure's definition written independently in the script. Two
+references rather than one for the corrections, because a step-up and a step-down
+procedure differ only in the direction of a running extremum and a wrong one
+still returns plausible numbers. Its header notes one case where that mattered:
+for Šidák, statsmodels uses the same `expm1`/`log1p` form the engine does, so the
+naive `1 - (1-p)^m` transcription is the only genuinely independent check there.
+
+21 further Rust tests carry identities that need no reference: Šidák never
+exceeds Bonferroni, Holm equals Bonferroni when every p is equal, corrections
+stay between the raw p and 1 and stay monotone in the raw ordering,
+`fdr_threshold` rejects exactly the set `p_adjust_bh` rejects, Cliff's delta
+equals the rank-biserial correlation, Cramér's V is `|φ|` on a 2×2 table, omega
+squared goes negative when grouping explains nothing, and every ratio interval
+contains its own point estimate.
 
 ## Verification
 

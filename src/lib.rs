@@ -41,6 +41,7 @@ pub mod limits;
 pub mod matrix;
 pub mod mechanics;
 pub mod model;
+pub mod multiplicity;
 pub mod networking;
 pub mod numerical;
 pub mod ode;

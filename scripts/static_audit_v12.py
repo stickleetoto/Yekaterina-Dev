@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 EXPECTED_VERSION = "1.2.0"
 ACCEPTED_VERSIONS = {"1.1.0", "1.2.0"}  # 1.1.0 tolerated before the v1.2 bump
-EXPECTED_OPS = 1387
+EXPECTED_OPS = 1410
 V11_OPS = 1215
 EXPECTED_TOOLS = ["yk.compute", "yk.find", "yk.spec"]
 EXPECTED_TOOLCHAIN = "1.98.0"

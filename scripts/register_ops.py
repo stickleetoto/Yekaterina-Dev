@@ -90,10 +90,23 @@ def register(new, anchors):
         t = re.sub(pattern, pattern.split(r"\d")[0].replace("\\", "") + str(len(ops)), t, count=1)
         p.write_text(t, encoding="utf-8")
 
+    # The pure/serialized split is derived, not assumed. This used to subtract a
+    # hard-coded 7 and silently went stale when `expr.eval` was reclassified
+    # Serialized, which would have written a count one too high and failed
+    # `the_rest_of_the_registry_is_pure` for a reason unrelated to the batch
+    # being registered. Counting the dispatcher's own arms cannot drift.
     p = ROOT / "src/safety.rs"
     t = p.read_text(encoding="utf-8")
-    t = re.sub(r"assert_eq!\(pure, \d+\);", "assert_eq!(pure, %d);" % (len(ops) - 7), t, count=1)
+    body = re.search(r"pub fn control_op\(.*?\n\}", t, re.S)
+    if body is None:
+        raise SystemExit("REFUSING TO WRITE: cannot find control_op in src/safety.rs")
+    serialized = len(re.findall(r"=>\s*ControlOp::", body.group(0)))
+    if serialized == 0:
+        raise SystemExit("REFUSING TO WRITE: parsed zero control operations")
+    t = re.sub(r"assert_eq!\(pure, \d+\);",
+               "assert_eq!(pure, %d);" % (len(ops) - serialized), t, count=1)
     p.write_text(t, encoding="utf-8")
+    print("  pure/serialized split derived from control_op: %d serialized" % serialized)
 
     print("registered %d operations; registry now %d; fixtures now %d"
           % (len(new), len(ops), fx["count"]))

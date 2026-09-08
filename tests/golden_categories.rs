@@ -1,6 +1,7 @@
 #[path = "../src/deep_linalg.rs"] mod deep_linalg;
 #[path = "../src/special_functions.rs"] mod special_functions;
 #[path = "../src/inference.rs"] mod inference;
+#[path = "../src/multiplicity.rs"] mod multiplicity;
 #[path = "../src/optimization.rs"] mod optimization;
 #[path = "../src/ode.rs"] mod ode;
 #[path = "../src/series.rs"] mod series;
