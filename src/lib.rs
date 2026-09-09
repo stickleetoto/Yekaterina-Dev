@@ -53,6 +53,7 @@ pub mod practical;
 pub mod precision;
 pub mod predicate;
 pub mod probability;
+pub mod program;
 pub mod radix;
 pub mod registry;
 pub mod safety;
