@@ -16,6 +16,8 @@
     "Cargo.lock",
     "Cargo.toml",
     "DECISIONS.md",
+    "DEMO_UNIX.sh",
+    "DEMO_WINDOWS.bat",
     "KNOWN_ISSUES.md",
     "LICENSE",
     "README.md",
@@ -24,6 +26,7 @@
     "RUN_BENCH_WINDOWS.bat",
     "RUN_FULL_CAPABILITY_AUDIT_WINDOWS.bat",
     "RUN_GOLDEN_WINDOWS.bat",
+    "SHOWCASE.md",
     "SOURCE_INTEGRITY.txt",
     "SOURCE_INTEGRITY_V11.txt",
     "SOURCE_INTEGRITY_V12.txt",
@@ -60,6 +63,7 @@
     "docs/ARCHITECTURE_ALPHA10.md",
     "docs/ARCHITECTURE_ALPHA11.md",
     "docs/ARCHITECTURE_ALPHA12.md",
+    "docs/CODEX_SETUP.md",
     "docs/GOLDEN_VALIDATION_ALPHA7.md",
     "docs/HANDOFF.md",
     "docs/HANDOFF_ALPHA11.md",
@@ -83,6 +87,7 @@
     "docs/V11_PARALLEL_MODEL.md",
     "docs/V11_SAFETY_MODEL.md",
     "docs/V12_OPERATIONS.md",
+    "docs/V12_RC1.md",
     "docs/V12_STATISTICS.md",
     "docs/V1_RELEASE.md",
     "docs/VALIDATION.md",
@@ -107,6 +112,7 @@
     "scripts/lexical_rust_audit.py",
     "scripts/mutate_gates.py",
     "scripts/operation_manifest.py",
+    "scripts/rc_gate.py",
     "scripts/register_ops.py",
     "scripts/static_audit.py",
     "scripts/static_audit_v11.py",
@@ -181,6 +187,7 @@
     "tests/formula_bit_identity.rs",
     "tests/golden_categories.rs",
     "tests/registry.rs",
-    "tests/user_ops.rs"
+    "tests/user_ops.rs",
+    "tools/demo.py"
   ]
 }

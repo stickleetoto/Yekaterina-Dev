@@ -200,11 +200,13 @@ def main() -> int:
         if welch is None:
             raise DemoError(f"yk.find could not discover a Welch operation: {hits!r}")
 
-        spec_response = call_tool("yk.spec", {"op": welch})
-        spec = spec_response.get("r") if isinstance(spec_response, dict) else None
+        # yk.spec returns the contract object itself. Only yk.compute wraps its
+        # result in {"r": ...}; unwrapping here yielded the *return-type string*
+        # ("object[]") instead of the spec, which is what failed CI.
+        spec = call_tool("yk.spec", {"op": welch})
         if not isinstance(spec, dict) or spec.get("op") != welch:
             raise DemoError(
-                f"yk.spec returned an unexpected contract: {spec_response!r}"
+                f"yk.spec returned an unexpected contract: {spec!r}"
             )
 
         print("Yekaterina v1.2 RC demo")

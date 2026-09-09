@@ -351,6 +351,12 @@ def type_ok(v, spec):
     if t in {'string','opcode'}: return isinstance(v,str)
     if t=='number|null': return v is None or is_number(v)
     if t=='object' or t=='pack': return isinstance(v,dict)
+    # object[] is used by the pairwise post-hoc operations, which return one
+    # record per comparison. scripts/validate_full_audit.py already allowed
+    # the type in the declared vocabulary; without the matching runtime
+    # check here every result was rejected and neither operation could ever
+    # be discovered, so both sat at 1408/1410 with a perfectly good fixture.
+    if t=='object[]': return isinstance(v,list) and all(isinstance(x,dict) for x in v)
     if t=='matrix': return isinstance(v,list) and all(isinstance(r,list) and all(is_number(x) for x in r) for r in v)
     if t in {'array','value[]'}: return isinstance(v,list)
     if t=='opcode[]': return isinstance(v,list) and all(isinstance(x,str) for x in v)

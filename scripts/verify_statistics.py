@@ -368,7 +368,13 @@ def main_inference():
 
             # --- KS ------------------------------------------------------------
             r = call("test.ks_normal", [NORMAL, 0.0, 1.0])
-            s = stats.kstest(NORMAL, "norm", args=(0.0, 1.0))
+            # The frozen distribution's cdf is passed directly rather than
+            # the ("norm", args=(mu, sigma)) form: newer scipy resolves the
+            # string to scipy.special.ndtr, which is the *standard* normal
+            # CDF and takes no location or scale, so the args are handed to
+            # a function that cannot accept them. This form has no such
+            # version dependency.
+            s = stats.kstest(NORMAL, stats.norm(0.0, 1.0).cdf)
             check("ks.d", r["d"], s.statistic)
             # The p is the asymptotic Kolmogorov form, which is what
             # kstwobign gives; scipy's default exact value differs for n=10 and
