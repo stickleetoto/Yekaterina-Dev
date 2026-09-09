@@ -27,6 +27,9 @@ jobs:
       # of them here would be redundant and would fail by design: each pins its
       # own line's package version and operation count, and v1.2 changed both.
       - run: python scripts/static_audit_v12.py
+      # RC-specific packaging/showcase invariants: version/count/tool surface,
+      # frozen request schema, and required reviewer-facing files.
+      - run: python scripts/rc_gate.py
       - run: python scripts/lexical_rust_audit.py
       - run: python scripts/operation_manifest.py
       - run: python scripts/validate_golden_manifest.py
@@ -39,6 +42,11 @@ jobs:
       - run: cargo test --locked --all-targets
       - run: cargo clippy --locked --all-targets
       - run: cargo build --locked --release
+
+      # The same reviewer-facing demo documented in SHOWCASE.md is a CI gate.
+      # It talks to the release executable over real MCP stdio and exercises
+      # compute, exact decimal arithmetic, batch, find and spec.
+      - run: python tools/demo.py ./target/release/yekaterina
 
       # 164 assertions comparing every v1.2 operation against a value computed
       # by a different route than the implementation uses.

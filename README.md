@@ -1,78 +1,90 @@
-# Yekaterina v1.0.0
+# Yekaterina — v1.2 Release Candidate
 
-**Pure computation. Minimal tokens.**
+**Pure computation. Minimal tokens. Verified evolution.**
 
-Yekaterina is a Rust compute offloader for LLM agents over MCP. v1.0.0 is the frozen production baseline promoted from the fully verified `v0.1.0-alpha.12-hotfix9` line.
+Yekaterina is a Rust computation offloader for LLM agents over MCP. The v1.2 release-candidate line expands the deterministic compute layer while preserving the compact three-tool interface used by clients.
 
-> Internal compute capability may grow without growing the LLM-facing MCP tool surface.
+> Stable distribution: [stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina) (`v1.0.0`).
+> This repository is the active source, verification, and release-preparation tree.
 
-## V1 frozen surface
+## Release-candidate snapshot
 
-- **1,215** registered built-in/control opcodes
-- exactly **3 MCP tools**
-  - `yk.compute`
-  - `yk.find`
-  - `yk.spec`
-- MCP request structs frozen to the alpha.10 surface
-- **527/527** MCP Golden cases
-- **1,215/1,215** live `yk.spec` coverage
-- **1,215/1,215** live MCP execution fixtures
-- **1,215/1,215** clean replay / return-type contract coverage
-- Golden oracle correctness: **100%**
+| Metric | v1.2 RC |
+|---|---:|
+| Registered built-in/control opcodes | **1,410** |
+| MCP tools | **3** — `yk.compute`, `yk.find`, `yk.spec` |
+| MCP schema footprint | **412 tokens / 1,725 bytes** |
+| Golden corpus | **527/527** |
+| Full Capability Audit | **1,410/1,410** |
+| Crate version | **1.2.0** |
+| Advertised MCP version | **1.0.0** (deliberately frozen) |
+| Rust toolchain | **1.98.0** |
 
-The 1,215/1,215 Full Capability Audit proves live execution and return-type coverage. It is not a claim that every mathematical result is proven correct for every possible input.
+The operation surface is frozen for RC1. The release-candidate work adds packaging, a one-command demo, Codex setup documentation, and CI gates; it does not add or rename operations.
 
-## Self-regression result
+## 60-second demo
 
-v1.0.0 was accepted by comparing the release candidate against the verified alpha.10 performance baseline:
-
-| Metric | alpha.10 baseline | v1.0.0 candidate | Result |
-|---|---:|---:|---|
-| Registered opcodes | 1,054 | 1,215 | **+15.28% capability** |
-| MCP tools | 3 | 3 | unchanged |
-| Schema tokens | 412 | 412 | unchanged |
-| 10k wire tokens | 159,794 | 159,794 | unchanged |
-| 10k arithmetic accuracy | 100% | 100% | unchanged |
-| 10k MCP time | 24.6739 ms | 26.8091 ms | +8.65% latency |
-| Hard regression gate | — | PASS | **CURRENT WINS** |
-
-The primary V1 architectural result is that capability increased by 15.28% over alpha.10 while the LLM-facing tool count, schema-token footprint, and 10k wire-token cost stayed unchanged.
-
-## Deep numerical families
-
-V1 includes the alpha.12 deep numerical layer:
-
-| Family | Ops | Focus |
-|---|---:|---|
-| `linalg.*` | 20 | eigen/SVD/pseudoinverse/PCA/least-squares |
-| `special.*` | 18 | Gamma/Beta/erf/Bessel/zeta/Lambert W |
-| `optimize.*` | 16 | Brent/golden/Newton/BFGS/Nelder-Mead |
-| `ode.*` | 15 | Euler/Heun/RK4/adaptive RK45 |
-| `series.*` | 16 | convergence/Taylor/Fourier/Chebyshev |
-
-V1 also retains the verification/trust families from alpha.11 (`verify.*`, `frame.*`, `curve.*`, `predicate.*`), exact BigInt/BigDecimal operations, batch execution, pipelines, Formula UDOs, Composite UDOs, persistent snapshots, pack import/export/uninstall, indexed discovery, deterministic alias resolution, and resource guards.
-
-## Verify on Windows
-
-Requires Rust **1.98.0**. Direct dependencies are exact-pinned. On the first local verification, `Cargo.lock` is generated if absent; all subsequent Cargo commands in the verifier use `--locked`.
+Windows:
 
 ```powershell
-.\VERIFY_WINDOWS.bat
-.\RUN_FULL_CAPABILITY_AUDIT_WINDOWS.bat
+.\DEMO_WINDOWS.bat
 ```
 
-Required V1 acceptance target:
+Linux/macOS:
+
+```bash
+./DEMO_UNIX.sh
+```
+
+If a release binary is not already present, the wrapper builds one with `cargo build --locked --release` and then runs the MCP demo.
+
+The demo performs real MCP calls: it verifies the three-tool catalog, computes `20 + 22`, checks exact decimal `0.1 + 0.2`, executes a compact batch, discovers a Welch-test operation with `yk.find`, inspects it with `yk.spec`, and exits only on `DEMO PASS`.
+
+See [SHOWCASE.md](SHOWCASE.md) for the walkthrough.
+
+## Why only three tools?
+
+Yekaterina keeps operation discovery out of `tools/list`.
 
 ```text
-registered opcodes          1215
-MCP tools                   3
-golden cases                527/527
-spec coverage               1215/1215
-fixture coverage            1215/1215
-clean replay/type contract  1215/1215
-golden oracle               100%
-release build               PASS
+yk.find     -> discover an operation lazily
+yk.spec     -> inspect its compact argument/result contract
+yk.compute  -> execute one call, a batch, a pipeline, or supported UDO control
 ```
+
+The internal registry can grow without enumerating every operation in the model-facing schema. From v1.0.0 to this RC, capability grew from 1,215 to 1,410 registered operations while the MCP tool count and measured schema footprint remained unchanged.
+
+## What is in v1.2?
+
+The v1.2 line adds 195 operations over the v1.1 baseline:
+
+- exact and applied families (`int`, `dec`, `geo`, `fin`, `vec`, `unit`, `pct`);
+- statistical inference, distributions, tests, confidence intervals, regression diagnostics;
+- multiplicity correction, post-hoc testing, effect sizes, and risk measures.
+
+It also fixes the v1.1 `expr.eval` worker-classification defect. `expr.eval` is serialized because worker reachability, not statelessness, is the safety property that matters.
+
+## Verification
+
+The verified v1.2 baseline at `8361beae` passed:
+
+- `scripts/static_audit_v12.py` — 24 pass / 0 fail;
+- lexical, manifest, Golden-manifest, and Full-Audit validators;
+- **386** Rust test executions and `cargo clippy`;
+- `scripts/verify_v12_operations.py` — 164 independent checks;
+- `scripts/verify_statistics.py` — 961 reference values against SciPy, NumPy, and mpmath;
+- `scripts/verify_multiplicity.py` — 577 checks against statsmodels/SciPy plus independent definitions;
+- Golden **527/527** and Full Capability Audit **1,410/1,410**.
+
+RC1 adds `scripts/rc_gate.py` and runs the user-facing demo in CI so the release packaging and documentation path cannot silently drift away from the executable.
+
+See [docs/V12_RC1.md](docs/V12_RC1.md) for the go/no-go checklist.
+
+## Codex setup
+
+Yekaterina is a local STDIO MCP server. Current Codex clients can register it directly as an MCP server.
+
+See [docs/CODEX_SETUP.md](docs/CODEX_SETUP.md) for CLI and `config.toml` examples.
 
 ## Protocol surface
 
@@ -82,20 +94,18 @@ FindParams:    q / l
 SpecParams:    op
 ```
 
-No V1 feature expands the MCP parameter schema.
+`src/model.rs` remains byte-identical to the frozen v1.0.0 MCP request-schema surface.
 
 ## Security boundary
 
-Compute operations do not expose arbitrary shell execution, network access, or arbitrary filesystem access. Formula evaluation uses the bounded internal expression parser. Batch, pipeline, expression, UDO, and numerical workloads have explicit size/depth/work guards.
+Compute operations do not expose arbitrary shell execution, arbitrary network access, or arbitrary filesystem access. Formula evaluation uses a bounded internal parser, and batch/pipeline/UDO/numerical workloads have explicit size, depth, and work guards.
 
-## Version history
+Parallel batch execution is opt-in. The default worker count remains 1; `--workers N|auto` or `YEKATERINA_WORKERS` enables the v1.1 worker pool.
 
-`v1.0.0` is a version promotion of the verified `v0.1.0-alpha.12-hotfix9` runtime. No new compute opcode was added during the V1 promotion. Historical alpha architecture, hardening, and validation documents remain under `docs/` for traceability.
+## Release lineage
 
-See:
+- **v1.0.0** — frozen public stable baseline, 1,215 operations.
+- **v1.1.0** — internal performance/concurrency line; no operation additions.
+- **v1.2.0 RC1** — 1,410 operations plus release/showcase hardening.
 
-- `docs/V1_RELEASE.md`
-- `docs/HANDOFF.md`
-- `docs/VALIDATION_ALPHA12.md`
-- `full_audit/README.md`
-- `CHANGELOG.md`
+The MCP `initialize` response still advertises `1.0.0` by design. That identity block is hash-gated so crate/version-line work does not silently change what existing MCP clients observe.
