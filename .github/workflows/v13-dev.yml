@@ -1,0 +1,53 @@
+name: v13-dev
+
+on:
+  push:
+    branches:
+      - 'feature/v1.3-*'
+  pull_request:
+
+jobs:
+  compute-program:
+    if: ${{ startsWith(github.ref_name, 'feature/v1.3-') || startsWith(github.head_ref, 'feature/v1.3-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.98.0
+        with:
+          components: rustfmt, clippy
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Fast compiler/test feedback comes before expensive independent-reference
+      # verification. v1.3 alpha work must not wait several minutes to discover
+      # a Rust syntax or type error.
+      - run: cargo fmt --check
+      - run: cargo test --locked --all-targets
+      - run: cargo clippy --locked --all-targets
+      - run: cargo build --locked --release
+
+      # Preserve the v1.2 reviewer-facing smoke and add a real MCP call that
+      # executes a named, forward-referencing Compute Program in one tool call.
+      - run: python tools/demo.py ./target/release/yekaterina
+      - run: python tools/demo_v13.py ./target/release/yekaterina
+
+      # Operation semantics are not supposed to change in alpha.1. Keep the
+      # independent Golden and Full Capability Audit gates while deliberately
+      # omitting v1.2's frozen-schema/RC gates and 412-token benchmark assertion.
+      - run: python scripts/operation_manifest.py
+      - run: python scripts/validate_golden_manifest.py
+      - run: python scripts/validate_full_audit.py
+      - run: python golden/run_golden.py --exe ./target/release/yekaterina --out ./golden_results/v13
+      - run: python scripts/check_golden_result.py ./golden_results/v13/result.json
+      - run: python full_audit/run_full_audit.py --exe ./target/release/yekaterina --out ./full_audit_results/v13 --strict
+
+      - name: Upload v1.3 verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v13-verification-reports
+          path: |
+            golden_results/v13/
+            full_audit_results/v13/
+          if-no-files-found: ignore
