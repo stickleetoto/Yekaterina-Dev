@@ -6,6 +6,10 @@ on:
 
 jobs:
   rust:
+    # v1.3 intentionally changes the frozen v1.2 request schema. Its feature
+    # branches use v13-dev.yml instead; this job remains the exact v1.2 gate for
+    # main/release work until the v1.3 line is promoted deliberately.
+    if: ${{ !startsWith(github.ref_name, 'feature/v1.3-') && !startsWith(github.head_ref, 'feature/v1.3-') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
