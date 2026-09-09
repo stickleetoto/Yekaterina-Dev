@@ -51,7 +51,11 @@ impl TryFrom<RawComputeParams> for ComputeParams {
 
     fn try_from(raw: RawComputeParams) -> Result<Self, Self::Error> {
         if let Some(program) = raw.program.as_ref() {
-            if raw.op.is_some() || !raw.a.is_empty() || !raw.ops.is_empty() || !raw.pipe.is_empty() {
+            if raw.op.is_some()
+                || !raw.a.is_empty()
+                || !raw.ops.is_empty()
+                || !raw.pipe.is_empty()
+            {
                 return Err("YK_PROGRAM_ARG".to_string());
             }
             let compiled = crate::program::compile_program(program, raw.input.as_ref(), raw.all)
@@ -109,7 +113,8 @@ mod tests {
             "a":[1,2],
             "input":{"x":1},
             "all":true
-        })).unwrap();
+        }))
+        .unwrap();
         assert_eq!(p.op.as_deref(), Some("math.add"));
         assert_eq!(p.a, vec![json!(1), json!(2)]);
         assert!(p.ops.is_empty());
@@ -125,18 +130,22 @@ mod tests {
             "input":{"x":5},
             "program":{
                 "steps":[
-                    {"id":"a","op":"math.add","a":["$input.x",1]},
+                    {"id":"a","op":"math.add","a":["$input.x", 1]},
                     {"id":"b","op":"math.mul","a":["$a",10]}
                 ],
                 "return":"b"
             }
-        })).unwrap();
+        }))
+        .unwrap();
         assert!(p.op.is_none());
         assert!(p.ops.is_empty());
-        assert_eq!(p.pipe, vec![
-            json!({"op":"math.add","a":[5,1]}),
-            json!({"op":"math.mul","a":["$0",10]})
-        ]);
+        assert_eq!(
+            p.pipe,
+            vec![
+                json!({"op":"math.add","a":[5,1]}),
+                json!({"op":"math.mul","a":["$0",10]})
+            ]
+        );
         assert!(p.program.is_none());
         assert!(!p.all);
     }
@@ -147,7 +156,9 @@ mod tests {
             "op":"math.add",
             "a":[1,2],
             "program":{"steps":[{"id":"a","op":"math.add","a":[1,2]}]}
-        })).unwrap_err().to_string();
+        }))
+        .unwrap_err()
+        .to_string();
         assert!(err.contains("YK_PROGRAM_ARG"));
     }
 
@@ -158,7 +169,9 @@ mod tests {
                 {"id":"a","op":"math.add","a":["$b",1]},
                 {"id":"b","op":"math.add","a":["$a",1]}
             ]}
-        })).unwrap_err().to_string();
+        }))
+        .unwrap_err()
+        .to_string();
         assert!(err.contains("YK_PROGRAM_CYCLE"));
     }
 }
