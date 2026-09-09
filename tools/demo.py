@@ -200,9 +200,12 @@ def main() -> int:
         if welch is None:
             raise DemoError(f"yk.find could not discover a Welch operation: {hits!r}")
 
-        spec = call_tool("yk.spec", {"op": welch})
+        spec_response = call_tool("yk.spec", {"op": welch})
+        spec = spec_response.get("r") if isinstance(spec_response, dict) else None
         if not isinstance(spec, dict) or spec.get("op") != welch:
-            raise DemoError(f"yk.spec returned an unexpected contract: {spec!r}")
+            raise DemoError(
+                f"yk.spec returned an unexpected contract: {spec_response!r}"
+            )
 
         print("Yekaterina v1.2 RC demo")
         print("MCP tools:", ", ".join(names))
