@@ -1,8 +1,8 @@
 {
-  "version": "v1.3-transformer-candidate",
-  "note": "Candidate native transformer surface prior to MCP registry promotion. These names must remain absent from the frozen v1.2 registry until the explicit v1.3 migration commit.",
+  "version": "v1.3-transformer-native",
+  "note": "Native transformer surface promoted through the v1.3 aggregate registry while the byte-stable v1.2 registry remains preserved as the 1410-op baseline.",
   "count": 15,
-  "registry_status": "unregistered",
+  "registry_status": "registered",
   "opcodes": [
     "xfmr.bh_field_strength",
     "xfmr.magnetizing_current_bh",
