@@ -30,6 +30,43 @@ pub const TRANSFORMER_OPERATIONS: &[OperationSpec] = &[
     op("xfmr.candidate_rank", &["candidates", "constraints", "objectives"], "object", "deterministically rank transformer candidates with feasible designs first"),
 ];
 
+/// Read-only aggregate view over the frozen v1.2 catalog followed by the v1.3
+/// transformer additions. Keeping this adapter preserves the historical
+/// `registry::OPERATIONS.iter()/len()` contract used by safety tests without
+/// copying or rewriting the 1,410-entry legacy array.
+#[derive(Debug, Clone, Copy)]
+pub struct OperationsView;
+
+pub const OPERATIONS: OperationsView = OperationsView;
+
+type OperationsIter = std::iter::Chain<
+    std::slice::Iter<'static, OperationSpec>,
+    std::slice::Iter<'static, OperationSpec>,
+>;
+
+impl OperationsView {
+    pub const fn len(&self) -> usize {
+        BUILTIN_COUNT
+    }
+
+    pub const fn is_empty(&self) -> bool {
+        false
+    }
+
+    pub fn iter(&self) -> OperationsIter {
+        legacy::OPERATIONS.iter().chain(TRANSFORMER_OPERATIONS.iter())
+    }
+}
+
+impl IntoIterator for OperationsView {
+    type Item = &'static OperationSpec;
+    type IntoIter = OperationsIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
 const fn op(
     opcode: &'static str,
     args: &'static [&'static str],
@@ -158,7 +195,8 @@ mod tests {
     fn aggregate_count_is_explicit() {
         assert_eq!(V12_BUILTIN_COUNT, legacy::OPERATIONS.len());
         assert_eq!(TRANSFORMER_OPERATIONS.len(), V13_TRANSFORMER_COUNT);
-        assert_eq!(BUILTIN_COUNT, 1425);
+        assert_eq!(OPERATIONS.len(), BUILTIN_COUNT);
+        assert_eq!(OPERATIONS.iter().count(), 1425);
     }
 
     #[test]
