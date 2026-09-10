@@ -6,6 +6,8 @@ on:
       - 'src/transformer_candidate.rs'
       - 'tests/transformer_candidate.rs'
       - 'docs/V13_CANDIDATE_EVALUATOR.md'
+      - 'full_audit/opcodes_v13_transformer_candidate.json'
+      - 'scripts/audit_v13_transformer_candidate.py'
       - '.github/workflows/xfmr-candidate.yml'
   push:
     branches:
@@ -14,6 +16,8 @@ on:
       - 'src/transformer_candidate.rs'
       - 'tests/transformer_candidate.rs'
       - 'docs/V13_CANDIDATE_EVALUATOR.md'
+      - 'full_audit/opcodes_v13_transformer_candidate.json'
+      - 'scripts/audit_v13_transformer_candidate.py'
       - '.github/workflows/xfmr-candidate.yml'
 
 jobs:
@@ -22,6 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.98.0
+      - name: Audit staged v1.3 native surface
+        run: python scripts/audit_v13_transformer_candidate.py
       - name: Candidate evaluator tests
         run: cargo test --locked --test transformer_candidate
       - name: Clippy candidate evaluator test target
