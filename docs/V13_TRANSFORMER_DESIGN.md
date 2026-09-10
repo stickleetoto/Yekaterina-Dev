@@ -160,9 +160,21 @@ not invent one universal transformer thermal resistance.
   concentric leakage inductance/reactance, Dowell factor behavior and harmonic
   copper-loss aggregation.
 - dedicated GitHub Actions workflows gate all three transformer layers.
-- `Transformer Winding` CI has passed both the Rust test target and clippy for
-  this layer on the development branch.
+- `Transformer Winding` CI has passed both its Rust test target and clippy.
 - the unchanged v1.2 full CI remains the regression gate for the existing engine.
+
+## Current status
+
+Layer 1 formula pack: implemented and verified.
+
+Layer 2 native material/geometry/thermal core: implemented and verified on its
+dedicated test target.
+
+Layer 3 native leakage/AC-winding core: implemented and verified on its dedicated
+test target.
+
+Native `xfmr.*` operations remain intentionally off the frozen v1.2 MCP registry
+until a v1.3 registry/audit policy is introduced.
 
 ## Next implementation slice
 
