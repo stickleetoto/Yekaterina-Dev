@@ -251,9 +251,8 @@ mod tests {
         // The structural invariant: everything without a dispatcher arm is
         // pure. This holds at any registry size.
         assert_eq!(pure, registry::OPERATIONS.len() - 8);
-        // The release-line count, which moves when operations are added and is
-        // here so that a change in the split is noticed rather than absorbed.
-        assert_eq!(pure, 1402);
+        // v1.3 has 1,425 built-ins and the same 8 server-handled operations.
+        assert_eq!(pure, 1417);
     }
 
     /// FAIL_CLOSED. Nothing outside the static registry may be pure.

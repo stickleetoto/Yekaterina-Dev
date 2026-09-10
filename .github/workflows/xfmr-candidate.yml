@@ -3,22 +3,38 @@ name: Transformer Candidate
 on:
   pull_request:
     paths:
+      - 'src/transformer.rs'
+      - 'src/transformer_winding.rs'
       - 'src/transformer_candidate.rs'
+      - 'src/registry_v13.rs'
+      - 'src/engine_v13.rs'
+      - 'src/lib.rs'
       - 'tests/transformer_candidate.rs'
       - 'docs/V13_CANDIDATE_EVALUATOR.md'
+      - 'docs/V13_REGISTRY_MIGRATION.md'
       - 'full_audit/opcodes_v13_transformer_candidate.json'
-      - 'scripts/audit_v13_transformer_candidate.py'
+      - 'full_audit/fixtures_v13_transformer.json'
+      - 'scripts/static_audit_v13.py'
+      - 'scripts/verify_v13_transformer_runtime.py'
       - '.github/workflows/xfmr-candidate.yml'
   push:
     branches:
       - main
-      - v1.3-candidate-evaluator
+      - v1.3-registry-migration
     paths:
+      - 'src/transformer.rs'
+      - 'src/transformer_winding.rs'
       - 'src/transformer_candidate.rs'
+      - 'src/registry_v13.rs'
+      - 'src/engine_v13.rs'
+      - 'src/lib.rs'
       - 'tests/transformer_candidate.rs'
       - 'docs/V13_CANDIDATE_EVALUATOR.md'
+      - 'docs/V13_REGISTRY_MIGRATION.md'
       - 'full_audit/opcodes_v13_transformer_candidate.json'
-      - 'scripts/audit_v13_transformer_candidate.py'
+      - 'full_audit/fixtures_v13_transformer.json'
+      - 'scripts/static_audit_v13.py'
+      - 'scripts/verify_v13_transformer_runtime.py'
       - '.github/workflows/xfmr-candidate.yml'
 
 jobs:
@@ -27,9 +43,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.98.0
-      - name: Audit staged v1.3 native surface
-        run: python scripts/audit_v13_transformer_candidate.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Audit promoted v1.3 aggregate surface
+        run: python scripts/static_audit_v13.py
       - name: Candidate evaluator tests
         run: cargo test --locked --test transformer_candidate
-      - name: Clippy candidate evaluator test target
-        run: cargo clippy --locked --test transformer_candidate
+      - name: Aggregate registry tests
+        run: cargo test --locked --lib registry_v13
+      - name: Aggregate engine tests
+        run: cargo test --locked --lib engine_v13
+      - name: Clippy promoted transformer surface
+        run: cargo clippy --locked --all-targets
+      - name: Build release runtime
+        run: cargo build --locked --release
+      - name: Verify promoted transformer MCP runtime
+        run: python scripts/verify_v13_transformer_runtime.py ./target/release/yekaterina

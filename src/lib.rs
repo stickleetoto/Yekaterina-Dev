@@ -6,11 +6,10 @@
 //! execution-only, validation-only and serialization-only timings, so the crate
 //! now also exposes a library target.
 //!
-//! This is a packaging change only. The module set, their contents and the
-//! binary entry point behave exactly as in v1.0.0; `benches/micro.rs` and future
-//! tests link against this target instead of textually including sources.
-//! The existing v1.0.0 test corpus is deliberately left on its original
-//! `#[path]` includes so that it keeps proving what it proved before.
+//! v1.3 keeps the promoted v1.2 registry and engine source files intact as
+//! historical baselines, then places explicit aggregate/dispatch shims in front
+//! of them. This makes the transformer-native promotion auditable without
+//! rewriting the stable 1,410-operation source snapshot.
 
 pub mod advanced_matrix;
 pub mod advanced_numerical;
@@ -27,6 +26,9 @@ pub mod data_ops;
 pub mod deep_linalg;
 pub mod discrete;
 pub mod electrical;
+#[path = "engine.rs"]
+pub mod engine_v12;
+#[path = "engine_v13.rs"]
 pub mod engine;
 pub mod engineering;
 pub mod extra_math;
@@ -54,6 +56,9 @@ pub mod precision;
 pub mod predicate;
 pub mod probability;
 pub mod radix;
+#[path = "registry.rs"]
+pub mod registry_v12;
+#[path = "registry_v13.rs"]
 pub mod registry;
 pub mod safety;
 pub mod scheduler;
@@ -65,6 +70,9 @@ pub mod stats;
 pub mod storage;
 pub mod thermodynamics;
 pub mod time_ops;
+pub mod transformer;
+pub mod transformer_candidate;
+pub mod transformer_winding;
 pub mod user_ops;
 pub mod vector;
 pub mod verification;

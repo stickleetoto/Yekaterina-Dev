@@ -1,0 +1,54 @@
+{
+  "version": "v1.3-transformer-native",
+  "count": 15,
+  "fixtures": {
+    "xfmr.bh_field_strength": [
+      [[0.0, 0.0], [1.0, 100.0], [1.5, 400.0], [1.8, 1000.0]],
+      1.25
+    ],
+    "xfmr.magnetizing_current_bh": [
+      [[0.0, 0.0], [1.0, 100.0], [1.5, 400.0], [1.8, 1000.0]],
+      1.25,
+      0.8,
+      500.0
+    ],
+    "xfmr.core_loss_specific_interp": [
+      [50.0, 60.0],
+      [1.0, 1.5],
+      [[1.0, 2.0], [1.2, 2.4]],
+      55.0,
+      1.25
+    ],
+    "xfmr.core_loss_from_grid": [
+      [50.0, 60.0],
+      [1.0, 1.5],
+      [[1.0, 2.0], [1.2, 2.4]],
+      55.0,
+      1.25,
+      10.0
+    ],
+    "xfmr.winding_geometry": [1000, 100, 1.2, 2.0, 0.2, 5.0],
+    "xfmr.skin_depth": [60.0, 1.724e-8, 1.0],
+    "xfmr.thermal_two_node": [1000.0, 500.0, 0.02, 0.03, 0.01, 25.0],
+    "xfmr.rogowski_factor": [0.5, 0.1],
+    "xfmr.effective_leakage_height": [0.5, 0.1],
+    "xfmr.leakage_inductance_concentric": [1000, 0.5, 0.03, 0.4, 0.02, 0.5, 0.03, 0.6],
+    "xfmr.leakage_reactance_concentric": [60.0, 1000, 0.5, 0.03, 0.4, 0.02, 0.5, 0.03, 0.6],
+    "xfmr.dowell_foil_ac_factor": [0.003, 0.0085, 10],
+    "xfmr.harmonic_copper_loss": [0.1, [100.0, 20.0], [1.0, 1.5]],
+    "xfmr.candidate_evaluate": [
+      {"bmax_t": 1.55, "loss_w": 1000.0, "impedance_pct": 5.8},
+      [{"metric": "bmax_t", "max": 1.65}, {"metric": "impedance_pct", "min": 5.0, "max": 6.5}],
+      [{"metric": "loss_w", "kind": "minimize", "good": 900.0, "bad": 1500.0}]
+    ],
+    "xfmr.candidate_rank": [
+      [
+        {"bmax_t": 1.55, "loss_w": 1100.0},
+        {"bmax_t": 1.50, "loss_w": 950.0},
+        {"bmax_t": 1.75, "loss_w": 850.0}
+      ],
+      [{"metric": "bmax_t", "max": 1.65}],
+      [{"metric": "loss_w", "kind": "minimize", "good": 900.0, "bad": 1500.0}]
+    ]
+  }
+}
