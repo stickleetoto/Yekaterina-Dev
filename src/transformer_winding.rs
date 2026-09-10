@@ -48,7 +48,8 @@ fn effective_leakage_height(args: &[Value]) -> Result<Value, &'static str> {
 }
 
 /// Preliminary short-circuit leakage inductance for a pair of equal-height,
-/// cylindrical, concentric windings, referred to `turns_reference`.
+/// cylindrical, concentric windings, referred to the actual integer turn count
+/// of the reference winding.
 ///
 /// Arguments:
 /// turns_reference,
@@ -62,7 +63,7 @@ fn effective_leakage_height(args: &[Value]) -> Result<Value, &'static str> {
 /// H_eq = H/K_R.
 fn leakage_inductance_concentric(args: &[Value]) -> Result<Value, &'static str> {
     need(args, 8)?;
-    let turns = positive(num(&args[0])?)?;
+    let turns = positive_integer(&args[0])? as f64;
     let h = positive(num(&args[1])?)?;
     let t1 = positive(num(&args[2])?)?;
     let d1 = positive(num(&args[3])?)?;
