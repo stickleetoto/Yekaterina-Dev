@@ -1,123 +1,116 @@
-# Yekaterina v1.3 Registry Migration Policy
+# Yekaterina v1.3 Registry Migration
 
-This document defines the compatibility rules for promoting the staged native
-transformer surface onto normal Yekaterina MCP discovery and execution.
+This document records the compatibility contract and implemented architecture for promoting the 15 native transformer operations onto normal Yekaterina MCP discovery and execution.
 
-The policy exists because v1.2.0 is already a promoted stable release. Native
-`xfmr.*` code may be developed and verified in the development repository, but
-it must not become discoverable through `yk.find`, inspectable through `yk.spec`
-or executable through ordinary `yk.compute` until the migration is explicit and
-audited.
+## Result
 
-## Current staged surface
+The migration is implemented in the development tree. The live development registry contains exactly **1,425** built-in/control operations: the frozen v1.2 set of 1,410 plus the 15 transformer-native operations from `full_audit/opcodes_v13_transformer_candidate.json`.
 
-`full_audit/opcodes_v13_transformer_candidate.json` freezes **15** native
-candidate operations:
+All 15 are now discoverable through `yk.find`, inspectable through `yk.spec`, and executable through ordinary `yk.compute`.
 
-- 7 material / interpolation / thermal / basic winding-geometry operations;
-- 6 winding-field / leakage / AC-loss operations;
-- 2 structured candidate evaluation / ranking operations.
+The 20 `pack.xfmr.*` scalar formula-pack operations remain importable pack content and are not duplicated as built-ins.
 
-The 20 `pack.xfmr.*` scalar formula-pack operations remain importable pack
-content. They are not part of this built-in migration and must not be duplicated
-as native registry entries without a separate compatibility decision.
+## Preservation-first architecture
 
-## Required v1.3 built-in count
+The original policy proposed appending the 15 entries directly to `src/registry.rs`. During implementation, a stronger preservation strategy was adopted: the promoted v1.2 registry and engine source files remain unchanged historical baselines, while v1.3 uses explicit aggregate shims.
 
-The v1.2 built-in/control registry contains **1,410** operations.
+- `src/registry.rs` — frozen v1.2 1,410-operation registry.
+- `src/registry_v13.rs` — aggregate v1.3 catalog composed from the legacy registry followed by the 15 transformer specs.
+- `src/engine.rs` — frozen v1.2 execution engine.
+- `src/engine_v13.rs` — transformer dispatch shim; legacy operations delegate to the v1.2 engine.
+- `src/lib.rs` — exposes the historical modules as `registry_v12` / `engine_v12` and the v1.3 aggregate modules as the live `registry` / `engine` API.
 
-If the current 15 native transformer candidates are promoted without any other
-built-in additions, the v1.3 registry must contain exactly **1,425** operations.
+This architecture satisfies the original compatibility intent without rewriting the 1,410-entry historical source snapshots.
 
-The migration should append the 15 new canonical names in candidate-manifest
-order. Existing v1.2 names must not be renamed, removed or reordered.
+## Built-in count and ordering
+
+The v1.3 development registry must contain exactly **1,425** operations.
+
+The aggregate ordering is:
+
+1. all 1,410 v1.2 canonical names, unchanged and in their original order;
+2. the 15 `xfmr.*` names in transformer manifest order.
+
+`registry_v13::OPERATIONS` exposes a read-only aggregate view so existing safety/scheduler tests can continue iterating the full static catalog without copying the legacy registry.
 
 ## MCP compatibility invariants
 
-The transformer migration does **not** require a larger model-facing MCP tool
-schema. v1.3 should retain:
+The transformer migration keeps the model-facing protocol small:
 
 - exactly 3 MCP tools: `yk.compute`, `yk.find`, `yk.spec`;
-- the frozen `ComputeParams`, `FindParams` and `SpecParams` fields;
-- the measured schema footprint unless an independently justified protocol
-  change is approved;
-- the existing error vocabulary when the transformer operations can express
-  failures with current codes (`ARG`, `TYPE`, `DOMAIN`, `LIMIT`, `NONFINITE`,
-  etc.);
-- default worker count 1 and current deterministic scheduling rules.
+- unchanged request parameter structures;
+- unchanged compatibility-gated MCP initialize identity;
+- unchanged error vocabulary where existing errors (`ARG`, `TYPE`, `DOMAIN`, `LIMIT`, `NONFINITE`, etc.) already express transformer failures;
+- default worker count 1 and existing deterministic scheduling rules.
 
-The crate/release version may move to v1.3.x while the MCP initialize identity
-remains deliberately compatibility-gated. Changing the advertised initialize
-version is a separate protocol decision, not an automatic consequence of adding
-operations behind the same three-tool surface.
+Crate/release metadata is a separate promotion decision. The development migration may be verified before the stable distribution is formally released as `1.3.x`.
 
-## Migration commit requirements
+## Promoted transformer surface
 
-A registry-promotion commit must make all of the following changes together:
+The 15 native operations are grouped as follows.
 
-1. expose the transformer native modules through the library target;
-2. add an `xfmr` dispatcher branch to the execution engine;
-3. append the 15 native operation specs to `src/registry.rs` in manifest order;
-4. add a frozen v1.2 operation-list artifact if one does not already exist;
-5. introduce a v1.3 static audit that proves all 1,410 v1.2 operations remain
-   present, unrenamed and in order;
-6. raise the expected built-in count to 1,425 only in the v1.3 audit path;
-7. keep the historical v1.2 audit and release evidence unchanged as historical
-   artifacts;
-8. extend full-audit fixtures so every promoted `xfmr.*` operation has an
-   executable acceptance case;
-9. run all transformer-specific gates plus the complete existing regression
-   suite on the migration commit.
+### Material, geometry and thermal
 
-A partial commit that registers names without dispatch, or dispatches code
-without registry discovery, is not acceptable.
+- `xfmr.bh_field_strength`
+- `xfmr.magnetizing_current_bh`
+- `xfmr.core_loss_specific_interp`
+- `xfmr.core_loss_from_grid`
+- `xfmr.winding_geometry`
+- `xfmr.skin_depth`
+- `xfmr.thermal_two_node`
 
-## Staging gate before migration
+### Winding field and AC loss
 
-`scripts/audit_v13_transformer_candidate.py` enforces the inverse state while
-promotion has not happened:
+- `xfmr.rogowski_factor`
+- `xfmr.effective_leakage_height`
+- `xfmr.leakage_inductance_concentric`
+- `xfmr.leakage_reactance_concentric`
+- `xfmr.dowell_foil_ac_factor`
+- `xfmr.harmonic_copper_loss`
 
-- the candidate manifest has the expected 15 names;
-- each name exists in its designated candidate source module;
-- the v1.2 registry remains exactly 1,410 operations;
-- none of the 15 names has leaked into that registry;
-- the engine has no `xfmr` dispatch branch yet.
+### Candidate decision layer
 
-This creates a clean phase boundary. Before migration, accidental exposure is a
-failure. During the explicit migration commit, the gate is replaced by the v1.3
-promotion audit whose expected state is the opposite.
+- `xfmr.candidate_evaluate`
+- `xfmr.candidate_rank`
 
-## Acceptance requirements for promotion
+## Verification contract
 
-Do not promote the staged native surface unless all of these are green on the
-same head commit:
+`scripts/static_audit_v13.py` proves the migration structure and preservation invariants, including:
 
-- Transformer Pack workflow;
-- Transformer Native workflow;
-- Transformer Winding workflow;
-- Transformer Candidate workflow;
-- full Rust test suite and clippy;
-- release build and MCP demo;
+- frozen v1.2 registry/engine/model/server artifacts remain preserved;
+- the v1.2 operation manifest remains 1,410 unique entries in order;
+- the transformer manifest is exactly 15 unique registered entries and disjoint from v1.2;
+- the v1.3 transformer specs match manifest order;
+- aggregate count is exactly 1,425;
+- all 15 operations are represented by the v1.3 dispatcher;
+- runtime fixtures cover all 15 operations;
+- the MCP tool surface remains exactly three tools.
+
+`full_audit/fixtures_v13_transformer.json` provides executable inputs for the promoted transformer surface. `scripts/verify_v13_transformer_runtime.py` launches the release executable over real MCP stdio and verifies transformer discovery, specs and execution rather than relying only on source inspection.
+
+## Verified migration head
+
+Before promotion to `main`, the migration branch must pass on the same effective head:
+
+- v1.3 static audit;
+- lexical and operation-manifest checks;
+- complete Rust test suite;
+- complete clippy suite;
+- release build;
+- reviewer-facing MCP demo;
+- v1.3 transformer runtime verifier;
+- existing v1.2 operation/reference verifiers;
 - Golden regression corpus;
-- Full Capability Audit;
-- v1.2 reference verifiers;
-- new v1.3 transformer acceptance fixtures;
-- new v1.3 static audit with no pending or failed checks.
+- frozen v1.2 Full Capability Audit;
+- benchmark invariants;
+- dedicated transformer workflows.
+
+The migration branch reached this state before PR promotion.
 
 ## Non-duplication rule
 
-Existing built-ins stay authoritative where semantics already exist, including
-ideal transformer voltage/current/impedance ratios, resistivity-based resistance,
-current density, I-squared-R power and generic efficiency. A new `xfmr.*` native
-operation is justified only when structured data, nonlinear material data,
-integer geometry, frequency-dependent effects, thermal networks, candidate
-reporting or another transformer-specific contract cannot be represented by the
-existing canonical operation without changing its meaning.
+Existing built-ins remain authoritative where semantics already exist, including ideal transformer voltage/current/impedance relationships, resistivity-based resistance, current density, I-squared-R power and generic efficiency. A native `xfmr.*` operation is justified only when the transformer-specific contract requires structured material data, nonlinear curves, integer geometry, frequency-dependent effects, thermal networks or candidate-level decision reporting.
 
 ## Safety and scope boundary
 
-Registry promotion means "available through Yekaterina", not "certified design".
-The native surface must continue to avoid claiming automatic compliance with
-IEC/IEEE/DOE rules, dielectric clearances, mechanical withstand, factory thermal
-rise or other standard-versioned requirements unless a separate versioned source
-and validation layer is introduced.
+Registry promotion means **available through Yekaterina**, not **certified transformer design**. These operations remain preliminary engineering calculation primitives and do not claim automatic IEC/IEEE/DOE compliance, dielectric-clearance adequacy, mechanical short-circuit withstand, guaranteed temperature rise or factory acceptance. Those require separately versioned source data and independent validation.
