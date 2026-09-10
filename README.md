@@ -1,15 +1,15 @@
-# Yekaterina — v1.2 Release Candidate
+# Yekaterina — Active Development
 
 **Pure computation. Minimal tokens. Verified evolution.**
 
-Yekaterina is a Rust computation offloader for LLM agents over MCP. The v1.2 release-candidate line expands the deterministic compute layer while preserving the compact three-tool interface used by clients.
+Yekaterina is a Rust computation offloader for LLM agents over MCP. This repository is the active source, verification, optimization, and release-preparation tree. The current stable line is v1.2.0, which preserves the compact three-tool interface while expanding the deterministic compute layer to 1,410 registered operations.
 
-> Stable distribution: [stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina) (`v1.0.0`).
-> This repository is the active source, verification, and release-preparation tree.
+> Stable distribution: [stickleetoto/Yekaterina](https://github.com/stickleetoto/Yekaterina) (`v1.2.0`).
+> Stable binaries, end-user documentation, and release artifacts are published from the distribution repository.
 
-## Release-candidate snapshot
+## v1.2.0 promoted baseline
 
-| Metric | v1.2 RC |
+| Metric | v1.2.0 |
 |---|---:|
 | Registered built-in/control opcodes | **1,410** |
 | MCP tools | **3** — `yk.compute`, `yk.find`, `yk.spec` |
@@ -20,7 +20,7 @@ Yekaterina is a Rust computation offloader for LLM agents over MCP. The v1.2 rel
 | Advertised MCP version | **1.0.0** (deliberately frozen) |
 | Rust toolchain | **1.98.0** |
 
-The operation surface is frozen for RC1. The release-candidate work adds packaging, a one-command demo, Codex setup documentation, and CI gates; it does not add or rename operations.
+The v1.2.0 operation surface was frozen for release and promoted from this repository after packaging, demo, verification, and CI gates passed. Post-release development continues here without changing the stable distribution until a later promotion is explicitly made.
 
 ## 60-second demo
 
@@ -52,7 +52,7 @@ yk.spec     -> inspect its compact argument/result contract
 yk.compute  -> execute one call, a batch, a pipeline, or supported UDO control
 ```
 
-The internal registry can grow without enumerating every operation in the model-facing schema. From v1.0.0 to this RC, capability grew from 1,215 to 1,410 registered operations while the MCP tool count and measured schema footprint remained unchanged.
+The internal registry can grow without enumerating every operation in the model-facing schema. From v1.0.0 to v1.2.0, capability grew from 1,215 to 1,410 registered operations while the MCP tool count and measured schema footprint remained unchanged.
 
 ## What is in v1.2?
 
@@ -66,7 +66,7 @@ It also fixes the v1.1 `expr.eval` worker-classification defect. `expr.eval` is 
 
 ## Verification
 
-The verified v1.2 baseline at `8361beae` passed:
+The source promoted to stable v1.2.0 at `9019194af02f7b9cbe72c5a232e753e236a84b4f` passed the end-to-end v1.2 verification path:
 
 - `scripts/static_audit_v12.py` — 24 pass / 0 fail;
 - lexical, manifest, Golden-manifest, and Full-Audit validators;
@@ -74,11 +74,13 @@ The verified v1.2 baseline at `8361beae` passed:
 - `scripts/verify_v12_operations.py` — 164 independent checks;
 - `scripts/verify_statistics.py` — 961 reference values against SciPy, NumPy, and mpmath;
 - `scripts/verify_multiplicity.py` — 577 checks against statsmodels/SciPy plus independent definitions;
-- Golden **527/527** and Full Capability Audit **1,410/1,410**.
+- Golden **527/527** and Full Capability Audit **1,410/1,410**;
+- user-facing MCP demo — **DEMO PASS**;
+- mutation gates — **6/6 caught**.
 
-RC1 adds `scripts/rc_gate.py` and runs the user-facing demo in CI so the release packaging and documentation path cannot silently drift away from the executable.
+The v1.2 release path added `scripts/rc_gate.py` and the user-facing demo to CI so packaging and documentation cannot silently drift away from the executable.
 
-See [docs/V12_RC1.md](docs/V12_RC1.md) for the go/no-go checklist.
+See [docs/V12_RC1.md](docs/V12_RC1.md) for the historical v1.2 RC go/no-go checklist.
 
 ## Codex setup
 
@@ -106,6 +108,7 @@ Parallel batch execution is opt-in. The default worker count remains 1; `--worke
 
 - **v1.0.0** — frozen public stable baseline, 1,215 operations.
 - **v1.1.0** — internal performance/concurrency line; no operation additions.
-- **v1.2.0 RC1** — 1,410 operations plus release/showcase hardening.
+- **v1.2.0** — stable release, 1,410 operations plus release/showcase hardening.
+- **post-v1.2 development** — active source and verification work continues in this repository; stable releases are promoted separately to `stickleetoto/Yekaterina`.
 
 The MCP `initialize` response still advertises `1.0.0` by design. That identity block is hash-gated so crate/version-line work does not silently change what existing MCP clients observe.
