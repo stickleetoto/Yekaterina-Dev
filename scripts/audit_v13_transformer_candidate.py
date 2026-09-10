@@ -75,13 +75,13 @@ def main() -> int:
             fail(f"missing candidate source: {rel}")
             continue
         text = path.read_text(encoding="utf-8")
+        owner_failed = False
         for opcode in owned:
             if text.count(f'"{opcode}"') != 1:
                 fail(f"{opcode} must appear exactly once in owner source {rel}")
-        if not any(msg.startswith(tuple(owned)) for msg in []):
-            # no-op branch keeps the audit intentionally lexical and deterministic
-            pass
-        ok(f"{rel} owns {len(owned)} staged opcode literals")
+                owner_failed = True
+        if not owner_failed:
+            ok(f"{rel} owns {len(owned)} staged opcode literals")
 
     registry_text = REGISTRY.read_text(encoding="utf-8")
     registered = re.findall(r'^\s*op\("([^"]+)"', registry_text, re.M)
