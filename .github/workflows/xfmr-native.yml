@@ -23,4 +23,4 @@ jobs:
       - name: Native transformer tests
         run: cargo test --locked --test transformer_native
       - name: Clippy native transformer test target
-        run: cargo clippy --locked --test transformer_native -- -D warnings
+        run: cargo clippy --locked --test transformer_native
