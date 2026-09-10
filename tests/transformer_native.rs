@@ -97,12 +97,12 @@ fn winding_geometry_rounds_layers_up_and_reports_partial_last_layer() {
 }
 
 #[test]
-fn copper_skin_depth_at_60_hz_is_about_8_5_mm() {
+fn copper_skin_depth_at_60_hz_is_about_8_53_mm() {
     let out = number(run(
         "xfmr.skin_depth",
         vec![json!(60.0), json!(1.724e-8), json!(1.0)],
     ));
-    close(out, 0.008529, 2e-6);
+    close(out, 0.008531259202666352, 1e-12);
 }
 
 #[test]
