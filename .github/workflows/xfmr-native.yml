@@ -1,0 +1,26 @@
+name: Transformer Native
+
+on:
+  pull_request:
+    paths:
+      - 'src/transformer.rs'
+      - 'tests/transformer_native.rs'
+      - '.github/workflows/xfmr-native.yml'
+  push:
+    branches:
+      - v1.3-transformer-design-engine
+    paths:
+      - 'src/transformer.rs'
+      - 'tests/transformer_native.rs'
+      - '.github/workflows/xfmr-native.yml'
+
+jobs:
+  verify-native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.98.0
+      - name: Native transformer tests
+        run: cargo test --locked --test transformer_native
+      - name: Clippy native transformer test target
+        run: cargo clippy --locked --test transformer_native -- -D warnings
