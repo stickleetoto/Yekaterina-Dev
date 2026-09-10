@@ -3,12 +3,13 @@
 This development line builds a manufacturing-oriented transformer calculation
 backend for preliminary 50/60 Hz power/distribution transformer design.
 
-It deliberately separates three layers while the v1.2 built-in registry remains
+It deliberately separates four layers while the v1.2 built-in registry remains
 frozen:
 
 1. an importable scalar formula pack for stable basic manufacturing equations;
 2. a native Rust material/geometry/thermal core for array and structured data;
-3. a native Rust winding-field core for leakage and frequency-dependent copper loss.
+3. a native Rust winding-field core for leakage and frequency-dependent copper loss;
+4. a structured candidate evaluator for hard constraints and multi-objective ranking.
 
 This is an engineering calculation kernel, not a certification engine. It does
 not assert IEC/IEEE/DOE compliance, dielectric safety, mechanical short-circuit
@@ -108,6 +109,25 @@ frequency-specific AC/DC resistance factor for each component. This makes
 non-sinusoidal load-loss calculations possible without pretending one single
 Rac correction applies to every harmonic.
 
+## Layer 4: candidate evaluation and ranking
+
+`src/transformer_candidate.rs` adds the decision layer needed by an optimizer or
+LLM agent after the physical calculations are complete:
+
+- `xfmr.candidate_evaluate` checks caller-supplied numeric constraints and returns
+  explicit pass/fail evidence plus a normalized 0..1 multi-objective score;
+- `xfmr.candidate_rank` applies one shared policy to many designs, always placing
+  feasible candidates ahead of infeasible candidates and using score plus original
+  index for deterministic ranking.
+
+Objectives are normalized to unitless desirability before weighting, so watts,
+kilograms, percentage impedance and other unlike quantities are never added
+raw. Minimize, maximize and target objectives are supported. All hard limits,
+weights and desirable ranges are caller data; Yekaterina does not invent a
+transformer design policy.
+
+See `docs/V13_CANDIDATE_EVALUATOR.md` for the full contract.
+
 ## Recommended candidate calculation chain
 
 A preliminary optimizer can now execute the following chain for each candidate:
@@ -125,11 +145,14 @@ A preliminary optimizer can now execute the following chain for each candidate:
 11. calculate Rogowski factor and preliminary leakage L/X from winding geometry;
 12. evaluate voltage regulation / impedance using the resulting equivalent model;
 13. run the winding/core/oil thermal network;
-14. reject candidates that violate material, window, thermal, insulation or
-    standard-versioned constraints.
+14. assemble selected outputs into a candidate metric object;
+15. reject candidates against explicit material/window/thermal/impedance limits;
+16. score and rank feasible candidates across loss, mass, margin or other explicit
+    caller-selected objectives.
 
-This is enough to make geometry changes participate in both electrical loss and
-impedance optimization rather than treating `%Z` and load loss as fixed inputs.
+This makes geometry changes participate in both electrical calculations and the
+actual optimization decision instead of treating `%Z`, load loss or design
+preference as fixed external inputs.
 
 ## Units and modeling rules
 
@@ -159,8 +182,12 @@ not invent one universal transformer thermal resistance.
 - `tests/transformer_winding.rs` independently checks the Rogowski expression,
   concentric leakage inductance/reactance, Dowell factor behavior and harmonic
   copper-loss aggregation.
-- dedicated GitHub Actions workflows gate all three transformer layers.
-- `Transformer Winding` CI has passed both its Rust test target and clippy.
+- `tests/transformer_candidate.rs` verifies feasibility reporting, objective
+  normalization, deterministic ranking and fail-closed malformed policies.
+- `scripts/audit_v13_transformer_candidate.py` freezes the staged native surface
+  and proves it has not leaked into the v1.2 registry before migration.
+- dedicated GitHub Actions workflows gate the transformer formula, native,
+  winding and candidate layers.
 - the unchanged v1.2 full CI remains the regression gate for the existing engine.
 
 ## Current status
@@ -173,20 +200,28 @@ dedicated test target.
 Layer 3 native leakage/AC-winding core: implemented and verified on its dedicated
 test target.
 
-Native `xfmr.*` operations remain intentionally off the frozen v1.2 MCP registry
-until a v1.3 registry/audit policy is introduced.
+Layer 4 candidate evaluation/ranking core: implemented and verified on its
+dedicated test target.
+
+The staged native transformer surface is frozen in
+`full_audit/opcodes_v13_transformer_candidate.json` at **15 operations**.
+
+Native `xfmr.*` operations remain intentionally off the frozen v1.2 MCP registry.
+The migration rules are now defined in `docs/V13_REGISTRY_MIGRATION.md`; the next
+registry step must be an explicit v1.3 promotion commit rather than an incidental
+side effect of transformer development.
 
 ## Next implementation slice
 
-The next useful manufacturing slice is not more basic algebra. Priority items are:
+The next useful manufacturing work is no longer basic algebra or candidate
+scoring. Priority items are:
 
+- execute the explicit v1.3 registry/audit migration when the staged 15-op native
+  contract is ready for MCP exposure;
 - unequal-height / multi-winding leakage models;
 - CTC and strand-eddy/circulating-current loss models for large power windings;
 - validated stray structural loss estimates;
 - winding mean-diameter / duct / transposition geometry builders;
 - thermal hot-spot models calibrated against test data;
 - mechanical short-circuit force/stress calculations;
-- versioned insulation and clearance constraint tables;
-- candidate-level structured pass/fail reports and multi-objective scoring;
-- explicit v1.3 registry/audit policy before promoting native `xfmr.*` operations
-  onto the MCP built-in surface.
+- versioned insulation and clearance constraint tables.
