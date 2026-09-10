@@ -160,6 +160,8 @@ not invent one universal transformer thermal resistance.
   concentric leakage inductance/reactance, Dowell factor behavior and harmonic
   copper-loss aggregation.
 - dedicated GitHub Actions workflows gate all three transformer layers.
+- `Transformer Winding` CI has passed both the Rust test target and clippy for
+  this layer on the development branch.
 - the unchanged v1.2 full CI remains the regression gate for the existing engine.
 
 ## Next implementation slice
