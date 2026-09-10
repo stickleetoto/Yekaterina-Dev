@@ -50,8 +50,10 @@ jobs:
         run: python scripts/static_audit_v13.py
       - name: Candidate evaluator tests
         run: cargo test --locked --test transformer_candidate
-      - name: Aggregate registry and dispatcher tests
-        run: cargo test --locked registry_v13 engine_v13
+      - name: Aggregate registry tests
+        run: cargo test --locked --lib registry_v13
+      - name: Aggregate engine tests
+        run: cargo test --locked --lib engine_v13
       - name: Clippy promoted transformer surface
         run: cargo clippy --locked --all-targets
       - name: Build release runtime
