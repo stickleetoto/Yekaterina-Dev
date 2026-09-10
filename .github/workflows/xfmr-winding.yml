@@ -1,0 +1,26 @@
+name: Transformer Winding
+
+on:
+  pull_request:
+    paths:
+      - 'src/transformer_winding.rs'
+      - 'tests/transformer_winding.rs'
+      - '.github/workflows/xfmr-winding.yml'
+  push:
+    branches:
+      - v1.3-transformer-design-engine
+    paths:
+      - 'src/transformer_winding.rs'
+      - 'tests/transformer_winding.rs'
+      - '.github/workflows/xfmr-winding.yml'
+
+jobs:
+  verify-winding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.98.0
+      - name: Winding model tests
+        run: cargo test --locked --test transformer_winding
+      - name: Clippy winding model target
+        run: cargo clippy --locked --test transformer_winding --no-deps

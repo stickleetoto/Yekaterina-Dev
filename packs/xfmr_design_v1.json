@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "name": "xfmr",
+  "ops": [
+    {"k":"f","op":"pack.xfmr.core_effective_area","p":["gross_area_m2","stacking_factor"],"expr":"gross_area_m2*stacking_factor"},
+    {"k":"f","op":"pack.xfmr.volts_per_turn_sine","p":["frequency_hz","bmax_t","effective_area_m2"],"expr":"4.44*frequency_hz*bmax_t*effective_area_m2"},
+    {"k":"f","op":"pack.xfmr.turns_sine","p":["voltage_rms","frequency_hz","bmax_t","effective_area_m2"],"expr":"voltage_rms/(4.44*frequency_hz*bmax_t*effective_area_m2)"},
+    {"k":"f","op":"pack.xfmr.flux_density_sine","p":["voltage_rms","frequency_hz","turns","effective_area_m2"],"expr":"voltage_rms/(4.44*frequency_hz*turns*effective_area_m2)"},
+    {"k":"f","op":"pack.xfmr.saturation_margin_pct","p":["saturation_flux_density_t","operating_flux_density_t"],"expr":"(saturation_flux_density_t-operating_flux_density_t)/saturation_flux_density_t*100"},
+    {"k":"f","op":"pack.xfmr.magnetic_reluctance","p":["magnetic_path_length_m","relative_permeability","effective_area_m2"],"expr":"magnetic_path_length_m/(1.2566370614359173e-06*relative_permeability*effective_area_m2)"},
+    {"k":"f","op":"pack.xfmr.magnetizing_inductance","p":["turns","relative_permeability","effective_area_m2","magnetic_path_length_m"],"expr":"1.2566370614359173e-06*relative_permeability*turns^2*effective_area_m2/magnetic_path_length_m"},
+    {"k":"f","op":"pack.xfmr.magnetizing_current_from_h","p":["field_strength_a_m","magnetic_path_length_m","turns"],"expr":"field_strength_a_m*magnetic_path_length_m/turns"},
+    {"k":"f","op":"pack.xfmr.conductor_area_mm2","p":["current_a","target_current_density_a_mm2"],"expr":"current_a/target_current_density_a_mm2"},
+    {"k":"f","op":"pack.xfmr.winding_length","p":["turns","mean_turn_length_m"],"expr":"turns*mean_turn_length_m"},
+    {"k":"f","op":"pack.xfmr.resistance_at_temperature","p":["resistance_20c_ohm","temp_coefficient_per_c","temperature_c"],"expr":"resistance_20c_ohm*(1+temp_coefficient_per_c*(temperature_c-20))"},
+    {"k":"f","op":"pack.xfmr.core_loss_density_steinmetz","p":["steinmetz_k","frequency_hz","alpha","flux_density_t","beta"],"expr":"steinmetz_k*frequency_hz^alpha*flux_density_t^beta"},
+    {"k":"f","op":"pack.xfmr.core_loss_from_density","p":["loss_density_w_m3","core_volume_m3"],"expr":"loss_density_w_m3*core_volume_m3"},
+    {"k":"f","op":"pack.xfmr.core_loss_from_specific_loss","p":["specific_loss_w_kg","core_mass_kg"],"expr":"specific_loss_w_kg*core_mass_kg"},
+    {"k":"f","op":"pack.xfmr.core_mass","p":["core_density_kg_m3","core_volume_m3"],"expr":"core_density_kg_m3*core_volume_m3"},
+    {"k":"f","op":"pack.xfmr.window_fill_pct","p":["occupied_conductor_area_mm2","usable_window_area_mm2"],"expr":"occupied_conductor_area_mm2/usable_window_area_mm2*100"},
+    {"k":"f","op":"pack.xfmr.rated_current_three_phase","p":["apparent_power_va","line_voltage_rms"],"expr":"apparent_power_va/(3^0.5*line_voltage_rms)"},
+    {"k":"f","op":"pack.xfmr.voltage_regulation_lagging_pct","p":["load_current_a","equivalent_resistance_ohm","equivalent_reactance_ohm","power_factor","rated_voltage_rms"],"expr":"load_current_a*(equivalent_resistance_ohm*power_factor+equivalent_reactance_ohm*(1-power_factor^2)^0.5)/rated_voltage_rms*100"},
+    {"k":"f","op":"pack.xfmr.voltage_regulation_leading_pct","p":["load_current_a","equivalent_resistance_ohm","equivalent_reactance_ohm","power_factor","rated_voltage_rms"],"expr":"load_current_a*(equivalent_resistance_ohm*power_factor-equivalent_reactance_ohm*(1-power_factor^2)^0.5)/rated_voltage_rms*100"},
+    {"k":"f","op":"pack.xfmr.short_circuit_impedance_pct","p":["rated_current_a","equivalent_resistance_ohm","equivalent_reactance_ohm","rated_voltage_rms"],"expr":"rated_current_a*(equivalent_resistance_ohm^2+equivalent_reactance_ohm^2)^0.5/rated_voltage_rms*100"}
+  ]
+}

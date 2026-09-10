@@ -1,0 +1,31 @@
+name: Transformer Pack
+
+on:
+  pull_request:
+    paths:
+      - "packs/xfmr_design_v1.json"
+      - "scripts/verify_transformer_pack.py"
+      - "docs/V13_TRANSFORMER_DESIGN.md"
+      - ".github/workflows/xfmr-pack.yml"
+  push:
+    branches:
+      - "v1.3-transformer-design-engine"
+    paths:
+      - "packs/xfmr_design_v1.json"
+      - "scripts/verify_transformer_pack.py"
+      - "docs/V13_TRANSFORMER_DESIGN.md"
+      - ".github/workflows/xfmr-pack.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify transformer design pack
+        run: python scripts/verify_transformer_pack.py
