@@ -11,6 +11,7 @@ on:
       - '.github/workflows/xfmr-candidate.yml'
   push:
     branches:
+      - main
       - v1.3-candidate-evaluator
     paths:
       - 'src/transformer_candidate.rs'
