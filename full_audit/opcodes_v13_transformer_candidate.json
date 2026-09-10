@@ -1,0 +1,23 @@
+{
+  "version": "v1.3-transformer-candidate",
+  "note": "Candidate native transformer surface prior to MCP registry promotion. These names must remain absent from the frozen v1.2 registry until the explicit v1.3 migration commit.",
+  "count": 15,
+  "registry_status": "unregistered",
+  "opcodes": [
+    "xfmr.bh_field_strength",
+    "xfmr.magnetizing_current_bh",
+    "xfmr.core_loss_specific_interp",
+    "xfmr.core_loss_from_grid",
+    "xfmr.winding_geometry",
+    "xfmr.skin_depth",
+    "xfmr.thermal_two_node",
+    "xfmr.rogowski_factor",
+    "xfmr.effective_leakage_height",
+    "xfmr.leakage_inductance_concentric",
+    "xfmr.leakage_reactance_concentric",
+    "xfmr.dowell_foil_ac_factor",
+    "xfmr.harmonic_copper_loss",
+    "xfmr.candidate_evaluate",
+    "xfmr.candidate_rank"
+  ]
+}
