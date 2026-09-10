@@ -1,33 +1,32 @@
 # CURRENT_STATE.md
 
-> Release-candidate snapshot for the public `stickleetoto/Yekaterina-Dev` tree.
+> Active-development snapshot for `stickleetoto/Yekaterina-Dev`.
 
 ## Current milestone
 
-**v1.2.0 RC1 — surface frozen, release/showcase hardening in progress.**
+**v1.2.0 is promoted stable; v1.3 transformer-design development is in progress.**
 
-RC1 branches from verified development baseline `8361beae`, which completed the
-1,215 -> 1,410 operation expansion. The RC work is intentionally packaging-only:
-demo tooling, Codex setup, release documentation, and CI release gates. No runtime
-operation, MCP request field, or error code is added by RC1.
+The verified v1.2.0 source was promoted from commit
+`9019194af02f7b9cbe72c5a232e753e236a84b4f` to the stable distribution repository.
+The v1.2 built-in operation surface remains frozen while post-release work continues
+in this repository.
 
 | | |
 |---|---|
-| Crate version | `1.2.0` |
+| Stable crate line | `1.2.0` |
 | Advertised MCP version | `1.0.0` (deliberately frozen and hash-gated) |
-| Registered opcodes | **1,410** |
+| Registered built-in/control opcodes | **1,410** |
 | MCP tools | **3** — `yk.compute`, `yk.find`, `yk.spec` |
 | Schema footprint | **412 tokens / 1,725 bytes** |
 | Error codes | **30** |
-| Serialized operations | **8** — seven `udo.*` controls plus `expr.eval` |
 | Golden corpus | **527/527** |
 | Full Capability Audit | **1,410/1,410** |
 | Rust edition / toolchain | 2024 / pinned 1.98.0 |
 | Default workers | 1 |
 
-## Verified baseline
+## Stable v1.2 verification record
 
-The `8361beae` baseline recorded:
+The source promoted to v1.2.0 passed the full release path:
 
 - `static_audit_v12`: **24 pass / 0 fail**;
 - lexical, operation-manifest, Golden-manifest, and Full-Audit validators: PASS;
@@ -36,82 +35,85 @@ The `8361beae` baseline recorded:
 - `verify_statistics.py`: **961** values against SciPy, NumPy, and mpmath;
 - `verify_multiplicity.py`: **577** checks against statsmodels/SciPy plus independent definitions;
 - Golden **527/527**;
-- Full Capability Audit **1,410/1,410**.
+- Full Capability Audit **1,410/1,410**;
+- user-facing MCP demo: **DEMO PASS**;
+- mutation gates: **6/6 caught**.
 
-These are baseline facts, not a claim that the RC packaging commit has already
-passed CI. RC1 is promotable only after the RC branch itself passes the full CI
-workflow.
+The stable distribution is `stickleetoto/Yekaterina`. Development changes in this
+repository do not change that stable release until a later promotion is explicit.
 
-## RC1 additions
+## v1.3 transformer-design candidate
 
-- `SHOWCASE.md` — reviewer-facing project walkthrough and architecture.
-- `DEMO_WINDOWS.bat` / `DEMO_UNIX.sh` — one-command build-and-demo wrappers.
-- `tools/demo.py` — standard-library MCP demonstration that exercises
-  `yk.compute`, `yk.find`, and `yk.spec`.
-- `docs/CODEX_SETUP.md` — current STDIO MCP setup for Codex.
-- `docs/V12_RC1.md` — release-candidate invariants and go/no-go checklist.
-- `scripts/rc_gate.py` — fast release-surface gate.
-- CI runs both `rc_gate.py` and the real MCP demo against the release build.
+The active transformer line is `v1.3-transformer-design-engine`.
 
-## v1.2 runtime work completed before RC1
+It intentionally keeps the frozen v1.2 registry untouched and separates the new
+work into three layers:
 
-The v1.2 runtime line added **195** operations:
+1. **Formula pack** — 20 importable `pack.xfmr.*` manufacturing calculations for
+   core area, volts/turn, turns, flux back-checks, magnetic quantities, conductor
+   sizing, hot resistance, core loss, window fill, rated current, regulation, and
+   short-circuit impedance.
+2. **Native material / geometry / thermal core** — B-H interpolation, magnetizing
+   current from B-H data, manufacturer core-loss-grid interpolation, integer
+   winding geometry, conductor skin depth, and a caller-parameterized thermal
+   network.
+3. **Native winding-field core** — Rogowski correction, preliminary concentric
+   leakage inductance/reactance, Dowell foil/layer AC resistance factor, and
+   harmonic copper-loss aggregation.
 
-- 103 exact/applied operations across `int`, `dec`, `geo`, `fin`, `vec`, `unit`, and `pct`;
-- 69 statistical inference/distribution/regression operations;
-- 23 multiplicity, post-hoc, effect-size, and risk-measure operations.
+Existing `elec.transformer_voltage`, `elec.transformer_current`, and
+`elec.transformer_impedance` remain authoritative for ideal turns-ratio
+relationships. The v1.3 work does not duplicate those operations.
 
-It also fixed the v1.1 `expr.eval` concurrency defect by classifying it
-`Serialized`. Worker safety means “the worker dispatcher can execute it,” not
-merely “the operation has no mutable state.”
+The native `xfmr.*` functions are compiled and independently tested, but they are
+not yet promoted onto the MCP built-in registry. That promotion requires an
+explicit v1.3 registry/audit compatibility decision rather than silently changing
+the frozen v1.2 surface.
 
-## Release invariants
+## Transformer verification gates
 
-RC1 must keep all of the following unchanged:
+The transformer branch has dedicated GitHub Actions workflows for:
 
-1. exactly **1,410** registered operations;
+- the importable formula pack and its independent Python verifier;
+- the native transformer material/geometry/thermal tests and clippy;
+- the winding-field tests and clippy;
+- the unchanged full v1.2 CI regression path.
+
+Before the transformer branch is merged, all of those workflows must be green on
+the current head.
+
+## Compatibility invariants retained during v1.3 development
+
+Until a v1.3 surface migration is explicitly approved, development must preserve:
+
+1. exactly **1,410** registered built-in/control operations;
 2. exactly **3** MCP tools;
 3. frozen `src/model.rs` request schema;
 4. **412-token / 1,725-byte** measured tool schema;
-5. MCP `initialize` version **1.0.0** and the existing instructions string;
+5. MCP `initialize` version **1.0.0** and its hash-gated identity;
 6. **30** error codes;
 7. default worker count **1**;
-8. all 1,215 v1.1 operations present, unrenamed, and in order.
+8. the complete v1.2 Golden and Full Capability Audit baselines.
 
-A change that intentionally breaks one of these is not an RC1 fix; it starts a
-new compatibility decision and must update the corresponding gate and decision
-record explicitly.
+New transformer capabilities may live in importable packs or unregistered native
+candidate modules without weakening those guarantees.
 
-## Promotion checklist
+## Next development decisions
 
-Before tagging/promoting v1.2:
+The highest-value follow-up work is:
 
-- GitHub CI green on the RC commit;
-- `python scripts/rc_gate.py` PASS;
-- `python scripts/static_audit_v12.py` PASS with no pending/fail entries;
-- `cargo test --locked --all-targets` PASS;
-- `cargo clippy --locked --all-targets` exit 0;
-- release build PASS;
-- all three Python reference verifiers PASS;
-- Golden 527/527;
-- Full Capability Audit 1,410/1,410;
-- `python tools/demo.py <release-executable>` prints `DEMO PASS`;
-- Windows `DEMO_WINDOWS.bat` checked on the packaged executable;
-- release archive checksum produced and verified before promotion to
-  `stickleetoto/Yekaterina`.
-
-## Deferred / intentionally unchanged
-
-- Pipeline parallelism remains deferred.
-- `DEFAULT_WORKERS` remains 1; parallelism is opt-in.
-- `OperationSource::Wasm` remains declared but unused.
-- `dec.sqrt` remains excluded because the `dec.*` contract is exactness.
-- Exact permutation p-values for rank tests remain out of scope.
-- `test.ks_normal` accepts the normal parameters rather than estimating them.
+- define the formal v1.3 registry/audit migration policy before exposing native
+  `xfmr.*` operations over MCP;
+- add candidate-level structured pass/fail reporting and multi-objective scoring;
+- extend winding geometry only with models whose assumptions and verification
+  data are explicit;
+- keep certification, dielectric-clearance, mechanical-withstand, and thermal
+  hot-spot claims outside the generic calculator unless a versioned source and
+  independent validation path are provided.
 
 ## Repository roles
 
-- `stickleetoto/Yekaterina-Dev` — source development, verification, RC work.
-- `stickleetoto/Yekaterina` — stable binaries, public release documentation, and
-  release evidence. It remains the v1.0.0 stable distribution until v1.2 is
-  explicitly promoted.
+- `stickleetoto/Yekaterina-Dev` — active source development, verification, and
+  future release preparation.
+- `stickleetoto/Yekaterina` — stable distribution, binaries, public release
+  documentation, and release evidence for v1.2.0.
