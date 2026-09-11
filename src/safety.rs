@@ -220,8 +220,8 @@ mod tests {
             .collect();
         assert_eq!(
             serialized.len(),
-            8,
-            "expected the 7 udo.* control operations plus expr.eval, got {serialized:?}"
+            ControlOp::ALL.len(),
+            "expected only server-handled control operations, got {serialized:?}"
         );
         assert!(serialized.iter().all(|op| op.starts_with("udo.") || *op == "expr.eval"));
         assert!(serialized.contains(&"expr.eval"),
@@ -248,11 +248,10 @@ mod tests {
             .iter()
             .filter(|s| classify(s.opcode) == Safety::Pure)
             .count();
-        // The structural invariant: everything without a dispatcher arm is
-        // pure. This holds at any registry size.
-        assert_eq!(pure, registry::OPERATIONS.len() - 8);
-        // v1.3 has 1,425 built-ins and the same 8 server-handled operations.
-        assert_eq!(pure, 1417);
+        // Structural invariant: every registered operation without a server
+        // dispatcher arm is pure. This stays correct as additive registry
+        // layers grow and intentionally avoids pinning a release-specific count.
+        assert_eq!(pure, registry::OPERATIONS.len() - ControlOp::ALL.len());
     }
 
     /// FAIL_CLOSED. Nothing outside the static registry may be pure.

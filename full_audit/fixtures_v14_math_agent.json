@@ -1,0 +1,11 @@
+{
+  "version": "v1.4-dev",
+  "count": 2,
+  "fixtures": {
+    "alg.linear_root": [2.0, -8.0],
+    "linalg.solve": [
+      [[2.0, 1.0], [1.0, -1.0]],
+      [5.0, 1.0]
+    ]
+  }
+}
