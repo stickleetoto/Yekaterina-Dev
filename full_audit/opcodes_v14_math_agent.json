@@ -1,0 +1,9 @@
+{
+  "version": "v1.4-dev",
+  "registry_status": "registered",
+  "count": 2,
+  "opcodes": [
+    "alg.linear_root",
+    "linalg.solve"
+  ]
+}
