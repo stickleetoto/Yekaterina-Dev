@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 V12_COUNT = 1410
 XFMR_COUNT = 15
 TOTAL_COUNT = 1425
+EXPECTED_PACKAGE_VERSION = "1.3.0"
 EXPECTED_TOOLS = ["yk.compute", "yk.find", "yk.spec"]
 
 failures: list[str] = []
@@ -59,6 +60,26 @@ def main() -> int:
             fail(f"frozen v1.2 artifact drifted: {rel}")
         else:
             ok(f"frozen v1.2 artifact preserved: {rel}")
+
+    cargo_toml = (ROOT / "Cargo.toml").read_text(encoding="utf-8")
+    package_version = re.search(
+        r'^\s*version\s*=\s*"([^"]+)"', cargo_toml, re.M
+    )
+    if package_version is None or package_version.group(1) != EXPECTED_PACKAGE_VERSION:
+        fail("Cargo.toml package version is not 1.3.0")
+    else:
+        ok("Cargo.toml package version is 1.3.0")
+
+    cargo_lock = (ROOT / "Cargo.lock").read_text(encoding="utf-8")
+    locked_version = re.search(
+        r'\[\[package\]\]\s+name\s*=\s*"yekaterina"\s+version\s*=\s*"([^"]+)"',
+        cargo_lock,
+        re.M,
+    )
+    if locked_version is None or locked_version.group(1) != EXPECTED_PACKAGE_VERSION:
+        fail("Cargo.lock yekaterina package version is not 1.3.0")
+    else:
+        ok("Cargo.lock yekaterina package version is 1.3.0")
 
     legacy_manifest = json.loads(
         (ROOT / "full_audit" / "opcodes_alpha12.json").read_text(encoding="utf-8-sig")
