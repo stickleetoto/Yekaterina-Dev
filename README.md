@@ -1,41 +1,59 @@
 # Yekaterina-Dev
 
-Release-finalization repository for Yekaterina v1.3.0.
+Development repository for Yekaterina.
 
 ## Status
 
-- Stable distribution: `stickleetoto/Yekaterina` remains on the v1.2.0 release line until promotion.
-- Development package metadata: **1.3.0**.
-- Live built-in/control operation surface: **1,425 operations**.
-- Transformer-native operations: **15**.
+- Stable distribution: `stickleetoto/Yekaterina` is **v1.3.0**.
+- Active development line: **v1.4 — Core Math + Agent Usability**.
+- Development package metadata remains **1.3.0** until an explicit v1.4 release-promotion phase.
+- Live v1.4 built-in/control operation surface: **1,427 operations**.
+- v1.3 baseline retained: **1,425 operations**, including **15** native `xfmr.*` operations.
+- v1.4 additions in the first slice: **2** focused equation-solving operations.
 - MCP tools remain exactly **3**: `yk.compute`, `yk.find`, `yk.spec`.
 - Golden regression corpus: **527/527** retained.
 - Frozen v1.2 full-capability audit surface: **1,410/1,410** retained.
 - Advertised MCP initialize version remains `1.0.0` by compatibility policy.
 
-The v1.3 compute scope is closed for release finalization. New calculator families or transformer-model extensions belong to a later development line rather than the v1.3 release candidate.
+## v1.4 direction
 
-For the authoritative snapshot, see [`CURRENT_STATE.md`](CURRENT_STATE.md).
-For repository ownership and file locations, see [`REPO_MAP.md`](REPO_MAP.md).
-For the release gate and promotion procedure, see [`RELEASE_CHECKLIST_V13.md`](RELEASE_CHECKLIST_V13.md).
+v1.4 is intentionally not an opcode-count race. The line has two goals:
 
-## v1.3 architecture
+1. **Core Math** — add small, high-leverage deterministic operations that remove common reasoning/calculation work from the LLM.
+2. **Agent Usability** — make existing capabilities easier to discover from natural-language intent without expanding the MCP tool schema.
 
-v1.3 keeps the promoted v1.2 implementation auditable rather than rewriting it in place:
+The first development slice adds:
 
-- `src/registry.rs` — frozen v1.2 registry, 1,410 operations.
-- `src/engine.rs` — frozen v1.2 execution engine.
-- `src/registry_v13.rs` — live aggregate registry, 1,425 operations total.
-- `src/engine_v13.rs` — live dispatch shim for transformer-native operations plus legacy delegation.
+- `alg.linear_root(a, b)` — solve `a*x + b = 0`;
+- `linalg.solve(matrix, rhs)` — solve square linear systems with pivoted Gaussian elimination;
+- semantic `yk.find` intent bridges for phrases such as `solve linear equation`, `system of equations`, `quadratic equation`, `greatest common divisor`, and `matrix inverse`.
 
-The model-facing surface remains `yk.compute`, `yk.find`, and `yk.spec`.
+Exact canonical/alias ownership remains stronger than semantic ranking, so existing v1.3 lookups keep their deterministic behavior.
+
+## Additive architecture
+
+Historical layers are preserved rather than rewritten:
+
+- `src/registry.rs` / `src/engine.rs` — frozen v1.2 baseline, 1,410 operations;
+- `src/registry_v13.rs` / `src/engine_v13.rs` — frozen v1.3 aggregate/dispatch layer, 1,425 operations;
+- `src/registry_v14.rs` / `src/engine_v14.rs` — active v1.4 aggregate/dispatch layer;
+- `src/math_v14.rs` — focused v1.4 math implementations.
+
+This keeps release evidence separable while allowing the live runtime to move forward.
 
 ## Verification
 
-The authoritative CI path runs the v1.3 static audit, locked Rust tests and clippy, release build, MCP demo, transformer runtime verification, v1.2 independent reference verifiers, Golden regression, frozen full-capability audit, and benchmark invariants.
+The v1.4 CI path requires:
 
-`scripts/static_audit_v13.py` additionally gates the v1.3 package version in both `Cargo.toml` and `Cargo.lock`, preventing release metadata drift.
+- `scripts/static_audit_v14.py`;
+- aggregate operation manifest: **1,427 total**;
+- locked Rust tests, clippy, and release build;
+- unchanged three-tool MCP demo;
+- retained v1.3 transformer runtime verification;
+- v1.4 real-process math + natural-language discovery verification;
+- existing v1.2 operation/statistics/multiplicity verifiers;
+- Golden regression corpus;
+- frozen v1.2 Full Capability Audit;
+- benchmark invariants.
 
-## Repository roles
-
-`Yekaterina-Dev` is the release-finalization and future development tree. The separate `Yekaterina` repository is the promoted stable distribution and should only receive v1.3 after the finalization CI gate passes.
+For the authoritative development snapshot, see [`CURRENT_STATE.md`](CURRENT_STATE.md).
