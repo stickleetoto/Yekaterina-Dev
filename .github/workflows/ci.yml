@@ -32,17 +32,15 @@ jobs:
       - run: python scripts/validate_golden_manifest.py
       - run: python scripts/validate_full_audit.py
 
-      # Cargo.lock is committed, so `--locked` validates the exact dependency
-      # graph. v1.3 development keeps the crate package version at 1.2.0 until
-      # release preparation so this registry migration does not require a lock
-      # regeneration commit unrelated to the compute-surface change.
+      # Cargo.toml and Cargo.lock are release-synchronized at 1.3.0. `--locked`
+      # verifies the exact committed dependency graph throughout finalization.
       - run: cargo test --locked --all-targets
       - run: cargo clippy --locked --all-targets
       - run: cargo build --locked --release
 
       # Existing three-tool MCP demo must remain unchanged.
       - run: python tools/demo.py ./target/release/yekaterina
-      # New v1.3 gate: all 15 promoted xfmr operations must be discoverable,
+      # v1.3 gate: all 15 promoted xfmr operations must be discoverable,
       # spec-readable and executable over the real MCP stdio process.
       - run: python scripts/verify_v13_transformer_runtime.py ./target/release/yekaterina
 

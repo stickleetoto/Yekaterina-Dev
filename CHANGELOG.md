@@ -1,3 +1,28 @@
+# Yekaterina v1.3.0
+
+Transformer-native expansion and release finalization. **1,410 -> 1,425** built-in/control operations while preserving the complete v1.2 registry/engine baseline and the three-tool MCP surface.
+
+**Added**
+- 15 registered `xfmr.*` native operations covering material/interpolation/thermal/basic geometry, winding-field/leakage/AC-loss calculations, and deterministic candidate evaluation/ranking.
+- Aggregate `src/registry_v13.rs` and `src/engine_v13.rs` shims. The historical v1.2 `src/registry.rs` and `src/engine.rs` remain frozen and auditable.
+- Real-process transformer runtime verification through `scripts/verify_v13_transformer_runtime.py`.
+
+**Release finalization**
+- Crate metadata promoted to **1.3.0** and synchronized in `Cargo.lock`.
+- `scripts/static_audit_v13.py` now gates both package-version locations as well as the 1,425-op aggregate contract, transformer manifest/fixtures, frozen v1.2 evidence, module wiring, dispatch coverage, and the unchanged three-tool MCP surface.
+- Added `RELEASE_CHECKLIST_V13.md` as the authoritative final acceptance and promotion procedure.
+- v1.3 compute scope is frozen. Additional transformer models, standards/compliance logic, and unrelated calculator expansion move to a later development line.
+
+**Compatibility retained**
+- Exactly 3 MCP tools: `yk.compute`, `yk.find`, `yk.spec`.
+- MCP initialize identity remains deliberately compatibility-gated at `1.0.0`.
+- Every v1.2 canonical operation remains present in the original order.
+- Golden regression corpus remains 527 cases and the frozen v1.2 Full Capability Audit remains 1,410 operations.
+- Default worker count remains 1 and the existing model-facing request schema/error vocabulary are unchanged.
+
+**Verification policy**
+The release is promotable only after the version-promoted finalization commit passes the complete CI path: v1.3 static audit, locked Rust test/clippy/release build, MCP demo, transformer runtime verification, v1.2 independent reference verifiers, Golden regression, frozen full-capability audit, and benchmark invariants.
+
 # Yekaterina v1.2.0
 
 Operation expansion. **1,215 -> 1,410**: 195 operations across nine families,

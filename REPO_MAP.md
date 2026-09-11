@@ -13,8 +13,8 @@
 | `golden/` | 527-case correctness oracle (`cases.json`, `run_golden.py`, `mcp_client.py`). |
 | `full_audit/` | Per-opcode capability audit: every registered opcode must execute. |
 | `scripts/` | Static audits, integrity generators, operation verifiers. |
-| `docs/` | Design and release history. `V11_*` / `V12_*` are retained release-history docs; v1.3 migration state is summarized in `CURRENT_STATE.md`. |
-| `.github/workflows/ci.yml` | The authoritative gate list. |
+| `docs/` | Design and release history. `V11_*` / `V12_*` are retained release-history docs; v1.3 finalization state is summarized in `CURRENT_STATE.md`. |
+| `.github/workflows/ci.yml` | The authoritative release-finalization gate list. |
 | `target/`, `*_results/` | Build and measurement output. Not analysed. |
 
 Outside the crate, `../../` (`포폴/Yekaterina/`) holds archived source zips and
@@ -41,7 +41,7 @@ MCP handler and request orchestration. Owns mutable server state.
 - MCP surface remains exactly three tools: `yk.compute`, `yk.find`, `yk.spec`.
 
 ### `registry_v13` — `src/registry_v13.rs`
-The live aggregate read-only registry for the development tree.
+The live aggregate read-only registry for v1.3.
 - Preserves all 1,410 v1.2 operation names and ordering.
 - Appends 15 registered transformer-native operations.
 - Total live built-in/control operation count: **1,425**.
@@ -92,7 +92,7 @@ Exact arithmetic (`int.*`, `dec.*`, `base.*`) over the precision dependencies an
 
 ## Operation modules
 
-The legacy engine dispatches by opcode family prefix. The development tree additionally exposes the transformer-native `xfmr.*` surface through the v1.3 shim.
+The legacy engine dispatches by opcode family prefix. v1.3 additionally exposes the transformer-native `xfmr.*` surface through the aggregate shim.
 
 | Prefix | Module(s), in fallback order |
 |---|---|
@@ -126,18 +126,19 @@ The legacy engine dispatches by opcode family prefix. The development tree addit
 |---|---|
 | `tests/` | Integration and operation-family regression tests. |
 | `golden/` | **527/527** MCP-level correctness regression corpus. |
-| `full_audit/` | Frozen v1.2 **1,410/1,410** full-capability evidence plus v1.3 transformer candidate manifests. |
-| `scripts/static_audit_v13.py` | v1.3 aggregate static audit; current verified result is **17 pass / 0 fail**. |
+| `full_audit/` | Frozen v1.2 **1,410/1,410** full-capability evidence plus v1.3 transformer manifests/fixtures. |
+| `scripts/static_audit_v13.py` | v1.3 aggregate static audit, including synchronized `Cargo.toml` / `Cargo.lock` package version at **1.3.0**. |
 | aggregate operation manifest | **1,425 total / 15 `xfmr.*`** operations. |
 | `scripts/verify_v13_transformer_runtime.py` | Real release-binary discovery/spec/execution verification for the promoted transformer surface. |
-| `cargo test --locked --all-targets` | Complete Rust test gate; current v1.3 migration head passes. |
-| `cargo clippy --locked --all-targets` | Complete lint gate; current v1.3 migration head passes. |
-| release build | Current v1.3 migration head passes. |
-| benchmark invariants | Current combined verification path passes. |
+| `cargo test --locked --all-targets` | Complete Rust test gate. |
+| `cargo clippy --locked --all-targets` | Complete lint gate. |
+| release build | Locked release build gate. |
+| benchmark invariants | Timing-independent schema/determinism/error-envelope checks. |
+| `RELEASE_CHECKLIST_V13.md` | Final v1.3 acceptance and promotion procedure. |
 
 ## Repository roles
 
-- `stickleetoto/Yekaterina-Dev` — active source development. v1.3 registry migration is implemented and verified here at 1,425 operations.
-- `stickleetoto/Yekaterina` — promoted stable distribution and release evidence, currently on the v1.2.0 release line.
+- `stickleetoto/Yekaterina-Dev` — v1.3 release finalization and subsequent development.
+- `stickleetoto/Yekaterina` — promoted stable distribution and release evidence, currently on v1.2.0 until v1.3 promotion.
 
-For the authoritative active snapshot, use `CURRENT_STATE.md`.
+For the authoritative release-finalization snapshot, use `CURRENT_STATE.md`.
