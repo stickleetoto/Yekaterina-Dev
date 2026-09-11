@@ -13,7 +13,7 @@
 | `golden/` | 527-case correctness oracle (`cases.json`, `run_golden.py`, `mcp_client.py`). |
 | `full_audit/` | Per-opcode capability audit: every registered opcode must execute. |
 | `scripts/` | Static audits, integrity generators, operation verifiers. |
-| `docs/` | Design and release history. `V11_*` / `V12_*` are current; `*_ALPHA*` are historical. |
+| `docs/` | Design and release history. `V11_*` / `V12_*` are retained release-history docs; v1.3 migration state is summarized in `CURRENT_STATE.md`. |
 | `.github/workflows/ci.yml` | The authoritative gate list. |
 | `target/`, `*_results/` | Build and measurement output. Not analysed. |
 
@@ -26,111 +26,77 @@ are snapshots, not part of this tree.
 | Entry point | File | Note |
 |---|---|---|
 | Process `main` | `src/main.rs` | Resolves worker count, then `Yekaterina::with_workers(n).serve(stdio())`. |
-| Library root | `src/lib.rs` | `pub mod` for every `src/*.rs`. Exists so benches/tests can link in-process. |
+| Library root | `src/lib.rs` | Aliases frozen v1.2 registry/engine modules and exposes the aggregate v1.3 live registry/engine surface. |
 | MCP tools | `src/server.rs`, `#[tool_router] impl Yekaterina` | `yk.compute`, `yk.find`, `yk.spec`. |
-| Operation dispatch | `src/engine.rs`, `execute` | Takes no `&self` — this is load-bearing, see ARCHITECTURE.md. |
-| Opcode table | `src/registry.rs`, `OPERATIONS` | 1,370 `OperationSpec` entries. |
+| Historical operation dispatch | `src/engine.rs`, `execute` | Frozen v1.2 execution engine for the legacy surface. |
+| Live operation dispatch | `src/engine_v13.rs` | Dispatches `xfmr.*` to transformer-native modules and delegates legacy operations to the historical engine. |
+| Historical opcode table | `src/registry.rs`, `OPERATIONS` | Frozen v1.2 catalog: 1,410 operations. |
+| Live aggregate opcode table | `src/registry_v13.rs` | v1.2 catalog plus 15 transformer-native operations: 1,425 total. |
 
 ## Core modules
 
-### `server` — `src/server.rs` (52 KB)
-MCP handler and request orchestration. Owns all mutable server state.
-- Symbols: `Yekaterina` (handler struct), `execute_any`, `execute_any_depth`,
-  `mutate_registry`, `run_batch`, `execute_ordered`, `execute_wave`,
-  `run_pipeline`, `resolve_args`, `resolve_value`, `render`, `eval_expression`.
-- Constants: `MAX_BATCH` 1024, `MAX_PIPE` 256, `MAX_UDO_DEPTH` 32,
-  `PARALLEL_COMPUTE_FLOOR` 50_000, `PARALLEL_PAYLOAD_RATIO` 20,
-  `PARALLEL_MIN_ITEMS` 2.
-- Depends on: `engine`, `formula`, `limits`, `model`, `pool`, `registry`,
-  `safety`, `scheduler`, `storage`, `user_ops`.
-- Tests: in-file `mod resolution_tests` plus the concurrency suite in the same
-  file (torn registry, worker-count equivalence, control-op barriers).
+### `server` — `src/server.rs`
+MCP handler and request orchestration. Owns mutable server state.
+- Symbols include `Yekaterina`, `execute_any`, registry mutation helpers, batch execution, pipeline execution, argument resolution, rendering, and expression evaluation.
+- MCP surface remains exactly three tools: `yk.compute`, `yk.find`, `yk.spec`.
 
-### `registry` — `src/registry.rs` (156 KB)
-The static opcode table and name resolution. Almost entirely data.
-- Symbols: `OperationSpec`, `OperationSource`, `OPERATIONS`, `resolve`, `search`,
-  `capability_code`, `cost_code`; lazy `EXACT_LOOKUP` / `LOOKUP` / `FAMILY_INDEX`.
-- Depends on: nothing in-crate.
-- Tests: `tests/registry.rs`; count and ordering gated by
-  `scripts/validate_full_audit.py`.
+### `registry_v13` — `src/registry_v13.rs`
+The live aggregate read-only registry for the development tree.
+- Preserves all 1,410 v1.2 operation names and ordering.
+- Appends 15 registered transformer-native operations.
+- Total live built-in/control operation count: **1,425**.
 
-### `engine` — `src/engine.rs`
-Stateless dispatcher. Tries `precision::execute`, then `dispatch_module` by
-family prefix, then an inline `match` for the base `math.*` / `stat.*` set.
-Unmatched opcodes return `NYI`.
-- Symbols: `execute`, `dispatch_module`, arg helpers `one` / `two` / `array` /
-  `binary` / `finite`.
-- Depends on: `registry`, `precision`, and every operation module.
-- Tests: `tests/engine.rs`, `tests/golden_categories.rs`.
+### `registry` historical source — `src/registry.rs`
+Frozen v1.2 static opcode table and name-resolution implementation.
+- Retained as an auditable baseline rather than rewritten during the v1.3 migration.
+- Historical operation count: **1,410**.
+
+### `engine_v13` — `src/engine_v13.rs`
+Live aggregate dispatcher.
+- Routes `xfmr.*` operations to the transformer-native implementation.
+- Delegates legacy operations to the frozen v1.2 engine.
+
+### `engine` historical source — `src/engine.rs`
+Frozen v1.2 stateless dispatcher for the legacy operation surface.
+- Tries precision execution, then family dispatch, then the inline base math/stat set.
+- Retained unchanged as migration evidence.
 
 ### `safety` — `src/safety.rs`
 Execution-safety classification. Never exposed over MCP.
-- Symbols: `Safety` (`Pure` / `Serialized`), `ControlOp` (8 variants),
-  `ControlOp::opcode`, `ControlOp::ALL`, `control_op`, `classify`.
-- Depends on: `registry`.
-- Design: `docs/V11_SAFETY_MODEL.md`. Gated by `scripts/static_audit_v11.py`.
+- Classifies pure and serialized/control execution behavior.
 
 ### `scheduler` — `src/scheduler.rs`
 Batch planning only; executes nothing.
-- Symbols: `Placement` (`Concurrent` / `Ordered`), `plan_batch`, `placement_of`,
-  `Cost`, `estimated_cost`, `run_cost`, `is_log_linear`, `iteration_driven`;
-  `MAGNITUDE_CAP` 100_000, `COMPUTE_CAP` 1_000_000_000.
-- Depends on: `registry`, `safety`, `user_ops`.
-- Design: `docs/V11_PARALLEL_MODEL.md`.
+- Handles concurrent versus ordered placement and cost estimation.
 
 ### `pool` — `src/pool.rs`
-The only module permitted to create OS threads (audit-enforced).
-- Symbols: `Job`, `Outcome`, `JobResult`, `WorkerPool::{new, workers, run}`,
-  `resolve_workers`, `MAX_AUTO_WORKERS` (8).
-- Depends on: `engine`.
+The worker-pool implementation and the only audit-approved location for OS-thread creation.
 
 ### `limits` — `src/limits.rs`
-Request and result size accounting.
-- Symbols: `MAX_VALUE_NODES` 200_000, `MAX_STRING_BYTES` 1_000_000,
-  `MAX_RESULT_NODES` 100_000, `MAX_RESULT_BYTES` 1_000_000, `measure_value`,
-  `value_too_large`, `ResultBudget`, `values_too_large_replay` (v1.0.0 oracle).
+Request/result size accounting and result-budget enforcement.
 
 ### `user_ops` — `src/user_ops.rs`
-User-defined operations: formulas, composites, packs.
-- Symbols: `UserRegistry` (`define_formula`, `define_composite`, `remove`,
-  `import_pack`, `uninstall_pack`, `lookup`, `find`, `list`, `snapshot`,
-  `from_snapshot`, `export_pack`), `UserOp`, `FormulaOp`, `CompositeOp`,
-  `UserSnapshot`, `OperationPack`, `PackOp`, `parse_step_ref`, `parse_step`,
-  `resolve_composite_args`, `contains_reference`, `execute_formula_spec`.
-- Constants: `MAX_USER_OPS` 4096, `MAX_COMPOSITE_STEPS` 256, `MAX_PACK_OPS` 1024,
-  `SNAPSHOT_VERSION` 1, `PACK_VERSION` 1.
-- Tests: `tests/user_ops.rs`. Pack format: `docs/UDO_PACKS.md`.
+User-defined operations: formulas, composites, packs, snapshots, import/export, and validation.
 
 ### `storage` — `src/storage.rs`
 Generation-numbered JSON snapshots of the user registry.
-- Symbols: `default_store_dir`, `load`, `save`; `KEEP_SNAPSHOTS` 3, file name
-  `snapshot-<20 digits>.json`.
-- Store dir resolution: `YEKATERINA_HOME` → `%LOCALAPPDATA%\Yekaterina\udo`
-  (Windows) → `$XDG_DATA_HOME/yekaterina/udo` → `~/.yekaterina/udo` → `.yekaterina/udo`.
 
 ### `formula` — `src/formula.rs`
-Safe arithmetic expression parser/evaluator behind `expr.eval` and user formulas;
-also the inner loop of the `num.` / `ode.` / `optimize.` / `series.` solvers.
-- Symbols: `eval`, `Env`; `MAX_EXPR_LEN` 4096, `MAX_PARAMS` 32, `MAX_DEPTH` 64.
-- Tests: `tests/formula.rs`; `tests/formula_bit_identity.rs` against
-  `tests/fixtures/formula_bits.json` (bit-exact f64 oracle).
+Safe arithmetic expression parser/evaluator used by expression execution and several numerical/solver families.
 
 ### `model` — `src/model.rs`
-The entire MCP schema surface: `ComputeParams`, `FindParams`, `SpecParams`.
-Frozen and byte-identical to v1.0.0.
+MCP schema surface (`ComputeParams`, `FindParams`, `SpecParams`). The model-facing request schema remains compatibility-frozen.
 
 ### `precision` — `src/precision.rs`
-Exact arithmetic (`int.*`, `dec.*`, `base.*`) over `num-bigint` / `bigdecimal`.
-Consulted by `engine::execute` **before** family dispatch.
+Exact arithmetic (`int.*`, `dec.*`, `base.*`) over the precision dependencies and consulted before ordinary family dispatch.
 
 ## Operation modules
 
-`engine::dispatch_module` routes on the family prefix of the opcode. To find an
-implementation: take the prefix, read this table, then grep the opcode string.
+The legacy engine dispatches by opcode family prefix. The development tree additionally exposes the transformer-native `xfmr.*` surface through the v1.3 shim.
 
 | Prefix | Module(s), in fallback order |
 |---|---|
-| `math` | `extra_math`, then the inline `match` in `engine` |
+| `math` | `extra_math`, then the inline `match` in the historical engine |
 | `stat`, `reg`, `test` | `inference` → `stats` → `advanced_stats` |
 | `prob` | `probability` → `advanced_probability` |
 | `num` | `numerical` → `advanced_numerical` |
@@ -150,27 +116,28 @@ implementation: take the prefix, read this table, then grep the opcode string.
 | `data` | `data_ops` |
 | `disc` | `discrete` |
 | `info` | `information` |
-| `phys`, `eng`, `mech`, `fluid`, `elec`, `optics`, `wave` | same-named module (`physics`, `engineering`, `mechanics`, `fluids`, `electrical`, `optics`, `waves`) |
-| `thermo`, `chem`, `net`, `color`, `astro`, `time`, `geod` | `thermodynamics`, `chemistry`, `networking`, `color`, `astronomy`, `time_ops`, `geodesy` |
-
-The order inside `stat` / `reg` / `test` is deliberate: `inference` is asked
-first because `advanced_stats` claims those whole prefixes and would answer `OP`
-for anything it does not implement. See the comment at `src/engine.rs:119`.
+| `phys`, `eng`, `mech`, `fluid`, `elec`, `optics`, `wave` | same-named domain modules |
+| `thermo`, `chem`, `net`, `color`, `astro`, `time`, `geod` | matching domain modules |
+| `xfmr` | v1.3 transformer-native modules through `engine_v13` |
 
 ## Tests and gates
 
 | Where | What it covers |
 |---|---|
-| `tests/engine.rs` | Numerical operations across families. |
-| `tests/golden_categories.rs` | Category-level golden expectations. |
-| `tests/registry.rs` | Alias resolution and search ranking. |
-| `tests/user_ops.rs` | Composite/formula definition and validation. |
-| `tests/formula.rs`, `tests/formula_bit_identity.rs` | Expression parser; bit-exact regression. |
-| in-file `mod tests` in `server`, `safety`, `scheduler`, `pool` | Concurrency, classification, planning. |
-| `scripts/static_audit_v12.py` | Current release gate: 1,370 opcodes, crate version 1.2.0, tool surface, integrity manifest; hash-pins the v1.0.0 and v1.1 audits. |
-| `scripts/validate_full_audit.py` | 1,370-opcode manifest; proves all 1,215 v1.1 opcodes are still registered, unrenamed and in order. |
-| `scripts/verify_v12_operations.py` | Drives the real binary over MCP; independent recomputation of the v1.2 operations. |
-| `scripts/lexical_rust_audit.py`, `scripts/operation_manifest.py`, `scripts/validate_golden_manifest.py` | Lexical and manifest gates. |
-| `golden/run_golden.py` + `scripts/check_golden_result.py` | 527 MCP-level cases. |
-| `full_audit/run_full_audit.py` | Every registered opcode executes against a fixture. |
-| `bench/run_bench.py`, `bench/paired_ab.py`, `bench/stress.py` | Performance, A/B decisions, concurrency stress. |
+| `tests/` | Integration and operation-family regression tests. |
+| `golden/` | **527/527** MCP-level correctness regression corpus. |
+| `full_audit/` | Frozen v1.2 **1,410/1,410** full-capability evidence plus v1.3 transformer candidate manifests. |
+| `scripts/static_audit_v13.py` | v1.3 aggregate static audit; current verified result is **17 pass / 0 fail**. |
+| aggregate operation manifest | **1,425 total / 15 `xfmr.*`** operations. |
+| `scripts/verify_v13_transformer_runtime.py` | Real release-binary discovery/spec/execution verification for the promoted transformer surface. |
+| `cargo test --locked --all-targets` | Complete Rust test gate; current v1.3 migration head passes. |
+| `cargo clippy --locked --all-targets` | Complete lint gate; current v1.3 migration head passes. |
+| release build | Current v1.3 migration head passes. |
+| benchmark invariants | Current combined verification path passes. |
+
+## Repository roles
+
+- `stickleetoto/Yekaterina-Dev` — active source development. v1.3 registry migration is implemented and verified here at 1,425 operations.
+- `stickleetoto/Yekaterina` — promoted stable distribution and release evidence, currently on the v1.2.0 release line.
+
+For the authoritative active snapshot, use `CURRENT_STATE.md`.
