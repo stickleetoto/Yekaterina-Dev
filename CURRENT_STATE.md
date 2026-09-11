@@ -95,6 +95,10 @@ The next high-value work is no longer registry exposure. Priorities are:
 - add calibrated hot-spot and mechanical short-circuit models only when their model/source boundaries are documented;
 - keep standard-versioned certification and dielectric-clearance claims outside the generic calculator until a dedicated validated compliance layer exists.
 
+## Documentation status
+
+`REPO_MAP.md` has been refreshed to describe the live v1.3 aggregate registry/engine shims and the current 1,425-operation development surface. Historical v1.2 source files remain intentionally frozen for auditability.
+
 ## Repository roles
 
 - `stickleetoto/Yekaterina-Dev` — active source development and v1.3 verification.
